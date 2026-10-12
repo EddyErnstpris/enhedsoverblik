@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.67 (2026-10-12)">
+<meta name="version" content="5.68 (2026-10-12)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -252,6 +252,7 @@ section[aria-label="Bygningen"]{container-type:inline-size}
 
 /* Inactive list: inset grouped lists */
 .group{margin-bottom:2.1rem}
+.typesel{min-width:12rem}
 .group-head{display:flex;flex-wrap:wrap;gap:.15rem .9rem;align-items:baseline;margin:0 .3rem .65rem}
 .group-head h2{margin:0}
 .group-head .muted{font-size:.875rem}
@@ -778,7 +779,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.67 fra <span class="nowrap">12-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.68 fra <span class="nowrap">12-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -1909,7 +1910,7 @@ function regTable(){
       if(inStock(d))fl.push('<span class="flag info">På lager, '+stockWord(d).toLowerCase()+'</span>');
       else if(d.lastUser&&lv.has(nkey(d.lastUser)))fl.push('<span class="flag bad">Bruger fratrådt</span>');
       return '<tr'+(sel.has(d.id)?' class="sel"':'')+'><td class="selc"><label class="selw"><input type="checkbox" data-ch="reg-sel" data-id="'+d.id+'" aria-label="Vælg '+nm+'"'+(sel.has(d.id)?' checked':'')+'></label></td><td><button class="linkish" data-act="dev" data-arg="'+d.id+'">'+esc(d.label||'Uden label')+'</button></td>'+
-        '<td class="nw"><div>'+esc(d.type)+' <span class="muted nowrap">'+esc(d.model)+'</span>'+osTag(d)+'</div><div class="sub mono">'+esc(d.serial)+'</div></td>'+
+        '<td class="nw"><div>'+(d.type==='Ukendt'?'<select class="typesel" aria-label="Type for '+nm+'" data-ch="dev" data-id="'+d.id+'" data-k="type"><option value="Ukendt" selected>Type mangler, vælg</option><option>Telefon</option><option>Tablet</option></select>':esc(d.type))+' <span class="muted nowrap">'+esc(d.model)+'</span>'+osTag(d)+'</div><div class="sub mono">'+esc(d.serial)+'</div></td>'+
         '<td data-l="Sidste bruger"><div>'+(d.shared?'<span class="muted">'+sharedWord(d)+'</span>':d.lastUser?'<span class="uname">'+esc(d.lastUser)+'</span>':'')+'</div><div class="sub num">'+(fmtDate(d.lastSeen)?'Sidst set <span class="nowrap">'+fmtDate(d.lastSeen)+'</span>':'')+'</div></td>'+
         '<td data-l="Placering"><select aria-label="Placering for '+nm+'" data-ch="place" data-id="'+d.id+'">'+deptOptions(d.deptId)+'</select></td>'+
         '<td data-l="Status"><select aria-label="Status for '+nm+'" data-ch="status" data-id="'+d.id+'">'+STATUSES.map(s=>'<option'+(s===d.status?' selected':'')+'>'+s+'</option>').join('')+'</select></td>'+
@@ -1922,6 +1923,7 @@ function regBulk(){
   return '<div class="bulk" role="region" aria-label="Valgte enheder"><b class="num">'+pl(n,'enhed valgt','enheder valgt')+'</b>'+
     '<select aria-label="Placér de valgte" data-ch="bulk-place"><option value="" disabled selected>Placér på…</option>'+deptOptions('__x',false,false)+'</select>'+
     '<select aria-label="Status for de valgte" data-ch="bulk-status"><option value="" disabled selected>Sæt status…</option>'+STATUSES.map(s=>'<option>'+s+'</option>').join('')+'</select>'+
+    '<select aria-label="Type for de valgte" data-ch="bulk-type"><option value="" disabled selected>Sæt type…</option><option>Telefon</option><option>Tablet</option></select>'+
     '<button class="btn small" data-act="reg-sel-clear">Ryd valg</button></div>';
 }
 function viewRegister(){
@@ -4412,7 +4414,11 @@ document.addEventListener('change',e=>{
   else if(ch==='ready-cb'||ch==='ready-all'||ch==='hi-cb'||ch==='hi-all'){const hi=ch.startsWith('hi');const cbs=[...document.querySelectorAll('#dlg [data-ch="'+(hi?'hi-cb':'ready-cb')+'"]')];if(ch==='ready-all'||ch==='hi-all')cbs.forEach(c=>{c.checked=el.checked;});const all=cbs.every(c=>c.checked);const m=$('#dlg [data-ch="'+(hi?'hi-all':'ready-all')+'"]');if(m)m.checked=all;const b=$('#dlg [data-act="'+(hi?'hand-in':'ready')+'"]');if(b){b.disabled=!all;if(all&&(ch==='ready-all'||ch==='hi-all'))b.focus();}}
   else if(ch==='decision'){const r=state.inactive.rows.find(x=>x.id===id);if(!r)return;r.decision=el.value;if(el.value!=='laasop')r.plan='';markDirty();render();
     if(el.value==='laasop'){const f=$('[data-in="plan"][data-id="'+id+'"]');if(f)f.focus({preventScroll:true});}}
-  else if(ch==='dev'){const d=devById(id);if(!d)return;d[el.dataset.k]=el.value;markDirty();if(el.dataset.k==='type'&&d.shared)openDevice(id);}
+  else if(ch==='dev'){const d=devById(id);if(!d)return;d[el.dataset.k]=el.value;markDirty();if(el.dataset.k==='type'&&d.shared&&inDlg)openDevice(id);else if(el.dataset.k==='type'&&!inDlg){if(ui.tab==='register')refreshReg();else render();toast((d.label||'Enheden')+' er nu '+(d.type==='Tablet'?'en tablet':d.type==='Telefon'?'en telefon':'uden type')+'.');}}
+  /* Version 5.68 (Eddy 12-10-2026): the type can be set in the register, also for many at once. */
+  else if(ch==='bulk-type'){const v=el.value;if(v!=='Telefon'&&v!=='Tablet')return;
+    const ds=[...ui.reg.sel].map(devById).filter(Boolean);let n=0;ds.forEach(d=>{if(d.type!==v){d.type=v;hist(d,'Type: '+v);n++;}});
+    ui.reg.sel.clear();if(n)markDirty();render();refreshReg();toast(n?pl(n,'enhed er','enheder er')+' nu sat til '+(v==='Tablet'?'tablet':'telefon')+'.':'Ingen af de valgte enheder ændrede sig.');}
   else if(ch==='map-full'){pend.full.map[id]=el.value===''?null:+el.value;if(el.value==='')delete pend.full.map[id];render();}
   else if(ch==='full-header'){const p=pend.full;p.hasHeader=el.checked;p.map=p.hasHeader?autoMap(p.rows[0]):{};guessByContent(fullData(p),p.map);render();}
   else if(ch==='inact-new'){pend.inact.newPeriod=el.checked;render();}
