@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.68 (2026-10-12)">
+<meta name="version" content="5.69 (2026-10-12)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -779,7 +779,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.68 fra <span class="nowrap">12-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.69 fra <span class="nowrap">12-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -2223,7 +2223,9 @@ function viewLager(){
     box+
     '<div class="scanres" id="scanRes">'+scanResults()+'</div>'+
     expRows+
-    '<div class="stat">'+card('Telefon','telefoner','telefon')+card('Tablet','tablets','tablet')+'<div><b class="num">'+ikke.length+'</b><span>ikke klar, venter på Supporten</span></div>'+(state.sims.length?'<div><b class="num">'+simFree().length+'</b><span>simkort på lager. <button class="linkish" data-act="tab" data-arg="simkort">Se dem</button></span></div>':'')+'</div>'+
+    '<div class="stat">'+card('Telefon','telefoner','telefon')+card('Tablet','tablets','tablet')+
+    /* Version 5.69 (Eddy 12-10-2026): ready devices without a type are counted too, so nothing ready is missing from the figures. */
+    ((n=>n?'<div><b class="num warnv">'+n+'</b><span>klar uden type (telefon eller tablet). <button class="linkish" data-act="reg-untyped">Vælg type i Register</button></span></div>':'')(readyList('Ukendt').length))+'<div><b class="num">'+ikke.length+'</b><span>ikke klar, venter på Supporten</span></div>'+(state.sims.length?'<div><b class="num">'+simFree().length+'</b><span>simkort på lager. <button class="linkish" data-act="tab" data-arg="simkort">Se dem</button></span></div>':'')+'</div>'+
     (()=>{const b=readyBack();return b.length?'<section class="group"><div class="group-head"><h2>Klar, men skal sendes retur</h2><span class="muted">På 90-dages-listen eller med beslutningen "Sender retur". Udleveres ikke.</span></div>'+stockRows(b,'retur')+'</section>':'';})()+
     '<section class="group"><div class="group-head"><h2>Klar</h2><span class="muted">Ældste først. Udlevér den, der har ligget længst.</span></div>'+stockRows(klar,'klar')+'</section>'+
     '<section class="group"><div class="group-head"><h2>Ikke klar</h2><span class="muted">Bliver klar, når Supporten har bekræftet nulstillingen.</span>'+(ikke.length>1?'<button class="btn small" data-act="ready-many-open">Markér flere som klar</button>':'')+'</div>'+stockRows(ikke,'ikke')+'</section>'+
@@ -4267,6 +4269,7 @@ const ACT={
   'inact-mode':a=>{if(pend.inact){pend.inact.newPeriod=a==='ny';render();}},
   'reg-ids-clear':()=>{delete ui.reg.ids;delete ui.reg.idsLabel;render();refreshReg();},
   'reg-special':a=>{ui.reg.special=a;render();refreshReg();},
+  'reg-untyped':()=>{regReset({type:'Ukendt'});ACT.tab('register');},
   'assign-labels':()=>{const before=new Set(state.devices.filter(d=>d.label).map(d=>d.id));const n=assignLabels();if(n){markDirty();render();refreshReg();}
     const nw=state.devices.filter(d=>d.label&&!before.has(d.id)).map(d=>d.label).sort();
     toast(n?pl(n,'enhed','enheder')+' har fået en label'+(nw.length?' ('+nw[0]+(nw.length>1?' til '+nw[nw.length-1]:'')+')':'')+'. Udskriv mærkater under Lager.':'Alle enheder har allerede en label.');},
