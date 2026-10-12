@@ -7,14 +7,15 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.58 (2026-10-11)">
+<meta name="version" content="5.62 (2026-10-12)">
+<meta name="eo-db" content="">
 <style>
 :root{
   color-scheme:light dark;
   --bg:#F5F5F7; --surface:#FFFFFF; --fill:rgba(118,118,128,.12); --fill-2:rgba(118,118,128,.2); --seg:#FFFFFF;
   --ink:#1D1D1F; --muted:#5C5C61; --faint:#5F5F64; --glyph:#77777C; --sep:rgba(60,60,67,.14);
   --bar:rgba(245,245,247,.8);
-  --accent:#0071E3; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(0,113,227,.1); --link:#005BBB; --badge:#D70015;
+  --accent:#0071E3; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(0,113,227,.1); --link:#005BBB; --who:#4A7356; --badge:#D70015;
   --s30:#7D5200; --s30-bg:rgba(255,204,0,.26); --s30-bar:#FFCC00; --s60-bar:#FF9500; --s90-bar:#FF3B30; --s60:#AD4500; --s60-bg:rgba(255,149,0,.18); --s90:#C20012; --s90-bg:rgba(255,59,48,.12); --ph:#58585D; --accent-dim:rgba(0,113,227,.5);
   --ok:#1E7B34; --ok-bg:rgba(52,199,89,.16);
   --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.04);
@@ -29,7 +30,7 @@
     --bg:#000000; --surface:#1C1C1E; --fill:rgba(118,118,128,.24); --fill-2:rgba(118,118,128,.36); --seg:#5B5B60;
     --ink:#F5F5F7; --muted:#A8A8AD; --faint:#A3A3A8; --glyph:#8E8E93; --sep:rgba(84,84,88,.6);
     --bar:rgba(22,22,23,.8);
-    --accent:#0A84FF; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(10,132,255,.2); --link:#5CB0FF; --badge:#D70015;
+    --accent:#0A84FF; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(10,132,255,.2); --link:#5CB0FF; --who:#8FB89B; --badge:#D70015;
     --s30:#FFD60A; --s30-bg:rgba(255,214,10,.16); --s30-bar:#FFD60A; --s60-bar:#FF9F0A; --s90-bar:#FF453A; --s60:#FF9F0A; --s60-bg:rgba(255,159,10,.18); --s90:#FF7B74; --s90-bg:rgba(255,69,58,.14); --ph:#B8B8BD; --accent-dim:rgba(10,132,255,.55);
     --ok:#30D158; --ok-bg:rgba(48,209,88,.18);
     --shadow:none;
@@ -226,6 +227,11 @@ section[aria-label="Bygningen"]{container-type:inline-size}
 .empty li+li{border-top:1px solid var(--sep)}
 .empty li::before{content:counter(s);width:1.75rem;height:1.75rem;border-radius:50%;background:var(--fill);display:grid;place-items:center;font-weight:600;font-size:.8125rem}
 .empty .row-actions{justify-content:center}
+/* Version 5.59 (Eddy 11-10-2026): the user's name is written in a dusty green (5.61: own class, so device titles keep their colour). */
+.uname{color:var(--who)}
+/* Version 5.61 (Eddy 12-10-2026): iPhones get a small grey tag, so they stand out when scrolling. */
+.ostag{display:inline-block;font-size:.75rem;font-weight:600;line-height:1.35;padding:.05rem .45rem;border-radius:.45rem;background:var(--fill);color:var(--ink);margin-left:.3rem;vertical-align:.08em;white-space:nowrap}
+@media print{.ostag{background:none;border:1px solid #777;color:#000}}
 /* Version 5.57–5.58: the login box (e-mail and a code by e-mail) on the start page and under Opsætning */
 .loginbox{display:grid;gap:.75rem;max-width:24rem}
 .empty .loginbox{margin:0 auto 1.2rem;text-align:left;background:var(--surface);border-radius:var(--r-card);box-shadow:var(--shadow);padding:1.1rem 1.15rem}
@@ -736,7 +742,7 @@ details>summary{min-height:24px}
   *{animation:none !important;transition:none !important}
 }
 @media print{
-  :root{--bg:#fff;--surface:#fff;--fill:#f0f0f0;--fill-2:#e6e6e6;--ink:#000;--muted:#444;--faint:#555;--glyph:#777;--sep:#bbb;--accent:#000;--accent-fill:#000;--accent-ink:#fff;--accent-soft:#eee;--link:#000;
+  :root{--who:#000;--bg:#fff;--surface:#fff;--fill:#f0f0f0;--fill-2:#e6e6e6;--ink:#000;--muted:#444;--faint:#555;--glyph:#777;--sep:#bbb;--accent:#000;--accent-fill:#000;--accent-ink:#fff;--accent-soft:#eee;--link:#000;
     --s30:#7D5200;--s30-bg:#FBF0C4;--s60:#AD4500;--s60-bg:#FCE4CF;--s90:#B00012;--s90-bg:#FADBD8;--ok:#1E7B34;--ok-bg:#DAEEE0;--shadow:none}
   .top,.toolbar,.no-print,#toast,footer.foot{display:none !important}
   body{font-size:11pt}
@@ -772,7 +778,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.58 fra <span class="nowrap">11-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.62 fra <span class="nowrap">12-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
 <input type="file" id="listFile" accept=".csv,.txt,.tsv,.htm,.html" hidden>
@@ -796,13 +802,20 @@ details>summary{min-height:24px}
 (function(){
 'use strict';
 
+/* Version 5.60 (Eddy 11-10-2026): a copy of the tool can have the database built in (meta "eo-db"), so the copy on the
+   web address asks for login at once. The page as it was loaded is kept to make that copy (before anything changes it). */
+const SRC0='<!DOCTYPE html>\n'+document.documentElement.outerHTML;
+const DB_NOEMB='enhedsoverblik.noemb';
+const EMB=(()=>{try{const m=document.querySelector('meta[name="eo-db"]'),v=m&&m.content?JSON.parse(m.content):null;
+  if(v&&typeof v.url==='string'&&typeof v.key==='string'&&v.key&&(/^https:\/\/[a-z0-9.-]+(:\d+)?$/i.test(v.url.replace(/\/+$/,''))||/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(v.url.replace(/\/+$/,''))))return {url:v.url.replace(/\/+$/,''),key:v.key};}catch(e){}return null;})();
+
 /* When the tool is opened as a local file, the browser is told to block every
    network request and every script other than this one. Nothing that ends up
    on the page can then send data anywhere or run code. */
 if(location.protocol==='file:'){
   /* The one exception is the database the user has set up (version 5.0). */
   let dbOrigin='';
-  try{const c=JSON.parse(localStorage.getItem('enhedsoverblik.db')||'null');let u=String(c&&c.url||'').replace(/\/+$/,'');
+  try{let c=JSON.parse(localStorage.getItem('enhedsoverblik.db')||'null');if(!c&&EMB&&!localStorage.getItem(DB_NOEMB))c=EMB;let u=String(c&&c.url||'').replace(/\/+$/,'');
     /* Version 5.53: a scanner link (#scan=…&u=…) names the database the phone sends to. */
     if(/^#scan=/.test(location.hash)){const hu=new URLSearchParams(location.hash.slice(1)).get('u');if(hu)u=String(hu).replace(/\/+$/,'');}if(/^https:\/\/[a-z0-9.-]+(:\d+)?$/i.test(u)||/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(u))dbOrigin=u;}catch(e){}
   const csp=document.createElement('meta');
@@ -973,6 +986,15 @@ const ANON='tidligere bruger';
 /* A shared device ("vikartelefon") is used by changing temps, so it never
    carries a person's name: lists are ignored, and the hand-out needs no
    recipient. It still has a department, a label and the stock flow. */
+/* Version 5.61–5.62 (Eddy 12-10-2026): every iPhone gets the tag, also when the list gives a model code.
+   An iPhone is: marked by hand on the device sheet (apple true; false overrides), or a list column
+   "Producent"/"Platform" saying Apple/iOS, or a model that says iPhone/Apple, or an Apple model code
+   (A1234, or a part number such as MLPF3DN/A). An Apple tablet (iPad) does not get the iPhone tag. */
+const appleWord=v=>/\b(apple|ios|iphone|ipados)\b/i.test(String(v||''));
+const appleCode=v=>{const m=String(v||'').trim().toUpperCase();return /^A\d{4}$/.test(m)||/^[A-Z0-9]{4,6}[A-Z]{1,2}\/A$/.test(m);};
+function isApple(d){if(!d)return false;if(d.apple===false)return false;return d.apple===true||appleWord(d.model)||appleCode(d.model);}
+function isIphone(d){return isApple(d)&&d.type!=='Tablet'&&!/ipad/i.test(String(d.model||''));}
+function osTag(d){return isIphone(d)?'<span class="ostag">iPhone</span>':'';}
 function sharedWord(d){return d.type==='Tablet'?'Vikartablet':'Vikartelefon';}
 function setShared(d,on){
   d.shared=!!on;
@@ -1253,7 +1275,8 @@ const FIELDS=[
   {k:'type',label:'Type',re:[/^type$|enhedstype|device\s*type/i]},
   {k:'phone',label:'Telefonnummer',re:[/telefon|mobil|tlf|phone/i]},
   {k:'user',label:'Sidste bruger',re:[/bruger|user/i,/^(?!.*(enhed|device|model|host|produkt|computer)).*(navn|name)/i]},
-  {k:'seen',label:'Sidst set',re:[/sidst\s*set|last\s*seen|senest|sidste\s*(login|aktiv|kontakt)|last\s*(login|sync|check)/i]}
+  {k:'seen',label:'Sidst set',re:[/sidst\s*set|last\s*seen|senest|sidste\s*(login|aktiv|kontakt)|last\s*(login|sync|check)/i]},
+  {k:'brand',label:'Producent eller platform',re:[/producent|fabrikant|manufacturer|^make$|brand|m\u00e6rke|platform|styresystem|operativsystem|operating\s*system|^os$/i]}
 ];
 const EXTRA=[{k:'laasop',re:[/^l[åa]s\s*op$/i]},{k:'plan',re:[/^plan/i]},{k:'retur',re:[/retur/i]}];
 function autoMap(header){
@@ -1330,7 +1353,7 @@ function recordsFrom(data,map){
     if(seen.has(key)){dupes++;return;}
     seen.add(key);
     const x=v=>/^x+$/i.test(v)||/^ja$/i.test(v);
-    out.push({serial,imei,model:get(r,'model'),type:get(r,'type'),phone:get(r,'phone').replace(/\s+/g,'').replace(/^(\+?\d+)[.,]0+$/,'$1'),
+    out.push({serial,imei,brand:get(r,'brand'),model:get(r,'model'),type:get(r,'type'),phone:get(r,'phone').replace(/\s+/g,'').replace(/^(\+?\d+)[.,]0+$/,'$1'),
       user:get(r,'user'),seen:parseDate(get(r,'seen')),
       retur:x(get(r,'retur')),laasop:x(get(r,'laasop')),plan:get(r,'plan')});
   });
@@ -1349,6 +1372,8 @@ function newDevice(rec,src){
   const d={id:uid(),serial:rec.serial||'',imei:rec.imei||'',model:rec.model||'',type:guessType(rec.model,rec.type),
     phone:rec.phone||'',label:'',deptId:'',status:'I drift',note:'',lastUser:rec.user||'',lastSeen:rec.seen||'',
     added:today(),source:SRC[src],altSerial:'',onFull:false,missingSince:'',userBy:{},history:[],stockSince:'',readySince:'',lockUser:'',mismatch:{},shared:false,leaveDate:''};
+  if(rec.brand&&appleWord(rec.brand))d.apple=true;
+  if(d.type==='Ukendt'&&isIphone(Object.assign({},d,{type:''})))d.type='Telefon';
   if(rec.user&&src!=='manual')d.userBy[src]=rec.user;
   state.devices.push(d);if(rec.phone)simEnsure(d,rec.phone);return d;
 }
@@ -1389,6 +1414,8 @@ function mergeDevice(d,rec,src){
   ['imei','model'].forEach(k=>{if(rec[k])d[k]=rec[k];});
   if(rec.phone&&ACTIVE.has(d.status)&&d.status!=='Reparation'){d.phone=rec.phone;simEnsure(d,rec.phone);}
   if(d.type==='Ukendt')d.type=guessType(d.model,rec.type);
+  if(rec.brand&&d.apple!==false&&appleWord(rec.brand))d.apple=true;
+  if(d.type==='Ukendt'&&isIphone(Object.assign({},d,{type:''})))d.type='Telefon';
   const userChanged=setUser(d,rec.user,src);
   if(rec.seen&&(!d.lastSeen||rec.seen>d.lastSeen))d.lastSeen=rec.seen;
   return userChanged;
@@ -1774,8 +1801,8 @@ function inactRow(r,d,users,lv){
   const returned=d.status==='Returneret til Supporten';
   const found=ui.found.has(d.id);
   return '<article class="irow'+(found?' is-found':'')+'">'+stageBadge(r.cat)+
-    '<div><div class="who">'+esc(d.label||'Uden label')+' <span>'+esc(d.type==='Ukendt'?'':d.type)+' <span class="nowrap">'+esc(d.model)+'</span></span></div>'+
-    '<div>'+(d.shared?sharedWord(d)+', bruges af flere':r.user?'Sidst brugt af '+esc(r.user):d.lastUser?'Ingen bruger på listen · registeret: '+esc(d.lastUser):'Ingen bruger registreret')+'</div>'+
+    '<div><div class="who">'+esc(d.label||'Uden label')+' <span>'+esc(d.type==='Ukendt'?'':d.type)+' <span class="nowrap">'+esc(d.model)+'</span></span>'+osTag(d)+'</div>'+
+    '<div>'+(d.shared?sharedWord(d)+', bruges af flere':r.user?'Sidst brugt af <span class="uname">'+esc(r.user)+'</span>':d.lastUser?'Ingen bruger på listen · registeret: <span class="uname">'+esc(d.lastUser)+'</span>':'Ingen bruger registreret')+'</div>'+
     '<div class="muted num">'+((r.seen||d.lastSeen)?'Sidst set '+fmtDate(r.seen||d.lastSeen)+(days!=null&&days>=0?', '+days+' dage siden':''):'Ingen dato for sidste aktivitet')+'</div>'+
     '<div>'+flags.join('')+'</div></div>'+
     '<div class="ids">'+(()=>{const dp=deptOf(d.deptId),fl=d.deptId===LAGER?'Lager':dp?dp.floor:'Ikke valgt',af=d.deptId===LAGER?'Lager':dp?dp.name:'Ikke valgt';return '<div><i>Etage</i><span>'+esc(fl)+'</span></div><div><i>Afdeling</i><span>'+esc(af)+'</span></div>';})()+'<div><i>Serienr.</i><b class="mono">'+esc(d.serial||'mangler')+'</b></div><div><i>IMEI</i><span class="mono">'+esc(d.imei||'mangler')+'</span></div>'+(d.phone?'<div><i>Tlf.</i><span class="mono">'+esc(d.phone)+'</span></div>':'')+'</div>'+
@@ -1860,9 +1887,10 @@ function regList(){
     if(s==='missing'&&!isMissing(d,im))return false;
     if(s==='leaver'&&!(d.lastUser&&lv.has(nkey(d.lastUser))&&ACTIVE.has(d.status)&&!inStock(d)))return false;
     if(s==='shared'&&!d.shared)return false;
+    if(s==='iphone'&&!isIphone(d))return false;
     if(s==='expected'&&!(d.leaveDate&&ACTIVE.has(d.status)&&!inStock(d)))return false;
     if(s==='inact'&&!im.has(d.id))return false;
-    if(q&&!norm([d.label,d.serial,d.imei,d.model,d.phone,d.lastUser,d.note].join(' ')).includes(q))return false;
+    if(q&&!norm([d.label,d.serial,d.imei,d.model,d.phone,d.lastUser,d.note,isIphone(d)?'iPhone':''].join(' ')).includes(q))return false;
     return true;
   }).sort((a,b)=>(order.has(a.deptId)?order.get(a.deptId):-1)-(order.has(b.deptId)?order.get(b.deptId):-1)||(a.label||'~').localeCompare(b.label||'~')||a.serial.localeCompare(b.serial));
 }
@@ -1880,8 +1908,8 @@ function regTable(){
       if(inStock(d))fl.push('<span class="flag info">På lager, '+stockWord(d).toLowerCase()+'</span>');
       else if(d.lastUser&&lv.has(nkey(d.lastUser)))fl.push('<span class="flag bad">Bruger fratrådt</span>');
       return '<tr'+(sel.has(d.id)?' class="sel"':'')+'><td class="selc"><label class="selw"><input type="checkbox" data-ch="reg-sel" data-id="'+d.id+'" aria-label="Vælg '+nm+'"'+(sel.has(d.id)?' checked':'')+'></label></td><td><button class="linkish" data-act="dev" data-arg="'+d.id+'">'+esc(d.label||'Uden label')+'</button></td>'+
-        '<td class="nw"><div>'+esc(d.type)+' <span class="muted nowrap">'+esc(d.model)+'</span></div><div class="sub mono">'+esc(d.serial)+'</div></td>'+
-        '<td data-l="Sidste bruger"><div>'+(d.shared?'<span class="muted">'+sharedWord(d)+'</span>':esc(d.lastUser))+'</div><div class="sub num">'+(fmtDate(d.lastSeen)?'Sidst set <span class="nowrap">'+fmtDate(d.lastSeen)+'</span>':'')+'</div></td>'+
+        '<td class="nw"><div>'+esc(d.type)+' <span class="muted nowrap">'+esc(d.model)+'</span>'+osTag(d)+'</div><div class="sub mono">'+esc(d.serial)+'</div></td>'+
+        '<td data-l="Sidste bruger"><div>'+(d.shared?'<span class="muted">'+sharedWord(d)+'</span>':d.lastUser?'<span class="uname">'+esc(d.lastUser)+'</span>':'')+'</div><div class="sub num">'+(fmtDate(d.lastSeen)?'Sidst set <span class="nowrap">'+fmtDate(d.lastSeen)+'</span>':'')+'</div></td>'+
         '<td data-l="Placering"><select aria-label="Placering for '+nm+'" data-ch="place" data-id="'+d.id+'">'+deptOptions(d.deptId)+'</select></td>'+
         '<td data-l="Status"><select aria-label="Status for '+nm+'" data-ch="status" data-id="'+d.id+'">'+STATUSES.map(s=>'<option'+(s===d.status?' selected':'')+'>'+s+'</option>').join('')+'</select></td>'+
         '<td class="flags">'+fl.join(' ')+'</td></tr>';
@@ -1904,7 +1932,7 @@ function viewRegister(){
     '<select aria-label="Filtrér på placering" data-ch="reg-dept"><option value="">Alle placeringer</option><option value="__none"'+(r.dept==='__none'?' selected':'')+'>Uden placering</option>'+deptOptions(r.dept,true)+'</select>'+
     '<select aria-label="Filtrér på status" data-ch="reg-status"><option value="">Alle statusser</option>'+STATUSES.map(s=>'<option'+(s===r.status?' selected':'')+'>'+s+'</option>').join('')+'</select>'+
     '<select aria-label="Filtrér på type" data-ch="reg-type"><option value="">Alle typer</option>'+['Telefon','Tablet','Ukendt'].map(s=>'<option'+(s===r.type?' selected':'')+'>'+s+'</option>').join('')+'</select></div>'+
-    '<div class="toolbar"><div class="chips">'+chip('','Alle')+chip('noplace','Mangler placering')+chip('inact','Inaktive')+chip('missing','Ikke på listerne')+chip('leaver','Bruger fratrådt')+chip('expected','Forventet retur')+chip('shared','Vikartelefoner')+'</div><span class="spacer"></span>'+
+    '<div class="toolbar"><div class="chips">'+chip('','Alle')+chip('noplace','Mangler placering')+chip('inact','Inaktive')+chip('missing','Ikke på listerne')+chip('leaver','Bruger fratrådt')+chip('expected','Forventet retur')+chip('shared','Vikartelefoner')+chip('iphone','iPhones')+'</div><span class="spacer"></span>'+
     '<div class="row-actions"><button class="btn small" data-act="assign-labels">Tildel labels</button><button class="btn small" data-act="add-device">Tilføj enhed</button><button class="btn small" data-act="export-csv">Eksportér til Excel</button></div></div>'+
  (r.ids?'<div class="notice"><p>Viser søgeresultatet for "'+esc(r.idsLabel)+'". <button class="btn small" data-act="reg-ids-clear">Vis alle enheder</button></p></div>':'')+
     '<div class="regmob"><label class="selw"><input type="checkbox" data-ch="reg-sel-all" aria-label="Vælg alle viste"'+(regAllSel()?' checked':'')+'><span>Vælg alle</span></label><select aria-label="Sortér efter" data-ch="reg-sort-sel">'+[['label','Label'],['type','Enhed'],['user','Sidste bruger'],['seen','Sidst set'],['place','Placering'],['status','Status']].map(x=>'<option value="'+x[0]+'"'+(r.sort===x[0]?' selected':'')+'>Sortér: '+x[1]+'</option>').join('')+'</select></div>'+
@@ -2131,7 +2159,7 @@ function viewOpsaetning(){
 
 /* Stock */
 const STOCK_WORD={klar:'Klar',ikke:'Ikke klar',defekt:'Defekt'};
-function devTitle(d){return esc(d.label||'Uden label')+' <span>'+esc(d.type==='Ukendt'?'':d.type)+' '+esc(d.model)+'</span>';}
+function devTitle(d){return esc(d.label||'Uden label')+' <span>'+esc(d.type==='Ukendt'?'':d.type)+' '+esc(d.model)+'</span>'+osTag(d);}
 /* The main thing to do with a device depends on where it is. */
 /* The next step for a device. A device that must go back to the Supporten
    (90 days, or "Sender retur") is marked as returned first; the stock
@@ -2157,7 +2185,7 @@ function scanResults(){
   return '<div class="list">'+m.map(d=>{const a=primaryAct(d),r=im.get(d.id);
     const tags=(r?'<span class="pill '+STAGE[r.cat].cls+' num">'+r.cat+' dage'+(!ACTIVE.has(d.status)?', '+esc(d.status.toLowerCase()):r.cat===90||r.decision==='retur'?', sendes retur':r.decision==='laasop'?', lås op':'')+'</span>':'')+(d.lastUser&&lv.has(nkey(d.lastUser))?'<span class="flag bad">Bruger fratrådt</span>':'')+leaveFlag(d)+(boxOn()&&inStock(d)?'<span class="flag info">Er allerede på lager</span>':'');
     return '<div class="srow"><div><div class="who">'+devTitle(d)+'</div><div class="muted mono" style="font-size:.8125rem">'+esc(d.serial||'Uden serienummer')+(d.imei?' · '+esc(d.imei):'')+'</div>'+(tags?'<div>'+tags+'</div>':'')+'</div>'+
-      '<div class="muted">'+esc(placeName(d.deptId))+' · '+esc(inStock(d)?stockWord(d):d.status)+(d.shared?'<br>'+sharedWord(d)+', bruges af flere':d.lastUser?'<br>Sidste bruger: '+esc(d.lastUser):'')+'</div>'+
+      '<div class="muted">'+esc(placeName(d.deptId))+' · '+esc(inStock(d)?stockWord(d):d.status)+(d.shared?'<br>'+sharedWord(d)+', bruges af flere':d.lastUser?'<br>Sidste bruger: <span class="uname">'+esc(d.lastUser)+'</span>':'')+'</div>'+
       '<div class="row-actions"><button class="btn small primary" data-act="'+a.act+'" data-arg="'+d.id+'">'+a.label+'</button>'+(a.second?'<button class="btn small" data-act="'+a.second.act+'" data-arg="'+d.id+'">'+a.second.label+'</button>':'')+(a.act!=='dev'?'<button class="btn small" data-act="dev" data-arg="'+d.id+'">Detaljer</button>':'')+'</div></div>';}).join('')+'</div>';
 }
 function refreshScan(){const w=$('#scanRes');if(w)w.innerHTML=scanResults();}
@@ -2765,7 +2793,7 @@ function qsSearch(raw){
     if(!f.every(fn=>fn(d)))return;
     let tot=0;
     for(const tok of rest){
-      const s=Math.max(wordScore(tok,d.label)*1.4,wordScore(tok,d.serial)*1.3,wordScore(tok,d.altSerial),wordScore(tok,d.imei)*1.3,wordScore(tok,d.lastUser)*1.2,wordScore(tok,d.model),wordScore(tok,d.phone),wordScore(tok,d.note)*.8,wordScore(tok,placeName(d.deptId))*.8,wordScore(tok,d.type)*.6);
+      const s=Math.max(wordScore(tok,d.label)*1.4,wordScore(tok,d.serial)*1.3,wordScore(tok,d.altSerial),wordScore(tok,d.imei)*1.3,wordScore(tok,d.lastUser)*1.2,wordScore(tok,d.model),wordScore(tok,d.phone),wordScore(tok,d.note)*.8,wordScore(tok,placeName(d.deptId))*.8,wordScore(tok,d.type)*.6,isIphone(d)?wordScore(tok,'iPhone'):0);
       if(!s)return;tot+=s;
     }
     if(!rest.length&&!f.length)return;
@@ -3185,7 +3213,8 @@ function openDevice(id){
     f('note','Note','wide')+
     simDevSection(d)+
     (ACTIVE.has(d.status)&&!inStock(d)&&!d.shared?'<label class="field wide">Brugeren stopper den<input type="date" data-in="dev-leave" data-id="'+id+'" min="2000-01-01" max="2099-12-31" value="'+esc(d.leaveDate)+'"><span class="muted" style="font-size:.8125rem;font-weight:400">Er lageret lukket, lægges enheden i afleveringskassen. Efter datoen står den som Mangler, indtil den er scannet ind.</span></label>':'')+
-    '<label class="switch wide" style="margin-top:.2rem"><input type="checkbox" role="switch" data-ch="dev-shared" data-id="'+id+'"'+(d.shared?' checked':'')+'> '+sharedWord(d)+': bruges af skiftende vikarer, ingen bruger gemmes</label></div>'+
+    '<label class="switch wide" style="margin-top:.2rem"><input type="checkbox" role="switch" data-ch="dev-shared" data-id="'+id+'"'+(d.shared?' checked':'')+'> '+sharedWord(d)+': bruges af skiftende vikarer, ingen bruger gemmes</label>'+
+    (d.type==='Tablet'?'':'<label class="switch wide" style="margin-top:.2rem"><input type="checkbox" role="switch" data-ch="dev-apple" data-id="'+id+'"'+(isIphone(d)?' checked':'')+'> iPhone (giver mærket "iPhone")</label>')+'</div>'+
     (d.imei&&!luhnOk(d.imei)?'<p class="warnline">IMEI\'et går ikke op. Tjek, at det er skrevet rigtigt.</p>':'')+
     (mismatchDate(d)&&ACTIVE.has(d.status)&&!inStock(d)?'<div class="notice warn" style="margin-top:.8rem"><p>Listen fra '+fmtDate(mismatchDate(d))+' viser '+(d.lastUser?'en anden bruger end den, enheden er udleveret til':'en bruger, men enheden er ikke udleveret til nogen i registeret')+'. Navnet fra listen er ikke gemt. Tjek med Supporten, at enheden er tilmeldt den rigtige bruger. <button class="btn small" data-act="unlock-user" data-arg="'+id+'">Brug listens navn fremover</button></p></div>':'')+
     (inStock(d)?'<p class="muted" style="font-size:.875rem;margin-top:.8rem">På lager, '+STOCK_WORD[stockState(d)].toLowerCase()+(d.stockSince?', siden '+fmtDate(d.stockSince):'')+'. '+(mustReturn(d)?'Skal sendes retur til Supporten og udleveres ikke. Markér den som sendt retur.':{klar:'Brug fanen Lager til at udlevere den.',ikke:'Markér den som klar på fanen Lager, når den er nulstillet.',defekt:'Når den er repareret, sæt status til Afventer nulstilling.'}[stockState(d)])+'</p>':'')+
@@ -3255,7 +3284,7 @@ const localISO=iso=>{const d=new Date(iso);return isNaN(d)?'':d.getFullYear()+'-
 const lsGet=k=>{try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}};
 const lsSet=(k,v)=>{try{if(v==null)localStorage.removeItem(k);else localStorage.setItem(k,JSON.stringify(v));}catch(e){}};
 function dbUrlOk(u){return /^https:\/\/[a-z0-9.-]+(:\d+)?$/i.test(u)||/^http:\/\/(127\.0\.0\.1|localhost)(:\d+)?$/i.test(u);}
-function dbLoadCfg(){const c=lsGet(DB_CFG_KEY);db.cfg=c&&dbUrlOk(String(c.url||''))&&c.key?{url:String(c.url).replace(/\/+$/,''),key:String(c.key),email:String(c.email||''),mode:c.mode==='email'?'email':'code'}:null;db.ses=lsGet(DB_SES_KEY);if(db.ses&&(!db.ses.access_token||!db.ses.refresh_token))db.ses=null;}
+function dbLoadCfg(){let c=lsGet(DB_CFG_KEY);if(!c&&EMB&&!lsGet(DB_NOEMB))c={url:EMB.url,key:EMB.key,mode:'code'};db.cfg=c&&dbUrlOk(String(c.url||''))&&c.key?{url:String(c.url).replace(/\/+$/,''),key:String(c.key),email:String(c.email||''),mode:c.mode==='email'?'email':'code'}:null;db.ses=lsGet(DB_SES_KEY);if(db.ses&&(!db.ses.access_token||!db.ses.refresh_token))db.ses=null;}
 function dbOn(){return !!db.cfg;}
 function dbLoggedIn(){return !!(db.cfg&&db.ses);}
 /* Version 5.57: the address and key for a login. On Opsætning they come from the fields; on the start page the saved ones are used.
@@ -3647,6 +3676,7 @@ function viewDbSection(){
     (dbLoggedIn()?'':'<h3 style="margin:1.1rem 0 .6rem;font-size:1rem">Log ind</h3>'+dbLoginForm())+
     '<div class="row-actions" style="margin-top:.6rem">'+(dbLoggedIn()?'<span class="muted">Logget ind som '+esc(dbWho())+'</span><button class="btn" data-act="db-reload">Hent nyeste fra databasen</button><button class="btn" data-act="db-logout">Log ud</button>':'')+
     (c.url?'<button class="btn plain" data-act="db-forget">Fjern database</button>':'')+'</div>'+
+    (db.cfg?'<div style="margin-top:.8rem"><button class="btn" data-act="db-embed">Lav fil med databasen indbygget</button><p class="muted" style="margin:.4rem 0 0;font-size:.875rem">Til værktøjets webadresse (fx GitHub Pages): den, der åbner filen, får login med det samme. Filen indeholder kun databasens adresse og den offentlige nøgle, ingen data og intet login.</p></div>':'')+
     '<details style="margin-top:.8rem"><summary class="muted">Opsætning af databasen (SQL til Supabase)</summary><p class="warnline" style="margin:.5rem 0 0">Slå "Allow new users to sign up" fra i Supabase under Authentication → Sign In / Providers. Ellers kan alle med adressen og nøglen oprette en bruger og læse registeret.</p><p class="muted" style="margin:.5rem 0 0">Login med kode på e-mail kræver, at Supabase sender e-mails gennem jeres egen SMTP (fx Resend) under Authentication → Emails, og at skabelonen "Magic Link" viser koden med {{ .Token }}. Se sidst i SQL\'en.</p><textarea class="mono" rows="12" readonly aria-label="SQL til opsætning af databasen" style="width:100%;margin-top:.5rem">'+esc(DB_SQL)+'</textarea></details></section>';
 }
 
@@ -3747,7 +3777,7 @@ function simRow(s,kind){
     kind==='enhed'?'<button class="btn small" data-act="sim-out" data-arg="'+s.id+'">Tag ud</button>'+(d?'<button class="btn small" data-act="dev" data-arg="'+d.id+'">Vis enheden</button>':''):
     (s.iccid||s.phone?'<button class="btn small" data-act="sim-stock" data-arg="'+s.id+'">Tilbage på lager</button>':'');
   return '<div class="srow"><div><div class="who">'+simLabel(s)+' <span>'+(s.iccid?'<span class="mono">'+esc(s.iccid)+'</span>':'ICCID ikke scannet')+'</span></div>'+(kind==='enhed'&&d&&!ACTIVE.has(d.status)?'<span class="flag warn">Enheden er '+esc(d.status==='Returneret til Supporten'?'returneret til Supporten':d.status.toLowerCase())+'</span>':'')+(kind==='enhed'&&!d?'<span class="flag warn">Enheden findes ikke mere</span>':'')+'</div>'+
-    '<div class="muted num">'+(kind==='enhed'?(d?'<b style="font-weight:600;color:var(--ink)">'+esc(d.label||d.serial||'Enhed')+'</b><br>'+esc(placeName(d.deptId))+(d.shared?'<br>'+sharedWord(d):d.lastUser?'<br>'+esc(d.lastUser):''):'Ingen enhed'):SIM_WORD[s.status])+'<br>Siden '+fmtDate(s.since)+(s.since&&daysSince(s.since)!=null?', '+pl(Math.max(0,daysSince(s.since)),'dag','dage'):'')+'</div>'+
+    '<div class="muted num">'+(kind==='enhed'?(d?'<b style="font-weight:600;color:var(--ink)">'+esc(d.label||d.serial||'Enhed')+'</b><br>'+esc(placeName(d.deptId))+(d.shared?'<br>'+sharedWord(d):d.lastUser?'<br><span class="uname">'+esc(d.lastUser)+'</span>':''):'Ingen enhed'):SIM_WORD[s.status])+'<br>Siden '+fmtDate(s.since)+(s.since&&daysSince(s.since)!=null?', '+pl(Math.max(0,daysSince(s.since)),'dag','dage'):'')+'</div>'+
     '<div class="row-actions">'+acts+'<button class="btn small" data-act="sim-edit" data-arg="'+s.id+'">Ret</button></div></div>';
 }
 function lagerSub(cur){const n=simFree().length;return '<div class="chips subtabs"><button class="chip" data-act="tab" data-arg="lager" aria-pressed="'+(cur==='lager')+'">Enheder</button><button class="chip" data-act="tab" data-arg="simkort" aria-pressed="'+(cur==='simkort')+'"'+(n?' aria-label="Simkort, '+n+' på lager"':'')+'>Simkort'+(n?' <span class="count num">'+n+'</span>':'')+'</button></div>';}
@@ -3915,7 +3945,7 @@ function loadRegister(text,opts){
       history:(Array.isArray(d.history)?d.history:[]).filter(obj).map(h=>{const o={d:str(h.d),t:str(h.t)};
         if(obj(h.e)&&EV_KINDS.includes(h.e.k))o.e={k:h.e.k,who:str(h.e.who).slice(0,200),place:str(h.e.place).slice(0,200)};return o;}),
       stockSince:isISO(str(d.stockSince))?str(d.stockSince).slice(0,10):'',readySince:isISO(str(d.readySince))?str(d.readySince).slice(0,10):'',
-      shared:d.shared===true,leaveDate:isDay(str(d.leaveDate).slice(0,10))?str(d.leaveDate).slice(0,10):'',lockUser:isISO(str(d.lockUser))?str(d.lockUser).slice(0,10):'',mismatch:(()=>{const m={};if(obj(d.mismatch))['full','mail'].forEach(k=>{if(isISO(str(d.mismatch[k])))m[k]=str(d.mismatch[k]).slice(0,10);});return m;})()};
+      apple:d.apple===true?true:d.apple===false?false:undefined,shared:d.shared===true,leaveDate:isDay(str(d.leaveDate).slice(0,10))?str(d.leaveDate).slice(0,10):'',lockUser:isISO(str(d.lockUser))?str(d.lockUser).slice(0,10):'',mismatch:(()=>{const m={};if(obj(d.mismatch))['full','mail'].forEach(k=>{if(isISO(str(d.mismatch[k])))m[k]=str(d.mismatch[k]).slice(0,10);});return m;})()};
   });
   /* Version 1 files have no stock settings; the defaults are used. */
   if(obj(o.stock))Object.keys(STOCK_DEF).forEach(k=>{const v=parseInt(o.stock[k],10);if(!isNaN(v))s.stock[k]=Math.max(0,Math.min(365,v));});
@@ -4049,6 +4079,14 @@ const ACT={
     finally{db.loggingIn=false;busyUi();}
     toast('Logget ind.');if(!$('#dlg').open)render();await dbStart();render();},
   'db-logout':()=>{dbLogoutAll();},
+  'db-embed':()=>{
+    if(!db.cfg){toast('Sæt databasen op først.');return;}
+    const tag='<meta name="eo-db" content="'+esc(JSON.stringify({url:db.cfg.url,key:db.cfg.key}))+'">';
+    const out=SRC0.replace(/<meta name="eo-db" content="[^"]*">/,()=>tag);
+    if(out===SRC0&&SRC0.indexOf(tag)<0){toast('Filen kunne ikke laves.');return;}
+    download('enhedsoverblik.html',out,'text/html');
+    toast('Filen er hentet. Læg den op på GitHub i stedet for den gamle, med samme navn.');
+  },
   'db-mode':a=>{ui.dbMode=a==='email'?'email':'code';otpReset();if(db.cfg){db.cfg.mode=ui.dbMode;lsSet(DB_CFG_KEY,db.cfg);}render();const f=$('#main [data-in="'+(ui.dbMode==='email'?'db-pw':'db-email')+'"]')||$('#main [data-in="db-email"]');if(f)f.focus();},
   'db-otp-send':async()=>{
     if(otp.busy||db.loggingIn)return;
@@ -4072,7 +4110,7 @@ const ACT={
   'db-reload':()=>{dbReload().then(()=>render());},
   'db-force':()=>{dbForce().then(()=>render());},
   'db-push':()=>{(db.loaded?dbPushNow():dbStart()).then(()=>render());},
-  'db-forget':()=>{if(!confirm('Fjern forbindelsen til databasen på denne pc? Registeret i databasen slettes ikke.'))return;ui.dbClear=true;dbEndSession();lsSet(DB_CFG_KEY,null);lsSet(DB_SES_KEY,null);dbOutboxClear(null);clearTimeout(db.retry);db.cfg=null;db.ses=null;db.state='off';db.loaded=false;db.started=false;db.version=0;db.base=null;db.savedAt='';db.remote=null;db.pendW=null;db.again=false;db.msg='';db.obOk=true;renderSaveState();render();toast('Forbindelsen er fjernet.');},
+  'db-forget':()=>{if(!confirm('Fjern forbindelsen til databasen på denne pc? Registeret i databasen slettes ikke.'))return;ui.dbClear=true;dbEndSession();lsSet(DB_CFG_KEY,null);if(EMB)lsSet(DB_NOEMB,true);lsSet(DB_SES_KEY,null);dbOutboxClear(null);clearTimeout(db.retry);db.cfg=null;db.ses=null;db.state='off';db.loaded=false;db.started=false;db.version=0;db.base=null;db.savedAt='';db.remote=null;db.pendW=null;db.again=false;db.msg='';db.obOk=true;renderSaveState();render();toast('Forbindelsen er fjernet.');},
   'unshare':a=>{const d=devById(a);if(!d)return;setShared(d,false);markDirty();openHandOut(a);},
   'demo':()=>{if(dbOn()){toast('Eksempeldata kan ikke bruges, mens databasen er sat op.');return;}if(dirty&&!state.demo&&!confirm('Eksempeldata erstatter det, du har skrevet under Opsætning, og det er ikke gemt i en registerfil. Vil du fortsætte?'))return;loadDemo();window.scrollTo(0,0);},
   'clear-all':()=>{if((state.demo&&!dbOn())||confirm('Vil du rydde alle data i værktøjet?'+(dbOn()?' Det tomme register bliver også gemt i databasen.':' En gemt registerfil bliver ikke slettet.'))){const kept=state.demo&&!dbOn()&&(touched.site||touched.floors||touched.leavers||touched.stock);if(state.demo&&!dbOn())leaveDemo();else state=freshState();dirty=false;fileHandle=null;resetUi();render();if(dbOn()||kept)markDirty();}},
@@ -4197,6 +4235,7 @@ document.addEventListener('change',e=>{
     const ask=statusAsks(d,el.value);
     if(ask&&!confirm(ask)){el.value=d.status;return;}
     const sm=statusDevice(d,el.value);if(sm!==null)markDirty();if(inDlg)openDevice(id);else if(ui.tab==='register')refreshReg();else render();if(sm)toast(sm.trim());}
+  else if(ch==='dev-apple'){const d=devById(id);if(!d)return;d.apple=el.checked;if(el.checked&&d.type==='Ukendt')d.type='Telefon';hist(d,el.checked?'Markeret som iPhone':'Ikke en iPhone');markDirty();openDevice(id);if(ui.tab==='register')refreshReg();}
   else if(ch==='dev-shared'){const d=devById(id);if(!d)return;
     if(el.checked&&namesOf(d).length&&!confirm('Enheden bliver '+sharedWord(d).toLowerCase()+', og navnet på sidste bruger slettes fra enheden og historikken. Det kan ikke fortrydes. Vil du fortsætte?')){el.checked=false;return;}
     setShared(d,el.checked);markDirty();openDevice(id);if(ui.tab==='register')refreshReg();}
