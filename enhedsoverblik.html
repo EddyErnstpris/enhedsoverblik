@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.64 (2026-10-12)">
+<meta name="version" content="5.65 (2026-10-12)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -778,8 +778,9 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.64 fra <span class="nowrap">12-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.65 fra <span class="nowrap">12-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
+<dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
 <input type="file" id="listFile" accept=".csv,.txt,.tsv,.htm,.html" hidden>
 <input type="file" id="imgFile" accept="image/*" hidden>
@@ -3837,9 +3838,25 @@ function simEnsure(d,phone,src){
   simInto(s,d,s.status==='på lager'?'Nummeret står på '+from+' under enheden, så kortet er ikke på lager':s.status==='i enhed'?'Nummeret står på '+from+' under denne enhed':'Nummeret er i brug igen ifølge '+from);
 }
 /* Repair and return: the cards come out and go to the box in stock. Lost: the cards are lost with it. */
+/* Version 5.65 (Eddy 12-10-2026): at Udfaset the card stays in the device until
+   OK is pressed in a message that cannot be cancelled; then it goes to stock. */
+let simWait=[];
+function simWaitOpen(){
+  simWait=simWait.filter(id=>{const x=state.sims.find(y=>y.id===id);return x&&x.status==='i enhed';});
+  const dl=$('#simdlg');if(!dl)return;
+  if(!simWait.length){if(dl.open)dl.close();return;}
+  const ls=simWait.map(id=>state.sims.find(y=>y.id===id)),one=ls.length===1;
+  dl.innerHTML='<div class="dlg-head"><div><h2 id="simdlgTitle">Tag '+(one?'simkortet':ls.length+' simkort')+' ud</h2><div class="muted">'+(one?(devById(ls[0].devId)&&devById(ls[0].devId).type==='Tablet'?'Tabletten':'Telefonen'):'Enhederne')+' er udfaset</div></div></div>'+
+    '<div class="dlg-body"><ul style="margin:.2rem 0 .8rem;padding-left:1.2rem">'+ls.map(x=>{const d=devById(x.devId);return '<li><b>'+esc(d?(d.label||d.serial||'Enheden'):'Enheden')+'</b>: simkort '+esc(simTxt(x))+'</li>';}).join('')+'</ul>'+
+    '<p>Tag '+(one?'kortet':'kortene')+' ud, og læg '+(one?'det':'dem')+' i simkassen. Tryk OK, når '+(one?'kortet er taget ud':'kortene er taget ud')+'. Så står '+(one?'det':'de')+' som på lager.</p>'+
+    '<div class="row-actions dlg-actions"><button class="btn primary" data-act="sim-wait-ok">OK, '+(one?'kortet er taget ud':'kortene er taget ud')+'</button></div></div>';
+  if(!dl.open)dl.showModal();
+  const b=dl.querySelector('[data-act="sim-wait-ok"]');if(b)b.focus({preventScroll:true});
+}
 function simOnStatus(d,v){
   const ls=simsOf(d);if(!ls.length)return '';
-  if(v==='Reparation'||v==='Returneret til Supporten'||v==='Udfaset'){ls.forEach(s=>simStock(s,v==='Reparation'?'Enheden sendes til reparation':v==='Udfaset'?'Enheden er udfaset':'Enheden sendes retur til Supporten'));return ' Tag '+(ls.length===1?'simkortet '+simTxt(ls[0]):ls.length+' simkort')+' ud, og læg '+(ls.length===1?'det':'dem')+' i simkassen. Det står nu som på lager.';}
+  if(v==='Udfaset'){ls.forEach(x=>{if(!simWait.includes(x.id))simWait.push(x.id);});setTimeout(simWaitOpen,0);return '';}
+  if(v==='Reparation'||v==='Returneret til Supporten'){ls.forEach(s=>simStock(s,v==='Reparation'?'Enheden sendes til reparation':'Enheden sendes retur til Supporten'));return ' Tag '+(ls.length===1?'simkortet '+simTxt(ls[0]):ls.length+' simkort')+' ud, og læg '+(ls.length===1?'det':'dem')+' i simkassen. Det står nu som på lager.';}
   if(v==='Bortkommet'){ls.forEach(s=>simEnd(s,'bortkommet','Spær nummeret hos Supporten'));return ' '+(ls.length===1?'Simkortet '+simTxt(ls[0])+' er':ls.length+' simkort er')+' meldt bortkommet. Spær nummeret hos Supporten.';}
   return '';
 }
@@ -4236,6 +4253,11 @@ const ACT={
   'box-done':()=>{const n=ui.box?ui.box.ids.filter(devById).length:0,late=expectedList().filter(isOverdue).length;ui.box=null;render();toast('Kassen er tømt: '+pl(n,'enhed','enheder')+' indleveret.'+(late?' '+pl(late,'enhed mangler','enheder mangler')+' stadig, se Forventet retur.':''));},
   'ready-open':openReady,'ready':doReady,
   'hand-out-open':openHandOut,'hand-out':doHandOut,
+  'sim-wait-ok':()=>{const ids=simWait.slice();simWait=[];let n=0;
+    ids.forEach(id=>{const x=state.sims.find(y=>y.id===id);if(x&&x.status==='i enhed'){simStock(x,'Enheden er udfaset');n++;}});
+    $('#simdlg').close();if(n)markDirty();
+    const dl=$('#dlg');if(dl.open&&dlgDevId)openDevice(dlgDevId);else if(!dl.open){if(ui.tab==='register')refreshReg();else render();}
+    if(n)toast(n===1?'Simkortet står nu som på lager.':n+' simkort står nu som på lager.');},
   'rep':a=>{ui.rep.type=a;ui.rep.names=!!REP_NAMES[a];ui.rep.open=true;render();if(matchMedia('(max-width:880px)').matches)window.scrollTo(0,0);},
   'rep-fit':()=>{ui.rep.fit=!ui.rep.fit;render();},
   'rep-back':()=>{ui.rep.open=false;render();window.scrollTo(0,0);},
@@ -4281,6 +4303,7 @@ const ACT={
   'full-apply':()=>{const p=pend.full;const res=recordsFrom(fullData(p),p.map);if(state.demo)leaveDemo();const r=applyFull(res.recs);pend.full=null;markDirty();ui.tab=state.inactive.rows.length?'overblik':'indlaes';render();toast('Registeret er opdateret: '+pl(r.added,'ny enhed','nye enheder')+(r.missing?', '+r.missing+' står ikke på listerne':'')+'.');},
   'inact-apply':()=>{const p=pend.inact;if(state.demo)leaveDemo();const r=applyInactive(p.tables.filter(t=>t.cat&&t.recs.length),p.newPeriod);pend.inact=null;markDirty();ui.tab='inaktive';ui.inactFilter='alle';render();window.scrollTo(0,0);toastHide();const u60=state.inactive.rows.filter(x=>x.cat===60&&rowOpen(x)).length;toast(pl(r.total,'inaktiv enhed','inaktive enheder')+' indlæst'+(u60?', '+pl(u60,'låst enhed mangler','låste enheder mangler')+' en beslutning':'')+(r.added?', '+r.added+' var ikke i registeret før.':'.'));}
 };
+(()=>{const sd=$('#simdlg');if(sd){sd.addEventListener('cancel',e=>{e.preventDefault();});sd.addEventListener('close',()=>{if(simWait.length)setTimeout(simWaitOpen,0);});}})();
 document.addEventListener('click',e=>{
   const b=e.target.closest('[data-act]');if(!b||b.disabled)return;
   const fn=ACT[b.dataset.act];if(fn)fn(b.dataset.arg);
@@ -4340,7 +4363,7 @@ document.addEventListener('change',e=>{
       if(!v){return;}
       const asks=ds.map(d=>statusAsks(d,v)).filter(Boolean);
       if(asks.length&&!confirm(pl(ds.length,'enhed','enheder')+' får status "'+v+'". '+asks[0])){el.value='';return;}
-      let nSim=0,nCh=0;ds.forEach(d=>{const n=(v==='Reparation'||v==='Returneret til Supporten'||v==='Udfaset'||v==='Bortkommet')&&d.status!==v?simsOf(d).length:0;if(statusDevice(d,v)!==null){nSim+=n;nCh++;}});if(!nCh){el.value='';toast('Ingen af de valgte enheder ændrede sig.');return;}toast(pl(nCh,'enhed har','enheder har')+' fået status '+((st=>st.length===1?st[0]:v)([...new Set(ds.map(d=>d.status))]))+'.'+(nSim?(v==='Bortkommet'?' '+pl(nSim,'simkort er','simkort er')+' meldt bortkommet. Spær '+(nSim===1?'nummeret':'numrene')+' hos Supporten.':' Tag '+pl(nSim,'simkort','simkort')+' ud, og læg '+(nSim===1?'det':'dem')+' i simkassen.'):''));
+      let nSim=0,nCh=0;ds.forEach(d=>{const n=(v==='Reparation'||v==='Returneret til Supporten'||v==='Bortkommet')&&d.status!==v?simsOf(d).length:0;if(statusDevice(d,v)!==null){nSim+=n;nCh++;}});if(!nCh){el.value='';toast('Ingen af de valgte enheder ændrede sig.');return;}toast(pl(nCh,'enhed har','enheder har')+' fået status '+((st=>st.length===1?st[0]:v)([...new Set(ds.map(d=>d.status))]))+'.'+(nSim?(v==='Bortkommet'?' '+pl(nSim,'simkort er','simkort er')+' meldt bortkommet. Spær '+(nSim===1?'nummeret':'numrene')+' hos Supporten.':' Tag '+pl(nSim,'simkort','simkort')+' ud, og læg '+(nSim===1?'det':'dem')+' i simkassen.'):''));
     }
     ui.reg.sel.clear();markDirty();render();refreshReg();}
   else if(ch==='ready-cb'||ch==='ready-all'||ch==='hi-cb'||ch==='hi-all'){const hi=ch.startsWith('hi');const cbs=[...document.querySelectorAll('#dlg [data-ch="'+(hi?'hi-cb':'ready-cb')+'"]')];if(ch==='ready-all'||ch==='hi-all')cbs.forEach(c=>{c.checked=el.checked;});const all=cbs.every(c=>c.checked);const m=$('#dlg [data-ch="'+(hi?'hi-all':'ready-all')+'"]');if(m)m.checked=all;const b=$('#dlg [data-act="'+(hi?'hand-in':'ready')+'"]');if(b){b.disabled=!all;if(all&&(ch==='ready-all'||ch==='hi-all'))b.focus();}}
