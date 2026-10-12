@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.66 (2026-10-12)">
+<meta name="version" content="5.67 (2026-10-12)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -778,7 +778,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.66 fra <span class="nowrap">12-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.67 fra <span class="nowrap">12-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -3876,11 +3876,11 @@ function simWaitOpen(){
   if(!simWait.length){if(dl.open)dl.close();return;}
   const ls=simWait.map(id=>state.sims.find(y=>y.id===id)),one=ls.length===1;
   dl.innerHTML='<div class="dlg-head"><div><h2 id="simdlgTitle">Tag '+(one?'simkortet':ls.length+' simkort')+' ud</h2><div class="muted">'+(one?(devById(ls[0].devId)&&devById(ls[0].devId).type==='Tablet'?'Tabletten':'Telefonen'):'Enhederne')+' er udfaset</div></div></div>'+
-    '<div class="dlg-body"><ul style="margin:.2rem 0 .8rem;padding-left:1.2rem">'+ls.map(x=>{const d=devById(x.devId);return '<li><b>'+esc(d?(d.label||d.serial||'Enheden'):'Enheden')+'</b>: simkort '+esc(simTxt(x))+'</li>';}).join('')+'</ul>'+
+    '<div class="dlg-body"><ul style="margin:.2rem 0 .8rem;padding-left:1.2rem">'+ls.map(x=>{const d=devById(x.devId);return '<li><b>'+esc(d?(d.label||d.serial||'Enheden'):'Enheden')+'</b>: simkort '+esc(simTxt(x))+(x.phone?'':'<label class="field" style="margin-top:.3rem">Kortets telefonnummer (skal udfyldes)<input type="text" id="swp-'+x.id+'" data-swp="'+x.id+'" inputmode="tel" required aria-required="true"></label>')+'</li>';}).join('')+'</ul>'+
     '<p>Tag '+(one?'kortet':'kortene')+' ud, og læg '+(one?'det':'dem')+' i simkassen. Tryk OK, når '+(one?'kortet er taget ud':'kortene er taget ud')+'. Så står '+(one?'det':'de')+' som på lager.</p>'+
     '<div class="row-actions dlg-actions"><button class="btn primary" data-act="sim-wait-ok">OK, '+(one?'kortet er taget ud':'kortene er taget ud')+'</button></div></div>';
   if(!dl.open)dl.showModal();
-  const b=dl.querySelector('[data-act="sim-wait-ok"]');if(b)b.focus({preventScroll:true});
+  const f=dl.querySelector('[data-swp]'),b=dl.querySelector('[data-act="sim-wait-ok"]');if(f)f.focus({preventScroll:true});else if(b)b.focus({preventScroll:true});
 }
 function simOnStatus(d,v){
   const ls=simsOf(d);if(!ls.length)return '';
@@ -3933,14 +3933,15 @@ function simDevOptions(sel){
 }
 function openSimNew(iccid){
   showDlg(dlgHead('Nyt simkort','Scan ICCID fra kortet, og skriv telefonnummeret')+
-    '<div class="dlg-body"><div class="formgrid"><label class="field">ICCID (18–20 cifre)<input type="text" id="simIccid" inputmode="numeric" value="'+esc(iccid||'')+'"></label><label class="field">Telefonnummer<input type="text" id="simPhone" inputmode="tel"></label>'+
+    '<div class="dlg-body"><div class="formgrid"><label class="field">ICCID (18–20 cifre)<input type="text" id="simIccid" inputmode="numeric" value="'+esc(iccid||'')+'"></label><label class="field">Telefonnummer (skal udfyldes)<input type="text" id="simPhone" inputmode="tel" required aria-required="true"></label>'+
     '<label class="field wide">Sidder i<select id="simDev"><option value="">Ingen (på lager)</option>'+simDevOptions('').replace('<option value="">Vælg enhed</option>','')+'</select></label></div>'+
     '<div class="row-actions dlg-actions"><button class="btn" data-act="dlg-close">Annullér</button><button class="btn primary" data-act="sim-new">Gem</button></div></div>');
 }
 function doSimNew(){
   const iccid=simDigits($('#simIccid').value),phone=simPhoneKey($('#simPhone').value),devId=$('#simDev').value;
   if(iccid&&!simIccidOk(iccid)){toast('ICCID har 18 til 20 cifre.');$('#simIccid').focus();return;}
-  if(!iccid&&!phone){toast('Skriv ICCID eller telefonnummer.');$('#simIccid').focus();return;}
+  /* Version 5.67 (Eddy 12-10-2026): a card cannot be saved without its phone number. */
+  if(!phone){toast('Skriv telefonnummeret. Et simkort kan ikke gemmes uden.');$('#simPhone').focus();return;}
   if(phone&&!/^\d{8}$/.test(phone)){toast('Telefonnummeret har 8 cifre.');$('#simPhone').focus();return;}
   const rc=iccid?simReclaimAsk(iccid,null):false;if(rc===null)return;
   if(iccid&&state.sims.some(s=>s!==rc&&s.iccid===iccid&&!(phone&&s.phone===phone))){toast('Kortet med det ICCID findes allerede.');return;}
@@ -3995,6 +3996,8 @@ function simTasks(){
   const out=[];
   const stray=simStrayList().length;
   if(stray)out.push({n:stray,cls:'s60',text:'simkort sidder i '+(stray===1?'en enhed':'enheder')+', der ikke længere er i brug. Tag kortet ud, eller ret registreringen',act:'tab',arg:'simkort'});
+  const noPhone=state.sims.filter(s=>s.status==='på lager'&&!s.phone).length;
+  if(noPhone)out.push({n:noPhone,cls:'s60',text:'kort på lager mangler telefonnummer. Skriv nummeret under Simkort → Ret',act:'tab',arg:'simkort'});
   const noIccid=state.sims.filter(s=>s.status==='på lager'&&!s.iccid).length;
   if(noIccid)out.push({n:noIccid,cls:'plain',text:'kort på lager mangler ICCID. Scan kortet under Simkort → Ret',act:'tab',arg:'simkort'});
   return out;
@@ -4272,8 +4275,8 @@ const ACT={
   'box-in':openBoxIn,'box-in-do':doBoxIn,
   'sim-new-open':a=>openSimNew(a||''),'sim-new':doSimNew,'sim-into-open':openSimInto,'sim-into':doSimInto,'sim-edit':openSimEdit,'sim-pick-open':openSimPick,
   'sim-pick':a=>{const d=devById(a),s=simById(($('#simPick')||{value:''}).value);if(!d||!s||!simCanTake(d))return;simInto(s,d,'');markDirty();$('#dlg').close();toast('Kortet er sat i '+(d.label||'enheden')+'.');},
-  'sim-out':a=>{const s=simById(a);if(!s)return;const back=dlgDevId&&s.devId===dlgDevId?dlgDevId:'';simStock(s,'Taget ud i hånden');markDirty();if(back)openDevice(back);else if($('#dlg').open)$('#dlg').close();else render();toast('Kortet '+simTxt(s)+' ligger nu på lager. Læg det i simkassen.');},
-  'sim-stock':a=>{const s=simById(a);if(!s)return;if(!s.iccid&&!s.phone){toast('Kortet har hverken ICCID eller nummer. Opret det som nyt simkort, hvis det er fundet igen.');return;}simStock(s,'Tilbage på lager');markDirty();if($('#dlg').open)$('#dlg').close();else render();toast('Kortet ligger nu på lager.');},
+  'sim-out':a=>{const s=simById(a);if(!s)return;if(!s.phone){toast('Skriv kortets telefonnummer, før det lægges på lager.');openSimEdit(s.id);return;}const back=dlgDevId&&s.devId===dlgDevId?dlgDevId:'';simStock(s,'Taget ud i hånden');markDirty();if(back)openDevice(back);else if($('#dlg').open)$('#dlg').close();else render();toast('Kortet '+simTxt(s)+' ligger nu på lager. Læg det i simkassen.');},
+  'sim-stock':a=>{const s=simById(a);if(!s)return;if(!s.iccid&&!s.phone){toast('Kortet har hverken ICCID eller nummer. Opret det som nyt simkort, hvis det er fundet igen.');return;}if(!s.phone){toast('Skriv kortets telefonnummer, før det lægges på lager.');openSimEdit(s.id);return;}simStock(s,'Tilbage på lager');markDirty();if($('#dlg').open)$('#dlg').close();else render();toast('Kortet ligger nu på lager.');},
   'sim-ret':a=>{const s=simById(a);if(!s||!confirm('Markér simkortet som returneret til Supporten?'))return;simEnd(s,'returneret','');markDirty();if($('#dlg').open)$('#dlg').close();else render();toast('Kortet er markeret som returneret.');},
   'sim-lost':a=>{const s=simById(a);if(!s||!confirm('Markér simkortet som bortkommet? Spær nummeret hos Supporten.'))return;simEnd(s,'bortkommet','');markDirty();if($('#dlg').open)$('#dlg').close();else render();toast('Kortet er markeret som bortkommet.');},
   'sim-del':a=>{const s=simById(a);if(!s||!confirm('Vil du slette simkortet fra registeret?'))return;const dd=s.devId?devById(s.devId):null;if(dd&&simPhoneKey(dd.phone)===s.phone)dd.phone='';state.sims=state.sims.filter(x=>x!==s);markDirty();$('#dlg').close();toast('Kortet er slettet.');},
@@ -4282,7 +4285,13 @@ const ACT={
   'box-done':()=>{const n=ui.box?ui.box.ids.filter(devById).length:0,late=expectedList().filter(isOverdue).length;ui.box=null;render();toast('Kassen er tømt: '+pl(n,'enhed','enheder')+' indleveret.'+(late?' '+pl(late,'enhed mangler','enheder mangler')+' stadig, se Forventet retur.':''));},
   'ready-open':openReady,'ready':doReady,'ready-many-open':openReadyMany,'ready-many':doReadyMany,
   'hand-out-open':openHandOut,'hand-out':doHandOut,
-  'sim-wait-ok':()=>{const ids=simWait.slice();simWait=[];let n=0;
+  'sim-wait-ok':()=>{
+    const live=y=>y.status==='i enhed'||y.status==='på lager',fs=[...document.querySelectorAll('#simdlg [data-swp]')],seen=new Set();
+    for(const f of fs){const v=simPhoneKey(f.value),x=state.sims.find(y=>y.id===f.dataset.swp);
+      if(!/^\d{8}$/.test(v)){toast(v?'Telefonnummeret har 8 cifre.':'Skriv kortets telefonnummer. Kortet kan ikke lægges på lager uden.');f.focus();return;}
+      if(seen.has(v)||state.sims.some(y=>y!==x&&y.phone===v&&live(y))){toast('Et andet kort har allerede nummeret '+v+'.');f.focus();return;}seen.add(v);}
+    fs.forEach(f=>{const v=simPhoneKey(f.value),x=state.sims.find(y=>y.id===f.dataset.swp);if(x){state.sims.filter(y=>y!==x&&y.phone===v).forEach(y=>{simHist(y,'Nummeret '+v+' er flyttet til et nyt kort');y.phone='';});x.phone=v;simHist(x,'Telefonnummer skrevet ved udfasning');}});
+    const ids=simWait.slice();simWait=[];let n=0;
     ids.forEach(id=>{const x=state.sims.find(y=>y.id===id);if(x&&x.status==='i enhed'){simStock(x,'Enheden er udfaset');n++;}});
     $('#simdlg').close();if(n)markDirty();
     const dl=$('#dlg');if(dl.open&&dlgDevId)openDevice(dlgDevId);else if(!dl.open){if(ui.tab==='register')refreshReg();else render();}
@@ -4352,6 +4361,7 @@ document.addEventListener('change',e=>{
     if(kk==='iccid'&&v&&simIccidOk(v)&&(s.status==='i enhed'||s.status==='på lager')){const rc=simReclaim(v,s);if(rc===null){el.value=s.iccid;return;}}
     const bad=v&&(kk==='iccid'?!simIccidOk(v):!/^\d{8}$/.test(v)),dup=v&&state.sims.find(x=>x!==s&&x[kk]===v&&(kk==='iccid'||x.status==='i enhed'||x.status==='på lager'));
     if(!bad&&!dup&&kk==='phone'&&v)state.sims.filter(x=>x!==s&&x.phone===v).forEach(x=>{simHist(x,'Nummeret '+v+' er flyttet til et nyt kort');x.phone='';});
+    if(!v&&kk==='phone'&&(s.status==='i enhed'||s.status==='på lager')){toast('Kortet skal have et telefonnummer.');el.value=s[kk];return;}
     if(!v&&!s[kk==='iccid'?'phone':'iccid']&&(s.status==='i enhed'||s.status==='på lager')){toast('Kortet skal have ICCID eller nummer.');el.value=s[kk];return;}
     if(bad||dup){toast(dup?'Et andet kort har allerede '+(kk==='iccid'?'det ICCID.':'det nummer.'):kk==='iccid'?'ICCID har 18 til 20 cifre.':'Telefonnummeret har 8 cifre.');el.value=s[kk];return;}
     if(v===s[kk]){el.value=v;return;}
