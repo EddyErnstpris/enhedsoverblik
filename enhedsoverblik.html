@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.71 (2026-10-13)">
+<meta name="version" content="5.72 (2026-10-13)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -15,7 +15,7 @@
   --bg:#F5F5F7; --surface:#FFFFFF; --fill:rgba(118,118,128,.12); --fill-2:rgba(118,118,128,.2); --seg:#FFFFFF;
   --ink:#1D1D1F; --muted:#5C5C61; --faint:#5F5F64; --glyph:#77777C; --sep:rgba(60,60,67,.14);
   --bar:rgba(245,245,247,.8);
-  --accent:#0071E3; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(0,113,227,.1); --link:#005BBB; --who:#4A7356; --badge:#D70015;
+  --accent:#0071E3; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(0,113,227,.1); --link:#005BBB; --who:#4A7356; --gbtn:#4A7356; --gbtn-on:#2F4D38; --badge:#D70015;
   --s30:#7D5200; --s30-bg:rgba(255,204,0,.26); --s30-bar:#FFCC00; --s60-bar:#FF9500; --s90-bar:#FF3B30; --s60:#AD4500; --s60-bg:rgba(255,149,0,.18); --s90:#C20012; --s90-bg:rgba(255,59,48,.12); --ph:#58585D; --accent-dim:rgba(0,113,227,.5);
   --ok:#1E7B34; --ok-bg:rgba(52,199,89,.16);
   --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.04);
@@ -30,7 +30,7 @@
     --bg:#000000; --surface:#1C1C1E; --fill:rgba(118,118,128,.24); --fill-2:rgba(118,118,128,.36); --seg:#5B5B60;
     --ink:#F5F5F7; --muted:#A8A8AD; --faint:#A3A3A8; --glyph:#8E8E93; --sep:rgba(84,84,88,.6);
     --bar:rgba(22,22,23,.8);
-    --accent:#0A84FF; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(10,132,255,.2); --link:#5CB0FF; --who:#8FB89B; --badge:#D70015;
+    --accent:#0A84FF; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(10,132,255,.2); --link:#5CB0FF; --who:#8FB89B; --gbtn:#4A7356; --gbtn-on:#2F4D38; --badge:#D70015;
     --s30:#FFD60A; --s30-bg:rgba(255,214,10,.16); --s30-bar:#FFD60A; --s60-bar:#FF9F0A; --s90-bar:#FF453A; --s60:#FF9F0A; --s60-bg:rgba(255,159,10,.18); --s90:#FF7B74; --s90-bg:rgba(255,69,58,.14); --ph:#B8B8BD; --accent-dim:rgba(10,132,255,.55);
     --ok:#30D158; --ok-bg:rgba(48,209,88,.18);
     --shadow:none;
@@ -229,6 +229,21 @@ section[aria-label="Bygningen"]{container-type:inline-size}
 .empty .row-actions{justify-content:center}
 /* Version 5.59 (Eddy 11-10-2026): the user's name is written in a dusty green (5.61: own class, so device titles keep their colour). */
 .uname{color:var(--who)}
+/* Version 5.72 (Eddy 13-10-2026): headings, key figures, department names and SIM numbers in dusty green;
+   device labels in blue; the buttons in Register and Enheder/Simkort on Lager are green with white text. */
+#main h1,#main h2,#main h3,.rpt h1,.rpt h2,.rpt h3{color:var(--who)}
+#main h2 .step{color:inherit}
+#main .paper .rpt h1,#main .paper .rpt h2,#main .paper .rpt h3,.paper .rpt h1,.paper .rpt h2,.paper .rpt h3{color:#4A7356}
+.kpi .k-v b.num{color:var(--who)}
+.room>b{color:var(--who)}
+.dlabel,.who b.dlabel{color:var(--link)}
+.srow .who span.dlabel,.who span.dlabel{color:var(--link);font-weight:inherit;font-size:inherit}
+.srow .who span.simnum,.who span.simnum{color:var(--who);font-weight:inherit;font-size:inherit}
+.srow .who span.simid,.simid{display:block;margin-top:.15rem;font-weight:400;font-size:.875rem;color:var(--muted)}
+.regv .chip,.regv .toolbar .btn,.regv .bulk .btn,.regv .notice .btn,.regv .more .btn,.subtabs .chip{background:var(--gbtn);color:#fff}
+.regv .chip[aria-pressed="true"],.subtabs .chip[aria-pressed="true"]{background:var(--gbtn-on);color:#fff;box-shadow:inset 0 0 0 2px #fff,0 0 0 2px var(--gbtn-on)}
+.subtabs .chip .count{color:inherit}
+@media (hover:hover){.regv .chip:hover,.regv .toolbar .btn:hover,.regv .bulk .btn:hover,.regv .notice .btn:hover,.regv .more .btn:hover,.subtabs .chip:hover{background:var(--gbtn-on)}}
 /* Version 5.61 (Eddy 12-10-2026): iPhones get a small grey tag, so they stand out when scrolling. */
 .ostag{display:inline-block;font-size:.75rem;font-weight:600;line-height:1.35;padding:.05rem .45rem;border-radius:.45rem;background:var(--fill);color:var(--ink);margin-left:.3rem;vertical-align:.08em;white-space:nowrap}
 @media print{.ostag{background:none;border:1px solid #777;color:#000}}
@@ -779,7 +794,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.71 fra <span class="nowrap">13-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.72 fra <span class="nowrap">13-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -1812,7 +1827,7 @@ function inactRow(r,d,users,lv){
   const returned=d.status==='Sendt retur';
   const found=ui.found.has(d.id);
   return '<article class="irow'+(found?' is-found':'')+'">'+stageBadge(r.cat)+
-    '<div><div class="who">'+esc(d.label||'Uden label')+' <span>'+esc(d.type==='Ukendt'?'':d.type)+' <span class="nowrap">'+esc(d.model)+'</span></span>'+osTag(d)+'</div>'+
+    '<div><div class="who"><span class="dlabel">'+esc(d.label||'Uden label')+'</span> <span>'+esc(d.type==='Ukendt'?'':d.type)+' <span class="nowrap">'+esc(d.model)+'</span></span>'+osTag(d)+'</div>'+
     '<div>'+(d.shared?sharedWord(d)+', bruges af flere':r.user?'Sidst brugt af <span class="uname">'+esc(r.user)+'</span>':d.lastUser?'Ingen bruger på listen · registeret: <span class="uname">'+esc(d.lastUser)+'</span>':'Ingen bruger registreret')+'</div>'+
     '<div class="muted num">'+((r.seen||d.lastSeen)?'Sidst set '+fmtDate(r.seen||d.lastSeen)+(days!=null&&days>=0?', '+days+' dage siden':''):'Ingen dato for sidste aktivitet')+'</div>'+
     '<div>'+flags.join('')+'</div></div>'+
@@ -1939,7 +1954,7 @@ function viewRegister(){
   if(!state.devices.length)return '<div class="empty"><h1>Registeret er tomt</h1><p>Indlæs den komplette liste, så bliver registeret bygget automatisk.</p><button class="btn primary" data-act="tab" data-arg="indlaes">Indlæs lister</button></div>';
   const r=ui.reg;
   const chip=(v,l)=>'<button class="chip" data-act="reg-special" data-arg="'+v+'" aria-pressed="'+(r.special===v)+'">'+l+'</button>';
-  return '<div class="lead"><h1>Register</h1><p>Én række pr. enhed. Placering og status retter du direkte i listen.</p></div>'+
+  return '<div class="regv"><div class="lead"><h1>Register</h1><p>Én række pr. enhed. Placering og status retter du direkte i listen.</p></div>'+
     '<div class="toolbar"><div class="grow"><input type="search" placeholder="Label, serienr., IMEI, bruger" aria-label="Søg" data-in="reg-q" value="'+esc(r.q)+'"></div>'+
     '<select aria-label="Filtrér på placering" data-ch="reg-dept"><option value="">Alle placeringer</option><option value="__none"'+(r.dept==='__none'?' selected':'')+'>Uden placering</option>'+deptOptions(r.dept,true)+'</select>'+
     '<select aria-label="Filtrér på status" data-ch="reg-status"><option value="">Alle statusser</option>'+STATUSES.map(s=>'<option'+(s===r.status?' selected':'')+'>'+s+'</option>').join('')+'</select>'+
@@ -1948,7 +1963,7 @@ function viewRegister(){
     '<div class="row-actions"><button class="btn small" data-act="assign-labels">Tildel labels</button><button class="btn small" data-act="add-device">Tilføj enhed</button><button class="btn small" data-act="export-csv">Eksportér til Excel</button></div></div>'+
  (r.ids?'<div class="notice"><p>Viser søgeresultatet for "'+esc(r.idsLabel)+'". <button class="btn small" data-act="reg-ids-clear">Vis alle enheder</button></p></div>':'')+
     '<div class="regmob"><label class="selw"><input type="checkbox" data-ch="reg-sel-all" aria-label="Vælg alle viste"'+(regAllSel()?' checked':'')+'><span>Vælg alle</span></label><select aria-label="Sortér efter" data-ch="reg-sort-sel">'+[['label','Label'],['type','Enhed'],['user','Sidste bruger'],['seen','Sidst set'],['place','Placering'],['status','Status']].map(x=>'<option value="'+x[0]+'"'+(r.sort===x[0]?' selected':'')+'>Sortér: '+x[1]+'</option>').join('')+'</select></div>'+
-    '<p class="muted num" id="regCount" role="status" style="font-size:.8125rem;margin:0 .3rem .5rem">Viser '+regList().length+' af '+state.devices.length+'</p><div id="regBulk">'+regBulk()+'</div><div class="tblwrap'+(r.sel&&r.sel.size?' with-bulk':'')+'" id="regWrap">'+regTable()+'</div>';
+    '<p class="muted num" id="regCount" role="status" style="font-size:.8125rem;margin:0 .3rem .5rem">Viser '+regList().length+' af '+state.devices.length+'</p><div id="regBulk">'+regBulk()+'</div><div class="tblwrap'+(r.sel&&r.sel.size?' with-bulk':'')+'" id="regWrap">'+regTable()+'</div></div>';
 }
 function regAllSel(){const sh=regShown();return sh.length>0&&sh.every(d=>ui.reg.sel.has(d.id));}
 function refreshReg(){
@@ -2171,7 +2186,7 @@ function viewOpsaetning(){
 
 /* Stock */
 const STOCK_WORD={klar:'Klar',ikke:'Ikke klar',defekt:'Defekt'};
-function devTitle(d){return esc(d.label||'Uden label')+' <span>'+esc(d.type==='Ukendt'?'':d.type)+' '+esc(d.model)+'</span>'+osTag(d);}
+function devTitle(d){return '<span class="dlabel">'+esc(d.label||'Uden label')+'</span> <span>'+esc(d.type==='Ukendt'?'':d.type)+' '+esc(d.model)+'</span>'+osTag(d);}
 /* The main thing to do with a device depends on where it is. */
 /* The next step for a device. A device that must go back to the Supporten
    (90 days, or "Sender retur") is marked as returned first; the stock
@@ -3921,8 +3936,8 @@ function simRow(s,kind){
   const acts=kind==='lager'?'<button class="btn small primary" data-act="sim-into-open" data-arg="'+s.id+'">Sæt i enhed</button><button class="btn small" data-act="sim-ret" data-arg="'+s.id+'">Markér som returneret</button>':
     kind==='enhed'?'<button class="btn small" data-act="sim-out" data-arg="'+s.id+'">Tag ud</button>'+(d?'<button class="btn small" data-act="dev" data-arg="'+d.id+'">Vis enheden</button>':''):
     (s.iccid||s.phone?'<button class="btn small" data-act="sim-stock" data-arg="'+s.id+'">Tilbage på lager</button>':'');
-  return '<div class="srow"><div><div class="who">'+simLabel(s)+' <span>'+(s.iccid?'<span class="mono">'+esc(s.iccid)+'</span>':'ICCID ikke scannet')+'</span></div>'+(kind==='enhed'&&d&&!ACTIVE.has(d.status)?'<span class="flag warn">Enheden er '+esc(d.status==='Sendt retur'?'returneret til Supporten':d.status.toLowerCase())+'</span>':'')+(kind==='enhed'&&!d?'<span class="flag warn">Enheden findes ikke mere</span>':'')+'</div>'+
-    '<div class="muted num">'+(kind==='enhed'?(d?'<b style="font-weight:600;color:var(--ink)">'+esc(d.label||d.serial||'Enhed')+'</b><br>'+esc(placeName(d.deptId))+(d.shared?'<br>'+sharedWord(d):d.lastUser?'<br><span class="uname">'+esc(d.lastUser)+'</span>':''):'Ingen enhed'):SIM_WORD[s.status])+'<br>Siden '+fmtDate(s.since)+(s.since&&daysSince(s.since)!=null?', '+pl(Math.max(0,daysSince(s.since)),'dag','dage'):'')+'</div>'+
+  return '<div class="srow"><div><div class="who"><span class="simnum">'+simLabel(s)+'</span><span class="simid">'+(s.iccid?'ICCID <span class="mono">'+esc(s.iccid)+'</span>':'ICCID ikke scannet')+'</span></div>'+(kind==='enhed'&&d&&!ACTIVE.has(d.status)?'<span class="flag warn">'+esc(d.status==='Skal sendes retur'?'Enheden skal sendes retur':d.status==='Sendt retur'?'Enheden er sendt retur':'Enheden er '+d.status.toLowerCase())+'</span>':'')+(kind==='enhed'&&!d?'<span class="flag warn">Enheden findes ikke mere</span>':'')+'</div>'+
+    '<div class="muted num">'+(kind==='enhed'?(d?'<b class="dlabel" style="font-weight:600">'+esc(d.label||d.serial||'Enhed')+'</b><br>'+esc(placeName(d.deptId))+(d.shared?'<br>'+sharedWord(d):d.lastUser?'<br><span class="uname">'+esc(d.lastUser)+'</span>':''):'Ingen enhed'):SIM_WORD[s.status])+'<br>Siden '+fmtDate(s.since)+(s.since&&daysSince(s.since)!=null?', '+pl(Math.max(0,daysSince(s.since)),'dag','dage'):'')+'</div>'+
     '<div class="row-actions">'+acts+'<button class="btn small" data-act="sim-edit" data-arg="'+s.id+'">Ret</button></div></div>';
 }
 function lagerSub(cur){const n=simFree().length;return '<div class="chips subtabs"><button class="chip" data-act="tab" data-arg="lager" aria-pressed="'+(cur==='lager')+'">Enheder</button><button class="chip" data-act="tab" data-arg="simkort" aria-pressed="'+(cur==='simkort')+'"'+(n?' aria-label="Simkort, '+n+' på lager"':'')+'>Simkort'+(n?' <span class="count num">'+n+'</span>':'')+'</button></div>';}
