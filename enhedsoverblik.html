@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.69 (2026-10-12)">
+<meta name="version" content="5.70 (2026-10-13)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -779,7 +779,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.69 fra <span class="nowrap">12-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.70 fra <span class="nowrap">13-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -908,7 +908,11 @@ function leaveDemo(){
   ui.box=null;ui.scan='';if(ui.found)ui.found.clear();
   regReset();
 }
+/* Version 5.70 (Eddy 13-10-2026): on a touch screen a menu that gets focus opens
+   again (iPhone), so after a choice the redraw never puts focus back on a menu. */
+const coarse=()=>matchMedia('(pointer:coarse)').matches;
 function keyOf(el){
+  if(el.tagName==='SELECT'&&coarse())return '';
   const ds=el.dataset,q=v=>String(v).replace(/["\\]/g,'\\$&');
   let k=ds.ch?'[data-ch="'+q(ds.ch)+'"]':ds.in?'[data-in="'+q(ds.in)+'"]':ds.act?'[data-act="'+q(ds.act)+'"]':ds.paste?'[data-paste="'+q(ds.paste)+'"]':'';
   if(!k&&el.id==='dbNotice')return '#dbNotice';
@@ -2250,7 +2254,7 @@ function focusFallback(){
   const el=$('#dlg').open?null:((scanFirst&&$('[data-in="scan"]'))||$('#main h1'));
   if(el){if(el.tagName==='H1')el.setAttribute('tabindex','-1');el.focus({preventScroll:true});}
 }
-function showDlg(html){dlgCleanup();const dl=$('#dlg');dl.classList.remove('qs','pairdlg');dl.innerHTML=html;if(!dl.open)dl.showModal();const f=dl.querySelector('input[type=text]:not([disabled]),select:not([disabled])');if(f&&!(matchMedia('(max-width:640px)').matches&&f.tagName==='INPUT'))f.focus({preventScroll:true});else{const h=dl.querySelector('#dlgTitle');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}}dl.querySelector('.dlg-body')&&(dl.querySelector('.dlg-body').scrollTop=0);dl.scrollTop=0;}
+function showDlg(html){dlgCleanup();const dl=$('#dlg');dl.classList.remove('qs','pairdlg');dl.innerHTML=html;if(!dl.open)dl.showModal();const f=dl.querySelector('input[type=text]:not([disabled]),select:not([disabled])');if(f&&!(matchMedia('(max-width:640px)').matches&&f.tagName==='INPUT')&&!(f.tagName==='SELECT'&&coarse()))f.focus({preventScroll:true});else{const h=dl.querySelector('#dlgTitle');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}}dl.querySelector('.dlg-body')&&(dl.querySelector('.dlg-body').scrollTop=0);dl.scrollTop=0;}
 function openHandIn(id){
   const d=devById(id);if(!d)return;
   showDlg(dlgHead('Indlevér '+esc(d.label||'enheden'),esc(d.type+' '+d.model)+' · '+esc(placeName(d.deptId)))+
