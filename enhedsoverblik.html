@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.74 (2026-10-13)">
+<meta name="version" content="5.75 (2026-10-16)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -232,7 +232,8 @@ section[aria-label="Bygningen"]{container-type:inline-size}
 /* Version 5.72 (Eddy 13-10-2026): headings, key figures, department names and SIM numbers in dusty green;
    device labels in blue; the buttons in Register and Enheder/Simkort on Lager are green with white text. */
 #main h1,#main h2,#main h3,.rpt h1,.rpt h2,.rpt h3{color:var(--who)}
-#main h2 .step{color:inherit}
+/* Version 5.75 (gennemgang 16-10-2026): the step numbers stay white on blue. */
+#main h2 .step{color:var(--accent-ink)}
 #main .paper .rpt h1,#main .paper .rpt h2,#main .paper .rpt h3,.paper .rpt h1,.paper .rpt h2,.paper .rpt h3{color:#4A7356}
 .kpi .k-v b.num{color:var(--who)}
 .room>b{color:var(--who)}
@@ -796,7 +797,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.74 fra <span class="nowrap">13-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.75 fra <span class="nowrap">16-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -2254,7 +2255,7 @@ function viewLager(){
     ((n=>n?'<div><b class="num warnv">'+n+'</b><span>klar uden type (telefon eller tablet). <button class="linkish" data-act="reg-untyped">Vælg type i Register</button></span></div>':'')(readyList('Ukendt').length))+'<div><b class="num">'+ikke.length+'</b><span>ikke klar, venter på Supporten</span></div>'+(state.sims.length?'<div><b class="num">'+simFree().length+'</b><span>simkort på lager. <button class="linkish" data-act="tab" data-arg="simkort">Se dem</button></span></div>':'')+'</div>'+
     (()=>{const b=readyBack();return b.length?'<section class="group"><div class="group-head"><h2>Klar, men skal sendes retur</h2><span class="muted">På 90-dages-listen eller med beslutningen "Sender retur". Udleveres ikke.</span></div>'+stockRows(b,'retur')+'</section>':'';})()+
     '<section class="group"><div class="group-head"><h2>Klar</h2><span class="muted">Ældste først. Udlevér den, der har ligget længst.</span></div>'+stockRows(klar,'klar')+'</section>'+
-    '<section class="group"><div class="group-head"><h2>Ikke klar</h2><span class="muted">Bliver klar, når Supporten har bekræftet nulstillingen.</span>'+(ikke.length>1?'<button class="btn small" data-act="ready-many-open">Markér flere som klar</button>':'')+'</div>'+stockRows(ikke,'ikke')+'</section>'+
+    '<section class="group"><div class="group-head"><h2>Ikke klar</h2><span class="muted">Bliver klar, når Supporten har bekræftet nulstillingen.</span>'+(readyWaiting().length>1?'<button class="btn small" data-act="ready-many-open">Markér flere som klar</button>':'')+'</div>'+stockRows(ikke,'ikke')+'</section>'+
     (def.length?'<section class="group"><div class="group-head"><h2>Defekt</h2><span class="muted">Repareres eller sendes retur.</span></div>'+stockRows(def,'defekt')+'</section>':'');
 }
 function checks(list,on){return '<div class="checks">'+list.map((c,i)=>'<label><input type="checkbox" data-ch="'+c[0]+'" data-id="'+i+'"'+(on?' checked':'')+'>'+c[1]+'</label>').join('')+'</div>';}
@@ -2397,8 +2398,9 @@ function doReady(id){
   markDirty();$('#dlg').close();ui.scan='';render();toast('Enheden er klar til udlevering.');
 }
 /* Version 5.66 (Eddy 12-10-2026): several waiting devices can be marked ready at
-   once. Pick the devices; the four checks are confirmed once for all of them. */
-function readyWaiting(){return state.devices.filter(d=>inStock(d)&&ACTIVE.has(d.status)&&stockState(d)==='ikke').sort((a,b)=>(a.stockSince||'9').localeCompare(b.stockSince||'9'));}
+   once. Pick the devices; the four checks are confirmed once for all of them.
+   Version 5.75: a device that must go back to the Supporten is not offered. */
+function readyWaiting(){return state.devices.filter(d=>inStock(d)&&ACTIVE.has(d.status)&&stockState(d)==='ikke'&&!mustReturn(d)).sort((a,b)=>(a.stockSince||'9').localeCompare(b.stockSince||'9'));}
 function openReadyMany(){
   const ls=readyWaiting();if(!ls.length)return;
   showDlg(dlgHead('Markér flere som klar',pl(ls.length,'enhed venter','enheder venter')+' på at blive klar')+
@@ -3935,7 +3937,7 @@ function simDevName(s){const d=s.devId?devById(s.devId):null;return d?(d.label||
 function simStrayList(){return state.sims.filter(s=>s.status==='i enhed'&&(!s.devId||!devById(s.devId)||!ACTIVE.has(devById(s.devId).status)));}
 function simRow(s,kind){
   const d=s.devId?devById(s.devId):null;
-  const acts=kind==='lager'?'<button class="btn small primary" data-act="sim-into-open" data-arg="'+s.id+'">Sæt i enhed</button><button class="btn small" data-act="sim-ret" data-arg="'+s.id+'">Markér som returneret</button>':
+  const acts=kind==='lager'?'<button class="btn small primary" data-act="sim-into-open" data-arg="'+s.id+'">Sæt i enhed</button><button class="btn small" data-act="sim-ret" data-arg="'+s.id+'">Markér som sendt retur</button>':
     kind==='enhed'?'<button class="btn small" data-act="sim-out" data-arg="'+s.id+'">Tag ud</button>'+(d?'<button class="btn small" data-act="dev" data-arg="'+d.id+'">Vis enheden</button>':''):
     (s.iccid||s.phone?'<button class="btn small" data-act="sim-stock" data-arg="'+s.id+'">Tilbage på lager</button>':'');
   return '<div class="srow"><div><div class="who"><span class="simnum">'+simLabel(s)+'</span><span class="simid">'+(s.iccid?'ICCID <span class="mono">'+esc(s.iccid)+'</span>':'ICCID ikke scannet')+'</span></div>'+(kind==='enhed'&&d&&!ACTIVE.has(d.status)?'<span class="flag warn">'+esc(d.status==='Skal sendes retur'?'Enheden skal sendes retur':d.status==='Sendt retur'?'Enheden er sendt retur':'Enheden er '+d.status.toLowerCase())+'</span>':'')+(kind==='enhed'&&!d?'<span class="flag warn">Enheden findes ikke mere</span>':'')+'</div>'+
@@ -4308,7 +4310,7 @@ const ACT={
   'sim-pick':a=>{const d=devById(a),s=simById(($('#simPick')||{value:''}).value);if(!d||!s||!simCanTake(d))return;simInto(s,d,'');markDirty();$('#dlg').close();toast('Kortet er sat i '+(d.label||'enheden')+'.');},
   'sim-out':a=>{const s=simById(a);if(!s)return;if(!s.phone){toast('Skriv kortets telefonnummer, før det lægges på lager.');openSimEdit(s.id);return;}const back=dlgDevId&&s.devId===dlgDevId?dlgDevId:'';simStock(s,'Taget ud i hånden');markDirty();if(back)openDevice(back);else if($('#dlg').open)$('#dlg').close();else render();toast('Kortet '+simTxt(s)+' ligger nu på lager. Læg det i simkassen.');},
   'sim-stock':a=>{const s=simById(a);if(!s)return;if(!s.iccid&&!s.phone){toast('Kortet har hverken ICCID eller nummer. Opret det som nyt simkort, hvis det er fundet igen.');return;}if(!s.phone){toast('Skriv kortets telefonnummer, før det lægges på lager.');openSimEdit(s.id);return;}simStock(s,'Tilbage på lager');markDirty();if($('#dlg').open)$('#dlg').close();else render();toast('Kortet ligger nu på lager.');},
-  'sim-ret':a=>{const s=simById(a);if(!s||!confirm('Markér simkortet som returneret til Supporten?'))return;simEnd(s,'returneret','');markDirty();if($('#dlg').open)$('#dlg').close();else render();toast('Kortet er markeret som returneret.');},
+  'sim-ret':a=>{const s=simById(a);if(!s||!confirm('Markér simkortet som sendt retur til Supporten?'))return;simEnd(s,'returneret','');markDirty();if($('#dlg').open)$('#dlg').close();else render();toast('Kortet er markeret som sendt retur.');},
   'sim-lost':a=>{const s=simById(a);if(!s||!confirm('Markér simkortet som bortkommet? Spær nummeret hos Supporten.'))return;simEnd(s,'bortkommet','');markDirty();if($('#dlg').open)$('#dlg').close();else render();toast('Kortet er markeret som bortkommet.');},
   'sim-del':a=>{const s=simById(a);if(!s||!confirm('Vil du slette simkortet fra registeret?'))return;const dd=s.devId?devById(s.devId):null;if(dd&&simPhoneKey(dd.phone)===s.phone)dd.phone='';state.sims=state.sims.filter(x=>x!==s);markDirty();$('#dlg').close();toast('Kortet er slettet.');},
   'sim-all':()=>{ui.simAll=true;render();},
@@ -4515,6 +4517,8 @@ document.addEventListener('keydown',e=>{
   }
   if(e.key==='Enter'&&tg&&tg.dataset&&tg.dataset.in==='stock'&&!drawing){stockRule(tg);return;}
   if(e.key==='Enter'&&tg&&tg.id==='phIn'){e.preventDefault();ACT['ph-send']();return;}
+  /* Version 5.75: Enter in the number field of "Tag simkortet ud" presses OK. */
+  if(e.key==='Enter'&&tg&&tg.dataset&&tg.dataset.swp!=null){e.preventDefault();ACT['sim-wait-ok']();return;}
   if(e.key==='Enter'&&tg&&tg.dataset&&/^db-(url|key|email|pw|code)$/.test(tg.dataset.in||'')&&!e.isComposing){const b=$('[data-act="db-otp-verify"]')||$('[data-act="db-otp-send"]')||$('[data-act="db-login"]');if(b){e.preventDefault();b.click();return;}}
   if(e.key==='Enter'&&tg&&tg.dataset&&tg.dataset.in==='simq'&&tg.value.trim()){const m=simFind(tg.value);e.preventDefault();if(m.length===1)openSimEdit(m[0].id);else if(!m.length&&simDigits(tg.value).length>=18)openSimNew(simDigits(tg.value));}
   /* A scanner ends with Enter or Tab. One match opens the next step at once. */
