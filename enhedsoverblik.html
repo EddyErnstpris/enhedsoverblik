@@ -7,16 +7,16 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.80 (2026-10-17)">
+<meta name="version" content="5.81 (2026-10-17)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
   color-scheme:light dark;
   --bg:#F5F5F7; --surface:#FFFFFF; --fill:rgba(118,118,128,.12); --fill-2:rgba(118,118,128,.2); --seg:#FFFFFF;
-  --ink:#1D1D1F; --muted:#5C5C61; --faint:#5F5F64; --glyph:#77777C; --sep:rgba(60,60,67,.14);
+  --ink:#0B4A8F; --muted:#2F5E96; --faint:#2F5E96; --glyph:#77777C; --sep:rgba(60,60,67,.14);
   --bar:rgba(245,245,247,.8);
   --accent:#0071E3; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(0,113,227,.1); --link:#005BBB; --who:#4A7356; --gbtn:#4A7356; --gbtn-on:#2F4D38; --badge:#D70015;
-  --s30:#7D5200; --s30-bg:rgba(255,204,0,.26); --s30-bar:#FFCC00; --s60-bar:#FF9500; --s90-bar:#FF3B30; --s60:#AD4500; --s60-bg:rgba(255,149,0,.18); --s90:#C20012; --s90-bg:rgba(255,59,48,.12); --ph:#58585D; --accent-dim:rgba(0,113,227,.5);
+  --s30:#7D5200; --s30-bg:rgba(255,204,0,.26); --s30-bar:#FFCC00; --s60-bar:#FF9500; --s90-bar:#FF3B30; --s60:#AD4500; --s60-bg:rgba(255,149,0,.18); --s90:#C20012; --s90-bg:rgba(255,59,48,.12); --ph:#3A6699; --accent-dim:rgba(0,113,227,.5);
   --ok:#1E7B34; --ok-bg:rgba(52,199,89,.16);
   --shadow:0 1px 2px rgba(0,0,0,.04),0 6px 20px rgba(0,0,0,.04);
   --ring:rgba(0,113,227,.5);
@@ -27,11 +27,11 @@
 @media (prefers-color-scheme: dark){
   #toast{background:rgba(58,58,60,.96);border:1px solid rgba(255,255,255,.12)}
   :root{
-    --bg:#000000; --surface:#1C1C1E; --fill:rgba(118,118,128,.24); --fill-2:rgba(118,118,128,.36); --seg:#5B5B60;
-    --ink:#F5F5F7; --muted:#A8A8AD; --faint:#A3A3A8; --glyph:#8E8E93; --sep:rgba(84,84,88,.6);
+    --bg:#000000; --surface:#1C1C1E; --fill:rgba(118,118,128,.24); --fill-2:rgba(118,118,128,.36); --seg:#3A3A3C;
+    --ink:#8CC4FF; --muted:#7FAEE0; --faint:#7FAEE0; --glyph:#8E8E93; --sep:rgba(84,84,88,.6);
     --bar:rgba(22,22,23,.8);
     --accent:#0A84FF; --accent-fill:#0071E3; --accent-press:#0062C4; --accent-ink:#FFFFFF; --accent-soft:rgba(10,132,255,.2); --link:#5CB0FF; --who:#8FB89B; --gbtn:#4A7356; --gbtn-on:#2F4D38; --badge:#D70015;
-    --s30:#FFD60A; --s30-bg:rgba(255,214,10,.16); --s30-bar:#FFD60A; --s60-bar:#FF9F0A; --s90-bar:#FF453A; --s60:#FF9F0A; --s60-bg:rgba(255,159,10,.18); --s90:#FF7B74; --s90-bg:rgba(255,69,58,.14); --ph:#B8B8BD; --accent-dim:rgba(10,132,255,.55);
+    --s30:#FFD60A; --s30-bg:rgba(255,214,10,.16); --s30-bar:#FFD60A; --s60-bar:#FF9F0A; --s90-bar:#FF453A; --s60:#FF9F0A; --s60-bg:rgba(255,159,10,.18); --s90:#FF7B74; --s90-bg:rgba(255,69,58,.14); --ph:#7FA6D6; --accent-dim:rgba(10,132,255,.55);
     --ok:#30D158; --ok-bg:rgba(48,209,88,.18);
     --shadow:none;
     --ring:rgba(10,132,255,.6);
@@ -243,6 +243,16 @@ section[aria-label="Bygningen"]{container-type:inline-size}
 .room>b{color:var(--who)}
 /* Version 5.76 (Eddy 17-10-2026): the floor names under Bygningen are orange. */
 .floor .floor-name{color:var(--s60)}
+/* Version 5.81 (Eddy 17-10-2026): all text that is not a heading is blue (tokens --ink/--muted/--faint/--ph above).
+   The report module (Rapporter) and everything printed keep the earlier black and grey. */
+body[data-tab="rapporter"] #main,#printArea{--ink:#1D1D1F;--muted:#5C5C61;--faint:#5F5F64;--ph:#58585D}
+body[data-tab="rapporter"] #main,#printArea{color:var(--ink)}
+@media (prefers-color-scheme: dark){body[data-tab="rapporter"] #main{--ink:#F5F5F7;--muted:#A8A8AD;--faint:#A3A3A8;--ph:#B8B8BD}}
+@media print{body[data-tab] #main,#printArea{--ink:#000;--muted:#444;--faint:#555;--ph:#555}}
+/* Version 5.81: the search button's magnifier is blue; "Åbn" and "Gem" are gone from the top bar (the database saves;
+   Åbn/Gem registerfil are under Opsætning → Registerfil and under Mere, and Ctrl+S still saves). */
+.qsbtn svg{color:var(--link)}
+.filebar [data-act="open-reg"],.filebar #btnSave{display:none !important}
 /* Version 5.80 (Eddy 17-10-2026): the app name, the report option labels (Periode, Afdeling …) and "Enhedsoverblik" on the report paper are orange too. */
 .brand-t .bt{color:var(--s60)}
 .ropts>label.field{color:var(--s60)}
@@ -808,7 +818,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.80 fra <span class="nowrap">17-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.81 fra <span class="nowrap">17-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -1616,6 +1626,7 @@ let lastDbState='';
 let drawing=false;
 const TITLES={overblik:'Overblik',inaktive:'Inaktive',lager:'Lager',simkort:'Simkort',register:'Register',rapporter:'Rapporter',indlaes:'Indlæs lister',opsaetning:'Opsætning',mere:'Mere'};
 function render(){
+  document.body.dataset.tab=ui.tab;
   if(ui.tab!=='simkort'){const lv=$('#srLive');if(lv&&lv.textContent)lv.textContent='';}
   document.title=(TITLES[ui.tab]?TITLES[ui.tab]+' – ':'')+'Enhedsoverblik';
   const main=$('#main'),tabs=$('#tabs'),ae=document.activeElement,y=window.scrollY;
@@ -2190,7 +2201,7 @@ function viewOpsaetning(){
     '<section><h2>Lager</h2><p class="muted">Antal klare enheder, du vil have på lageret, og hvor længe en enhed må ligge, før du får en opgave på overblikket.</p><div class="formgrid" style="max-width:30rem">'+
       [['minTlf','Telefoner, mindst'],['minTab','Tablets, mindst'],['days','Dage klar før opgave'],['waitDays','Dage ikke klar før opgave']].map(f=>'<label class="field">'+f[1]+'<input type="number" min="0" max="365" data-in="stock" data-k="'+f[0]+'" value="'+state.stock[f[0]]+'"></label>').join('')+'</div></section>'+
     viewDbSection()+
-    '<section><h2>Registerfil</h2><p class="muted">'+(dbOn()?'Registerfilen er en kopi til backup, når databasen er i brug.'+(matchMedia('(pointer:coarse)').matches?'':' Genvej: Ctrl+S.'):'Gem registerfilen i en godkendt mappe, og behold kun de to nyeste.'+(matchMedia('(pointer:coarse)').matches?'':' Genvej: Ctrl+S.'))+'</p>'+
+    '<section><h2>Registerfil</h2><div class="row-actions" style="margin-bottom:.6rem"><button class="btn primary" data-act="save-reg">Gem registerfil</button><button class="btn" data-act="open-reg">Åbn registerfil</button></div><p class="muted">'+(dbOn()?'Registerfilen er en kopi til backup, når databasen er i brug.'+(matchMedia('(pointer:coarse)').matches?'':' Genvej: Ctrl+S.'):'Gem registerfilen i en godkendt mappe, og behold kun de to nyeste.'+(matchMedia('(pointer:coarse)').matches?'':' Genvej: Ctrl+S.'))+'</p>'+
       (canPickFile()?'<p class="muted">'+(fileHandle?'Gem skriver nu til <b>'+esc(fileHandle.name)+'</b>, så der ikke kommer en ny fil i Overførsler hver gang.':'Vælg en fast fil, så Gem skriver til den samme fil hver gang i stedet for en ny fil i Overførsler.')+'</p><div class="row-actions"><button class="btn" data-act="pick-file-save">'+(fileHandle?'Vælg en anden fil…':'Gem i fast fil…')+'</button></div>':'<p class="muted">Browseren kan ikke skrive direkte til en fil. Filen hentes i Overførsler, og du flytter den selv.</p>')+'</section>'+
     '<section><h2>Fratrådte medarbejdere</h2><p class="muted">Skriv ét navn pr. linje, præcis som det står i listerne. Enheder med de brugere bliver markeret, så du kan hente dem.</p><textarea rows="5" aria-label="Fratrådte medarbejdere, ét navn pr. linje" data-in="leavers" style="max-width:24rem">\n'+esc(state.leavers)+'</textarea>'+
       (()=>{const idle=idleLeavers();return idle.length?'<div class="notice" style="max-width:36rem;margin-top:.8rem"><p>'+(idle.length===1?esc(idle[0])+' har':pl(idle.length,'navn','navne')+' har')+' ingen enhed i brug i registeret. Et navn slettes selv, når den sidste enhed indleveres. <button class="btn small" data-act="leavers-idle">Slet '+(idle.length===1?'navnet':'navnene')+'</button></p></div>':'';})()+
