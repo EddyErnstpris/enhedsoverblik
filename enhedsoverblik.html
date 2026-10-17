@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.77 (2026-10-17)">
+<meta name="version" content="5.78 (2026-10-17)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -234,10 +234,11 @@ section[aria-label="Bygningen"]{container-type:inline-size}
 .uname{color:var(--who)}
 /* Version 5.72 (Eddy 13-10-2026): headings, key figures, department names and SIM numbers in dusty green;
    device labels in blue; the buttons in Register and Enheder/Simkort on Lager are green with white text. */
-#main h1,#main h2,#main h3,.rpt h1,.rpt h2,.rpt h3{color:var(--who)}
+/* Version 5.78 (Eddy 17-10-2026): all headings are orange (was dusty green from 5.72). */
+#main h1,#main h2,#main h3,.rpt h1,.rpt h2,.rpt h3{color:var(--s60)}
 /* Version 5.75 (gennemgang 16-10-2026): the step numbers stay white on blue. */
 #main h2 .step{color:var(--accent-ink)}
-#main .paper .rpt h1,#main .paper .rpt h2,#main .paper .rpt h3,.paper .rpt h1,.paper .rpt h2,.paper .rpt h3{color:#4A7356}
+#main .paper .rpt h1,#main .paper .rpt h2,#main .paper .rpt h3,.paper .rpt h1,.paper .rpt h2,.paper .rpt h3{color:#AD4500}
 .kpi .k-v b.num{color:var(--who)}
 .room>b{color:var(--who)}
 /* Version 5.76 (Eddy 17-10-2026): the floor names under Bygningen are orange. */
@@ -802,7 +803,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.77 fra <span class="nowrap">17-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.78 fra <span class="nowrap">17-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
