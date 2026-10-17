@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.81 (2026-10-17)">
+<meta name="version" content="5.82 (2026-10-17)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -253,6 +253,9 @@ body[data-tab="rapporter"] #main,#printArea{color:var(--ink)}
    Åbn/Gem registerfil are under Opsætning → Registerfil and under Mere, and Ctrl+S still saves). */
 .qsbtn svg{color:var(--link)}
 .filebar [data-act="open-reg"],.filebar #btnSave{display:none !important}
+/* Version 5.82 (Eddy 17-10-2026): the numbers in the Lager boxes are orange and the Lager buttons blue with white text; the text in the boxes,
+   after "Klar"/"Ikke klar" and in the footer (lock included) is blue through the 5.81 tokens. */
+.lagerstat b,.lagerstat .warnv{color:var(--s60)}
 /* Version 5.80 (Eddy 17-10-2026): the app name, the report option labels (Periode, Afdeling …) and "Enhedsoverblik" on the report paper are orange too. */
 .brand-t .bt{color:var(--s60)}
 .ropts>label.field{color:var(--s60)}
@@ -818,7 +821,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.81 fra <span class="nowrap">17-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.82 fra <span class="nowrap">17-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -2268,11 +2271,11 @@ function viewLager(){
     return '<div class="srow"><div><div class="who">'+devTitle(d)+'</div>'+leaveFlag(d)+'</div><div class="muted">'+esc(placeName(d.deptId))+'<div class="mono" style="font-size:.8125rem">'+esc(d.serial||'')+'</div></div>'+
       '<div class="row-actions"><button class="btn small primary" data-act="'+a.act+'" data-arg="'+d.id+'">'+a.label+'</button><button class="btn small" data-act="dev" data-arg="'+d.id+'">Detaljer</button></div></div>';}).join('')+'</div></section>':'';
   return '<div class="lead"><h1>Lager</h1><p>Alle enheder går gennem lageret mellem to medarbejdere. Scan eller skriv label, serienummer eller IMEI.</p></div>'+lagerSub('lager')+
-    '<div class="scan"><input type="search" data-in="scan" aria-label="Scan eller søg efter en enhed" placeholder="Scan label, serienr. eller IMEI" value="'+esc(ui.scan)+'" autocomplete="off"><div class="row-actions">'+(ui.box?'':'<button class="btn" data-act="box-start">Tøm kassen</button>')+(camOk()?'<button class="btn" data-act="cam-open">Scan med kamera</button>':'')+(dbOn()?'<button class="btn" data-act="phone-open">'+(pairOn()?'Telefon forbundet':'Scan med telefon')+'</button>':'')+'<button class="btn" data-act="print-stock">Lagerliste (udskriv eller PDF)</button><button class="btn" data-act="labels-open">Udskriv mærkater</button></div></div>'+
+    '<div class="scan"><input type="search" data-in="scan" aria-label="Scan eller søg efter en enhed" placeholder="Scan label, serienr. eller IMEI" value="'+esc(ui.scan)+'" autocomplete="off"><div class="row-actions">'+(ui.box?'':'<button class="btn primary" data-act="box-start">Tøm kassen</button>')+(camOk()?'<button class="btn primary" data-act="cam-open">Scan med kamera</button>':'')+(dbOn()?'<button class="btn primary" data-act="phone-open">'+(pairOn()?'Telefon forbundet':'Scan med telefon')+'</button>':'')+'<button class="btn primary" data-act="print-stock">Lagerliste (udskriv eller PDF)</button><button class="btn primary" data-act="labels-open">Udskriv mærkater</button></div></div>'+
     box+
     '<div class="scanres" id="scanRes">'+scanResults()+'</div>'+
     expRows+
-    '<div class="stat">'+card('Telefon','telefoner','telefon')+card('Tablet','tablets','tablet')+
+    '<div class="stat lagerstat">'+card('Telefon','telefoner','telefon')+card('Tablet','tablets','tablet')+
     /* Version 5.69 (Eddy 12-10-2026): ready devices without a type are counted too, so nothing ready is missing from the figures. */
     ((n=>n?'<div><b class="num warnv">'+n+'</b><span>klar uden type (telefon eller tablet). <button class="linkish" data-act="reg-untyped">Vælg type i Register</button></span></div>':'')(readyList('Ukendt').length))+'<div><b class="num">'+ikke.length+'</b><span>ikke klar, venter på Supporten</span></div>'+(state.sims.length?'<div><b class="num">'+simFree().length+'</b><span>simkort på lager. <button class="linkish" data-act="tab" data-arg="simkort">Se dem</button></span></div>':'')+'</div>'+
     (()=>{const b=readyBack();return b.length?'<section class="group"><div class="group-head"><h2>Klar, men skal sendes retur</h2><span class="muted">På 90-dages-listen eller med beslutningen "Sender retur". Udleveres ikke.</span></div>'+stockRows(b,'retur')+'</section>':'';})()+
@@ -3831,7 +3834,7 @@ function dbLoginForm(){
   const n=otpLeft();
   return '<div class="loginbox">'+
     '<p>Er <b>'+esc(otp.mail)+'</b> oprettet som bruger, er der sendt en e-mail med en kode.</p>'+
-    '<label class="field">Kode fra e-mailen<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="one-time-code" data-in="db-code" placeholder="123456"></label>'+
+    '<label class="field">Kode fra e-mailen<input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="10" autocomplete="one-time-code" data-in="db-code" placeholder="12345678"></label>'+
     '<div class="row-actions"><button class="btn primary" data-act="db-otp-verify"'+(otp.busy?' aria-disabled="true" aria-busy="true">Logger ind…':'>Log ind')+'</button>'+
     '<button class="btn" data-act="db-otp-resend"'+(n?' aria-disabled="true">Send ny kode ('+n+' s)':'>Send ny kode')+'</button></div>'+
     '<p class="muted">Kommer der ingen e-mail inden for et par minutter, så tjek adressen og spam-mappen. <button class="linkish" data-act="db-otp-change">Brug en anden adresse</button></p></div>';
