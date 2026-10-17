@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.82 (2026-10-17)">
+<meta name="version" content="5.83 (2026-10-17)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -256,6 +256,11 @@ body[data-tab="rapporter"] #main,#printArea{color:var(--ink)}
 /* Version 5.82 (Eddy 17-10-2026): the numbers in the Lager boxes are orange and the Lager buttons blue with white text; the text in the boxes,
    after "Klar"/"Ikke klar" and in the footer (lock included) is blue through the 5.81 tokens. */
 .lagerstat b,.lagerstat .warnv{color:var(--s60)}
+/* Version 5.83 (Eddy 17-10-2026): the Lager buttons are grey again with orange text, and the scan field's text is orange; the icons in the bottom bar
+   and the links "Skriv arbejdspladsens navn" and "Indlæs den komplette liste" on the start page are orange. */
+.lagerbtns .btn{color:var(--s60)}
+[data-in="scan"],[data-in="scan"]::placeholder{color:var(--s60)}
+.empty ol .linkish{color:var(--s60)}
 /* Version 5.80 (Eddy 17-10-2026): the app name, the report option labels (Periode, Afdeling …) and "Enhedsoverblik" on the report paper are orange too. */
 .brand-t .bt{color:var(--s60)}
 .ropts>label.field{color:var(--s60)}
@@ -708,8 +713,8 @@ details>summary{min-height:24px}
   .tabs{position:fixed;left:0;right:0;bottom:0;z-index:30;display:grid;justify-self:stretch;width:auto;grid-template-columns:repeat(5,minmax(0,1fr));padding:.4rem max(.25rem,env(safe-area-inset-right)) calc(.35rem + env(safe-area-inset-bottom)) max(.25rem,env(safe-area-inset-left));border-radius:0;background:var(--bar);-webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);border-top:1px solid var(--sep)}
   /* Version 5.74 (Eddy 13-10-2026): every label in the bottom bar is bold blue like the open tab. */
   .tab{position:relative;flex-direction:column;gap:.12rem;padding:.15rem 0;min-height:2.75rem;font-size:.6875rem;font-weight:600;color:var(--link);min-width:0;transition:color .15s}
-  /* Version 5.73 (Eddy 13-10-2026): every icon in the bottom bar is blue like Mere; the open tab still has a blue, bold label. */
-  .tab svg{display:block;width:1.6rem;height:1.6rem;color:var(--link)}
+  /* Version 5.73 (Eddy 13-10-2026): every icon in the bottom bar is blue like Mere (orange from 5.83); the open tab still has a blue, bold label. */
+  .tab svg{display:block;width:1.6rem;height:1.6rem;color:var(--s60)}
   .tab[aria-current="page"]{background:none;box-shadow:none;color:var(--link);font-weight:600}
   .tab .count{display:none}
   .tab .count.alert{display:block;position:absolute;top:-.1rem;left:calc(50% + .45rem);min-width:1.05rem;height:1.05rem;padding:0 .3rem;border-radius:.55rem;background:var(--badge);color:#fff;font-size:.6875rem;font-weight:600;line-height:1.05rem;text-align:center}
@@ -821,7 +826,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.82 fra <span class="nowrap">17-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 5.83 fra <span class="nowrap">17-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -2271,7 +2276,7 @@ function viewLager(){
     return '<div class="srow"><div><div class="who">'+devTitle(d)+'</div>'+leaveFlag(d)+'</div><div class="muted">'+esc(placeName(d.deptId))+'<div class="mono" style="font-size:.8125rem">'+esc(d.serial||'')+'</div></div>'+
       '<div class="row-actions"><button class="btn small primary" data-act="'+a.act+'" data-arg="'+d.id+'">'+a.label+'</button><button class="btn small" data-act="dev" data-arg="'+d.id+'">Detaljer</button></div></div>';}).join('')+'</div></section>':'';
   return '<div class="lead"><h1>Lager</h1><p>Alle enheder går gennem lageret mellem to medarbejdere. Scan eller skriv label, serienummer eller IMEI.</p></div>'+lagerSub('lager')+
-    '<div class="scan"><input type="search" data-in="scan" aria-label="Scan eller søg efter en enhed" placeholder="Scan label, serienr. eller IMEI" value="'+esc(ui.scan)+'" autocomplete="off"><div class="row-actions">'+(ui.box?'':'<button class="btn primary" data-act="box-start">Tøm kassen</button>')+(camOk()?'<button class="btn primary" data-act="cam-open">Scan med kamera</button>':'')+(dbOn()?'<button class="btn primary" data-act="phone-open">'+(pairOn()?'Telefon forbundet':'Scan med telefon')+'</button>':'')+'<button class="btn primary" data-act="print-stock">Lagerliste (udskriv eller PDF)</button><button class="btn primary" data-act="labels-open">Udskriv mærkater</button></div></div>'+
+    '<div class="scan"><input type="search" data-in="scan" aria-label="Scan eller søg efter en enhed" placeholder="Scan label, serienr. eller IMEI" value="'+esc(ui.scan)+'" autocomplete="off"><div class="row-actions lagerbtns">'+(ui.box?'':'<button class="btn" data-act="box-start">Tøm kassen</button>')+(camOk()?'<button class="btn" data-act="cam-open">Scan med kamera</button>':'')+(dbOn()?'<button class="btn" data-act="phone-open">'+(pairOn()?'Telefon forbundet':'Scan med telefon')+'</button>':'')+'<button class="btn" data-act="print-stock">Lagerliste (udskriv eller PDF)</button><button class="btn" data-act="labels-open">Udskriv mærkater</button></div></div>'+
     box+
     '<div class="scanres" id="scanRes">'+scanResults()+'</div>'+
     expRows+
