@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.95 (2026-10-17)">
+<meta name="version" content="5.96 (2026-10-18)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -339,7 +339,7 @@ footer.foot svg{color:var(--s60)}
 @media print{#btnLogout,.top .save-state,.top #siteName,.top .tool,.top .tab{color:inherit}}
 /* Version 5.95 (Eddy 17-10-2026): before login the whole top bar is hidden (on a phone also the bottom bar), and the message box is dusty green with white text. */
 body[data-login] header.top{display:none}
-body[data-login] #toast{background:rgba(74,115,86,.96);color:#fff;border-color:rgba(255,255,255,.18);top:calc(1rem + env(safe-area-inset-top))}
+body[data-login] #toast,#toast.green{background:rgba(74,115,86,.96);color:#fff;border-color:rgba(255,255,255,.18)}body[data-login] #toast{top:calc(1rem + env(safe-area-inset-top))}
 @media print{.kpi .k-h>span{color:inherit}.empty p.startlead{color:inherit}.loginbox label.lcode,.loginbox label.lmail{color:inherit}}
 /* Version 5.91: "E-mail" and "Log ind med adgangskode i stedet" in the login box are orange. */
 .loginbox label.lmail{color:var(--s60)}
@@ -915,7 +915,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 5.95 fra <span class="nowrap">17-10-2026</span>.</span></div><div class="foot-by">Udviklet af Eddy Ernstpris</div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 5.96 fra <span class="nowrap">18-10-2026</span>.</span></div><div class="foot-by">Udviklet af Eddy Ernstpris</div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -1783,8 +1783,9 @@ function toastLift(t,on){
   }catch(e){}
 }
 function toastHide(){const t=$('#toast');if(t){t.classList.remove('show');toastLift(t,false);}clearTimeout(toast.t);}
-function toast(msg){
-  const t=$('#toast');t.textContent=msg;
+/* Version 5.96 (Eddy 18-10-2026): opts.green gives the dusty green box with white text (used for "Logget ind."). */
+function toast(msg,opts){
+  const t=$('#toast');t.textContent=msg;t.classList.toggle('green',!!(opts&&opts.green));
   const dl=$('#dlg');toastLift(t,!!(dl&&dl.open));
   t.classList.add('show');
   const ms=Math.min(10000,3000+50*String(msg).length);
@@ -4685,7 +4686,7 @@ const ACT={
     db.loggingIn=true;busyUi();
     try{await dbLogin(email,pw);if(db.state==='login')db.state='loading';}catch(e){if(e.message==='ended'||!db.cfg)return;if(!db.ses){db.state='login';}toast(e.message);const f=$('[data-in="db-pw"]');if(f){f.focus();f.select();}return;}
     finally{db.loggingIn=false;busyUi();}
-    toast('Logget ind.');if(!$('#dlg').open)render();await dbStart();render();},
+    toast('Logget ind.',{green:true});if(!$('#dlg').open)render();await dbStart();render();},
   'db-logout':()=>{dbLogoutAll();},
   'db-embed':()=>{
     if(!db.cfg){toast('Sæt databasen op først.');return;}
@@ -4713,7 +4714,7 @@ const ACT={
     try{await dbOtpVerify(otp.mail,code);if(db.state==='login')db.state='loading';}
     catch(e){if(e.message==='ended'||!db.cfg)return;if(!db.ses)db.state='login';toast(e.message);const g=$('[data-in="db-code"]');if(g){g.focus();g.select();}return;}
     finally{otp.busy=false;db.loggingIn=false;otpBusyUi();}
-    otpReset();toast('Logget ind.');if(!$('#dlg').open)render();await dbStart();render();
+    otpReset();toast('Logget ind.',{green:true});if(!$('#dlg').open)render();await dbStart();render();
   },
   'db-reload':()=>{dbReload().then(()=>render());},
   'db-force':()=>{dbForce().then(()=>render());},
