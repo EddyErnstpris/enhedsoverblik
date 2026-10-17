@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.78 (2026-10-17)">
+<meta name="version" content="5.79 (2026-10-17)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -803,7 +803,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.78 fra <span class="nowrap">17-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.79 fra <span class="nowrap">17-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -1734,7 +1734,7 @@ function viewOverblik(){
     return '<div class="empty">'+ICON.app+'<h1>Start med dine to lister</h1>'+
       '<p>Værktøjet holder styr på, hvor hver telefon og tablet hører til, og viser dig de inaktive enheder samlet pr. etage og afdeling.</p>'+
       '<ol><li><span><button class="linkish" data-act="tab" data-arg="opsaetning">Skriv arbejdspladsens navn</button> under Opsætning.</span></li><li><span><button class="linkish" data-act="tab" data-arg="indlaes">Indlæs den komplette liste</button> over enheder, og indsæt mailen med 30, 60 og 90 dage.</span></li><li><span>Placér enhederne på etage og afdeling under Register. Det gør du kun én gang.</span></li><li><span>'+(dbOn()?'Registeret gemmes af sig selv i databasen. Gem af og til en registerfil som backup.':'Gem registerfilen'+(matchMedia('(pointer:coarse)').matches?'':' (Ctrl+S)')+', og åbn den igen næste måned.')+'</span></li></ol>'+
-      '<div class="row-actions"><button class="btn primary" data-act="tab" data-arg="indlaes">Indlæs lister</button><button class="btn" data-act="open-reg">Åbn registerfil</button>'+(dbOn()?'':'<button class="btn plain" data-act="demo">Prøv med eksempeldata</button>')+'</div></div>';
+      '<div class="row-actions"><button class="btn primary" data-act="tab" data-arg="indlaes">Indlæs lister</button><button class="btn primary" data-act="open-reg">Åbn registerfil</button>'+(dbOn()?'':'<button class="btn primary" data-act="demo">Prøv med eksempeldata</button>')+'</div></div>';
   }
   const act=state.devices.filter(d=>ACTIVE.has(d.status));
   const rows=state.inactive.rows;const im=inactMap();const lv=leaverSet();
