@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.79 (2026-10-17)">
+<meta name="version" content="5.80 (2026-10-17)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -243,6 +243,11 @@ section[aria-label="Bygningen"]{container-type:inline-size}
 .room>b{color:var(--who)}
 /* Version 5.76 (Eddy 17-10-2026): the floor names under Bygningen are orange. */
 .floor .floor-name{color:var(--s60)}
+/* Version 5.80 (Eddy 17-10-2026): the app name, the report option labels (Periode, Afdeling …) and "Enhedsoverblik" on the report paper are orange too. */
+.brand-t .bt{color:var(--s60)}
+.ropts>label.field{color:var(--s60)}
+.ropts>label.field select,.ropts>label.field input{color:var(--ink)}
+.paper .rpt-tag,.rpt .rpt-tag{color:#AD4500}
 .dlabel,.who b.dlabel{color:var(--link)}
 .srow .who span.dlabel,.who span.dlabel{color:var(--link);font-weight:inherit;font-size:inherit}
 .srow .who span.simnum,.who span.simnum{color:var(--who);font-weight:inherit;font-size:inherit}
@@ -803,7 +808,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.79 fra <span class="nowrap">17-10-2026</span>.</span></footer>
+<footer class="foot"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning, ellers kun i den registerfil, du selv gemmer. Værktøjet taler ikke med andre adresser. Version 5.80 fra <span class="nowrap">17-10-2026</span>.</span></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -2732,7 +2737,7 @@ function viewRapporter(){
         (r.period==='valgt'?'<label class="field">Fra<input type="date" data-ch="rep-from" value="'+esc(r.from)+'"></label><label class="field">Til<input type="date" data-ch="rep-to" value="'+esc(r.to)+'"></label>':''):'')+
       (r.type==='afdeling'?'<label class="field">Afdeling<select data-ch="rep-dept"><option value="">Alle afdelinger med enheder</option>'+deptOptions(r.dept,true,true)+'</select></label>':'')+
       (r.type!=='status'&&r.type!=='lager'&&r.type!=='simkort'?'<label class="switch"><input type="checkbox" role="switch" data-ch="rep-names"'+(r.names?' checked':'')+'> Vis navne på brugere</label>':'')+
-      '<span class="spacer"></span><div class="row-actions"><button class="btn" data-act="rep-csv"'+(rep.csv.rows.length?'':' disabled')+'>Eksportér til Excel</button><button class="btn fitbtn" data-act="rep-fit" aria-pressed="'+!!r.fit+'">'+(r.fit?'Fuld størrelse':'Hele siden')+'</button><button class="btn primary" data-act="rep-print">Udskriv eller gem som PDF</button></div></div>'+
+      '<span class="spacer"></span><div class="row-actions"><button class="btn primary" data-act="rep-csv"'+(rep.csv.rows.length?'':' disabled')+'>Eksportér til Excel</button><button class="btn fitbtn" data-act="rep-fit" aria-pressed="'+!!r.fit+'">'+(r.fit?'Fuld størrelse':'Hele siden')+'</button><button class="btn primary" data-act="rep-print">Udskriv eller gem som PDF</button></div></div>'+
     '<div class="paperwrap"><div class="paper">'+repDoc(rep)+'</div></div></section></div>';
 }
 function viewMere(){
