@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="5.99 (2026-10-18)">
+<meta name="version" content="6.0 (2026-10-18)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -930,7 +930,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 5.99 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.0 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="regFile" accept=".json,application/json" hidden>
@@ -2088,7 +2088,7 @@ function regTable(){
       if(inStock(d))fl.push('<span class="flag info">På lager, '+stockWord(d).toLowerCase()+'</span>');
       else if(d.lastUser&&lv.has(nkey(d.lastUser)))fl.push('<span class="flag bad">Bruger fratrådt</span>');
       return '<tr'+(sel.has(d.id)?' class="sel"':'')+'><td class="selc"><label class="selw"><input type="checkbox" data-ch="reg-sel" data-id="'+d.id+'" aria-label="Vælg '+nm+'"'+(sel.has(d.id)?' checked':'')+'></label></td><td><button class="linkish" data-act="dev" data-arg="'+d.id+'">'+esc(d.label||'Uden label')+'</button></td>'+
-        '<td class="nw"><div>'+(d.type==='Ukendt'?'<select class="typesel" aria-label="Type for '+nm+'" data-ch="dev" data-id="'+d.id+'" data-k="type"><option value="Ukendt" selected>Type mangler, vælg</option><option>Telefon</option><option>Tablet</option></select>':esc(d.type))+' <span class="muted nowrap">'+esc(d.model)+'</span>'+osTag(d)+'</div><div class="sub mono">'+esc(d.serial)+'</div></td>'+
+        '<td class="nw"><div>'+(d.type==='Ukendt'?'<select class="typesel" aria-label="Type for '+nm+'" data-ch="dev" data-id="'+d.id+'" data-k="type"><option value="Ukendt" selected>Type mangler, vælg</option><option>Telefon</option><option>Vikartelefon</option><option>Tablet</option></select>':esc(d.type))+' <span class="muted nowrap">'+esc(d.model)+'</span>'+osTag(d)+'</div><div class="sub mono">'+esc(d.serial)+'</div></td>'+
         '<td data-l="Sidste bruger"><div>'+(d.shared?'<span class="muted">'+sharedWord(d)+'</span>':d.lastUser?'<span class="uname">'+esc(d.lastUser)+'</span>':'')+'</div><div class="sub num">'+(fmtDate(d.lastSeen)?'Sidst set <span class="nowrap">'+fmtDate(d.lastSeen)+'</span>':'')+'</div></td>'+
         '<td data-l="Placering"><select aria-label="Placering for '+nm+'" data-ch="place" data-id="'+d.id+'">'+deptOptions(d.deptId)+'</select></td>'+
         '<td data-l="Status"><select aria-label="Status for '+nm+'" data-ch="status" data-id="'+d.id+'">'+STATUSES.map(s=>'<option'+(s===d.status?' selected':'')+'>'+s+'</option>').join('')+'</select></td>'+
@@ -2438,19 +2438,18 @@ function scanAuto(d){
   if(boxOn()){const a=primaryAct(d);ACT[a.act](d.id);return;}
   if(inStock(d))openStockOut(d.id);else openHandIn(d.id);
 }
-/* TEST 5.98 (Eddy 18-10-2026: "Kan du tilføje at det virker på en alm. stregkode, så jeg kan teste det. Så fjerner vi den mulighed bagefter"):
-   a code on Lager that matches no device opens the same kind of box as a real device. "Ja" only puts the code on a list in memory (ui.testStock);
-   nothing is written to the register or the database, and the list is gone when the page is reloaded. To remove: delete TEST_SCAN, testScan,
-   the three calls marked TEST 5.98 and the actions test-in/test-out. */
-const TEST_SCAN=true;
-function testScan(code){
-  const k=skey(code);if(!TEST_SCAN||k.length<4||boxOn()||/^\d{14,16}$/.test(k))return false;/* an IMEI-like number keeps the check-digit warning */
-  if(!ui.testStock)ui.testStock=new Set();
-  const inS=ui.testStock.has(k),tag='<p class="muted" style="font-size:.8125rem">Test af en almindelig stregkode. Der gemmes intet i registeret.</p>';
+/* Version 6.0 (Eddy 18-10-2026): a code on Lager that matches no device (after the test in 5.98): the box asks whether the device
+   should be created and taken into stock. "Ja" creates the device with the scanned code as IMEI (15 digits with a valid check digit) or
+   serial number, puts it on stock as not ready, and opens the device sheet so the rest (label, type, model) is filled in as usual.
+   The next scan of the same code then meets the ordinary stock box (Markér som klar / Udlevér). Not in "Tøm kassen", not for an
+   ICCID (18–20 digits) and not for a 15-digit number whose check digit fails (the warning stays). */
+function scanNew(code){
+  const k=skey(code);if(k.length<4||boxOn()||/^\d{18,20}$/.test(simDigits(code)))return false;
+  const isImei=/^\d{15}$/.test(k);if(isImei&&!luhnOk(k))return false;
   scanBox=true;
-  showDlg(dlgHead('Test: '+esc(code),inS?'Står på lageret (test)':'Ikke på lageret')+'<div class="dlg-body">'+
-    (inS?'<p><b>Enheden er på lageret. Vil du udlevere den?</b></p>':'<p><b>Enheden er ikke på lageret. Skal den ind på lageret?</b></p>')+tag+
-    '<div class="row-actions dlg-actions"><button class="btn" data-act="dlg-close">Nej</button><button class="btn primary" data-act="'+(inS?'test-out':'test-in')+'" data-arg="'+esc(k)+'"'+(inS?' style="background:var(--gbtn);color:#fff"':'')+'>'+(inS?'Ja, udlevér':'Ja, ind på lageret')+'</button></div></div>');
+  showDlg(dlgHead(esc(code)+' er ikke i registeret','Ny enhed')+'<div class="dlg-body"><p><b>Enheden er ikke i registeret. Skal den oprettes og ind på lageret?</b></p>'+
+    '<p class="muted" style="font-size:.8125rem">Koden gemmes som '+(isImei?'IMEI':'serienummer')+'. Bagefter udfylder du label, type og model som normalt. Enheden kommer på lageret som ikke klar.</p>'+
+    '<div class="row-actions dlg-actions"><button class="btn" data-act="dlg-close">Nej</button><button class="btn primary" data-act="scan-new" data-arg="'+esc(k)+'">Ja, opret og indlevér</button></div></div>');
   const b=$('#dlg .dlg-actions .btn.primary');if(b&&!matchMedia('(pointer:coarse)').matches)b.focus({preventScroll:true});
   return true;
 }
@@ -3002,7 +3001,7 @@ const EDU=[
    {img:'hi',alt:'Boksen Indlevér, der spørger, om enheden skal ind på lageret, med tre punkter og knappen Indlevér',steps:[
     ['Skal den ind på lageret?','Medarbejderen låser op og fjerner private konti foran dig. Sæt flueben, eller tryk Alle tre er i orden.'],
     ['Tryk Indlevér','Enheden er nu på lager som ikke klar, og navnet er slettet. Tryk Annullér, hvis den ikke skal ind.']]}],
-  tips:['Sæt enheden til opladning, og bed Supporten om at nulstille den.','Er enheden i stykker, så sæt status til Reparation bagefter.']},
+  tips:['Sæt enheden til opladning, og bed Supporten om at nulstille den.','Er enheden i stykker, så sæt status til Reparation bagefter.','Er enheden helt ny og ikke i registeret, spørger systemet, om den skal oprettes og ind på lageret. Udfyld så label, type og model.']},
  {id:'kasse',t:'Afleveringskassen',min:2,intro:'Er lageret lukket, lægger medarbejderen enheden i den aflåste kasse. Næste dag tømmer du den på fanen Lager med knappen Tøm kassen.',
   sec:[
    {img:'box',alt:'Afleveringskassen tømmes: scanfeltet og knappen Færdig med kassen',steps:[
@@ -3617,7 +3616,7 @@ function camFound(text){
   const m=findByScan(text);
   toast('Læst: '+text);
   if(m.length===1)scanAuto(m[0]);
-  else if(!m.length)testScan(text);/* TEST 5.98 */
+  else if(!m.length)scanNew(text);
 }
 /* A code counts once per video frame and is accepted when two different frames agree. */
 function camHit(text,frame){
@@ -4860,9 +4859,10 @@ const ACT={
   'tjek-rep':a=>{ui.tab='rapporter';ACT.rep(a);window.scrollTo(0,0);},
   'tjek-reset':a=>{if(!confirm('Vil du fjerne alle krydser og bemærkninger på listen? Det kan ikke fortrydes.'))return;const c=tjekData(a);c.items={};c.started=today();markDirty();render();toast('Listen er nulstillet.');},
   'stock-out-yes':a=>{openHandOut(a);},
-  /* TEST 5.98 */
-  'test-in':a=>{ui.testStock.add(a);$('#dlg').close();toast('Test: enheden er nu på lageret. Scan den igen for at prøve Udlevér.',{green:true});},
-  'test-out':a=>{ui.testStock.delete(a);$('#dlg').close();toast('Test: enheden er udleveret. Der er intet gemt.',{green:true});},
+  'scan-new':a=>{const k=skey(a);if(!k||findByScan(k).length)return;const isImei=/^\d{15}$/.test(k);
+    const d=newDevice({serial:isImei?'':k,imei:isImei?k:'',model:'',type:''},'manual');enterStock(d,'Afventer nulstilling');
+    hist(d,'Oprettet ved scanning på Lager og indleveret som ny enhed',{k:'Indleveret',who:'',place:'Ny enhed'});markDirty();
+    ui.scan='';scanBox=false;render();openDevice(d.id);toast('Enheden er oprettet og på lageret. Udfyld label, type og model, og tryk Færdig.',{green:true});},
   'rep-csv':exportReport,
   'phone-open':async()=>{
     if(!dbLoggedIn()){toast('Scan med telefon bruger databasen. Log ind under Opsætning → Database først.');return;}
@@ -4985,7 +4985,7 @@ document.addEventListener('change',e=>{
     if(el.value==='laasop'){const f=$('[data-in="plan"][data-id="'+id+'"]');if(f)f.focus({preventScroll:true});}}
   else if(ch==='dev'){const d=devById(id);if(!d)return;
     /* Version 5.99 (Eddy 18-10-2026): "Vikartelefon" in the Type menu = Telefon with the vikar mark; choosing Telefon again takes the mark off. */
-    if(el.dataset.k==='type'&&el.value==='Vikartelefon'){if(!d.shared&&namesOf(d).length&&!confirm('Enheden bliver vikartelefon, og navnet på sidste bruger slettes fra enheden og historikken. Det kan ikke fortrydes. Vil du fortsætte?')){openDevice(id);return;}d.type='Telefon';if(!d.shared)setShared(d,true);markDirty();openDevice(id);if(ui.tab==='register')refreshReg();return;}
+    if(el.dataset.k==='type'&&el.value==='Vikartelefon'){if(!d.shared&&namesOf(d).length&&!confirm('Enheden bliver vikartelefon, og navnet på sidste bruger slettes fra enheden og historikken. Det kan ikke fortrydes. Vil du fortsætte?')){if(inDlg)openDevice(id);else el.value='Ukendt';return;}d.type='Telefon';if(!d.shared)setShared(d,true);markDirty();if(inDlg)openDevice(id);else{if(ui.tab==='register')refreshReg();else render();toast((d.label||'Enheden')+' er nu vikartelefon.');}return;}
     if(el.dataset.k==='type'&&el.value==='Telefon'&&d.shared&&d.type==='Telefon'){setShared(d,false);markDirty();openDevice(id);if(ui.tab==='register')refreshReg();return;}
     d[el.dataset.k]=el.value;markDirty();if(el.dataset.k==='type'&&d.shared&&inDlg)openDevice(id);else if(el.dataset.k==='type'&&!inDlg){if(ui.tab==='register')refreshReg();else render();toast((d.label||'Enheden')+' er nu '+(d.type==='Tablet'?'en tablet':d.type==='Telefon'?'en telefon':'uden type')+'.');}}
   /* Version 5.68 (Eddy 12-10-2026): the type can be set in the register, also for many at once. */
@@ -5045,7 +5045,7 @@ function scanAutoSchedule(el){
   clearTimeout(scanAutoT);const v=el.value;
   if(!skey(v)||boxOn()||$('#dlg').open||!isKeyBurst(el))return;
   const ex=exactScan(v);
-  if(!ex.length&&!findByScan(v).length){scanAutoT=setTimeout(()=>{if(el.isConnected&&el.value===v&&!$('#dlg').open&&ui.tab==='lager')testScan(v);},250);return;}/* TEST 5.98 */
+  if(!ex.length&&!findByScan(v).length){scanAutoT=setTimeout(()=>{if(el.isConnected&&el.value===v&&!$('#dlg').open&&ui.tab==='lager')scanNew(v);},250);return;}
   if(ex.length!==1)return;
   scanAutoT=setTimeout(()=>{if(!el.isConnected||el.value!==v||$('#dlg').open||ui.tab!=='lager'||boxOn())return;lastScan=true;scanAuto(ex[0]);if(!$('#dlg').open)lastScan=false;},250);
 }
@@ -5083,7 +5083,7 @@ document.addEventListener('keydown',e=>{
     if(!m.length&&/^\d{18,20}$/.test(simDigits(e.target.value))&&e.key==='Enter'){const code=simDigits(e.target.value),sm=simFind(code);ui.scan='';e.target.value='';refreshScan();if(sm.length===1)openSimEdit(sm[0].id);else openSimNew(code);return;}
     if(m.length===1&&boxOn()&&inStock(m[0])){toast('Enheden er allerede på lager. Scan den næste.');e.target.value='';ui.scan='';refreshScan();}
     else if(m.length===1){lastScan=true;scanAuto(m[0]);if(!$('#dlg').open)lastScan=false;}
-    else if(e.key==='Enter'&&!m.length&&!testScan(e.target.value))toast('Ingen enhed passer til det, du scannede.');/* TEST 5.98 */
+    else if(e.key==='Enter'&&!m.length&&!scanNew(e.target.value))toast('Ingen enhed passer til det, du scannede.');
   }
   /* The digital lists: Enter or Tab after a scan. */
   if(e.target&&e.target.dataset&&e.target.dataset.in==='tjek-scan'&&skey(e.target.value)&&(e.key==='Enter'||(e.key==='Tab'&&!e.shiftKey&&isScanBurst(e.target)))){e.preventDefault();clearTimeout(tjAutoT);tjekScan(e.target.value);}
