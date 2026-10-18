@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.4 (2026-10-18)">
+<meta name="version" content="6.5 (2026-10-18)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -818,7 +818,7 @@ details>summary{min-height:24px}
   .tab svg{display:block;width:1.6rem;height:1.6rem;color:var(--who)} /* dusty green from 5.90 */
   .tab[aria-current="page"]{background:none;box-shadow:none;color:var(--s60);font-weight:600}
   /* Version 5.85 (Eddy 17-10-2026): the icons in the bottom bar are blue again and the labels orange. */
-  .tabs.six{grid-template-columns:repeat(6,minmax(0,1fr))}.tab.tab-out,.tab.tab-out svg{color:var(--s90)}
+  .mrow.out,.mrow.out>span:not(.ic){color:var(--s90)}.mrow.out .ic{background:#C20012}
   .tab .count{display:none}
   .tab .count.alert{display:block;position:absolute;top:-.1rem;left:calc(50% + .45rem);min-width:1.05rem;height:1.05rem;padding:0 .3rem;border-radius:.55rem;background:var(--badge);color:#fff;font-size:.6875rem;font-weight:600;line-height:1.05rem;text-align:center}
   main{padding:1.5rem max(1rem,env(safe-area-inset-right)) calc(6.5rem + env(safe-area-inset-bottom)) max(1rem,env(safe-area-inset-left))}
@@ -928,7 +928,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.4 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.5 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="listFile" accept=".csv,.txt,.tsv,.htm,.html" hidden>
@@ -1802,10 +1802,8 @@ const MORE=['rapporter','indlaes','opsaetning','mere'];
 function renderTabs(){
   const counts={inaktive:state.inactive.rows.length,lager:state.devices.filter(inStock).length,register:state.devices.length};
   const cur=k=>ui.tab===k||(k==='mere'&&(MORE.includes(ui.tab)||ui.tab==='tjek'))||(k==='lager'&&ui.tab==='simkort');
-  $('#tabs').innerHTML=TABS.map(t=>'<button class="tab'+(t[2]?' tab-'+t[2]:'')+'" data-act="tab" data-arg="'+t[0]+'"'+(cur(t[0])?' aria-current="page"':'')+(counts[t[0]]?' aria-label="'+t[1]+', '+counts[t[0]]+'"':'')+'>'+ICON[t[0]]+'<span>'+t[1]+'</span>'+(counts[t[0]]?'<span class="count num'+(t[0]==='inaktive'?' alert':'')+'">'+counts[t[0]]+'</span>':'')+'</button>').join('')+
-    /* Version 6.3 (Eddy 18-10-2026): a red Log ud in the bottom bar on a phone while logged in. */
-    (dbLoggedIn()?'<button class="tab tab-mob tab-out" data-act="db-logout" aria-label="Log ud af databasen">'+ICON.logout+'<span>Log ud</span></button>':'');
-  $('#tabs').classList.toggle('six',dbLoggedIn());
+  $('#tabs').innerHTML=TABS.map(t=>'<button class="tab'+(t[2]?' tab-'+t[2]:'')+'" data-act="tab" data-arg="'+t[0]+'"'+(cur(t[0])?' aria-current="page"':'')+(counts[t[0]]?' aria-label="'+t[1]+', '+counts[t[0]]+'"':'')+'>'+ICON[t[0]]+'<span>'+t[1]+'</span>'+(counts[t[0]]?'<span class="count num'+(t[0]==='inaktive'?' alert':'')+'">'+counts[t[0]]+'</span>':'')+'</button>').join('');
+  /* Version 6.5 (Eddy 18-10-2026): "Log ud skal ligge under mere og ikke i bundbjælken" – the red Log ud from 6.3 is gone from the bar; it is the red row under Mere. */
   document.querySelectorAll('.tool[data-act="tab"]').forEach(b=>{if(b.dataset.arg===ui.tab)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current');});
   $('#siteName').textContent=state.site;
 }
@@ -3055,10 +3053,10 @@ function viewRapporter(){
     '<div class="paperwrap"><div class="paper">'+repDoc(rep)+'</div></div></section></div>';
 }
 function viewMere(){
-  const row=(act,arg,ic,cls,title,sub)=>'<li><button class="mrow" data-act="'+act+'"'+(arg?' data-arg="'+arg+'"':'')+'><span class="ic '+cls+'">'+ic+'</span><span>'+title+(sub?'<small>'+sub+'</small>':'')+'</span>'+ICON.chev+'</button></li>';
+  const row=(act,arg,ic,cls,title,sub)=>'<li><button class="mrow'+(cls==='red'?' out':'')+'" data-act="'+act+'"'+(arg?' data-arg="'+arg+'"':'')+'><span class="ic '+cls+'">'+ic+'</span><span>'+title+(sub?'<small>'+sub+'</small>':'')+'</span>'+ICON.chev+'</button></li>';
   return '<div class="lead"><h1>Mere</h1></div>'+
     '<ul class="mlist">'+row('tab','simkort',ICON.simkort,'green','Simkort','Alle numre, kort på lager, i enheder')+row('tab','rapporter',ICON.rapporter,'blue','Rapporter','Statusrapport, afdelinger, lager og mere')+row('tab','indlaes',ICON.indlaes,'green','Indlæs lister','Den komplette liste og mailen fra Supporten')+row('tab','opsaetning',ICON.opsaetning,'gray','Opsætning','Arbejdsplads, etager, ledere, lager og fratrådte')+row('edu-open','',ICON.edu,'orange','Akademi','Lær systemet trin for trin, med billeder, og tag testen')+'</ul>'+
-    '<ul class="mlist">'+row('qs-open','',ICON.search,'blue','Søg','Enheder, personer, placeringer og handlinger')+(dbLoggedIn()?row('db-logout','',ICON.logout,'gray','Log ud af databasen','Logget ind som '+esc(dbWho())):'')+'</ul>';
+    '<ul class="mlist">'+row('qs-open','',ICON.search,'blue','Søg','Enheder, personer, placeringer og handlinger')+(dbLoggedIn()?row('db-logout','',ICON.logout,'red','Log ud','Logget ind som '+esc(dbWho())):'')+'</ul>';
 }
 /* Version 5.84 (Eddy 17-10-2026): "Undervisning". A short course in how to use the tool, with pictures taken from the tool itself
    (invented example data only). Each section has one picture with orange numbers, and the steps under it have the same numbers. */
