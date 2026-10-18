@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.8 (2026-10-18)">
+<meta name="version" content="6.9 (2026-10-18)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -166,6 +166,7 @@ div.field>b{color:var(--ink);font-weight:500;font-size:1rem;min-height:2.4rem;di
 .rule.s90{background:var(--s90-bg);color:var(--s90)}
 .notice p{margin:0;max-width:none}
 .notice .btn{margin-left:.4rem;background:var(--surface)}
+.eduresume .btn.primary{background:var(--accent-fill);color:var(--accent-ink);margin-left:0}.eduresume .row-actions{margin-top:.5rem}
 
 /* Stage capsules, pills and tags */
 .stage{display:inline-grid;justify-items:center;white-space:nowrap;min-width:4.9rem;padding:.42rem .6rem;border-radius:12px;font-weight:700;font-size:.9375rem;line-height:1.15;letter-spacing:-.01em}
@@ -929,7 +930,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.8 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.9 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="listFile" accept=".csv,.txt,.tsv,.htm,.html" hidden>
@@ -1378,7 +1379,7 @@ function gdprRecordHtml(){
     sec('Grundlag og oplysning','<p>Oplysningerne er nødvendige for at administrere arbejdspladsens udstyr. Medarbejderne oplyses ved ansættelsen.</p>')+
     sec('Modtagere og databehandlere','<ul><li>Databasen: '+db+'. Registeret ligger kun dér, bag login med e-mail og en kode på e-mail; adgang styres af databasens regler (RLS).</li><li>Login-e-mails sendes gennem Resend (e-mailtjeneste). Kun e-mailadressen og koden går gennem Resend.</li><li>Værktøjets fil ligger på GitHub Pages uden data (kun databasens adresse og den offentlige nøgle).</li><li>Databehandleraftaler med Supabase og Resend er arbejdspladsens ansvar.</li></ul>')+
     sec('Opbevaring og sletning','<ul><li>Navnet på en bruger gemmes, mens enheden er i brug.</li><li>Ved indlevering fjernes navnet fra enheden og listerne. Det står i enhedens historik i '+n+' dage og slettes så automatisk ("GDPR slettet").</li><li>En person, der ikke har haft en enhed i brug i '+n+' dage, slettes helt fra registeret (navn, lister, historik, noter, fratrådte).</li><li>Sendes en enhed retur til Supporten, eller meldes den bortkommet, slettes navnet med det samme.</li><li>På anmodning: Opsætning → GDPR → "Find personen" viser alt om en person og kan slette det med det samme.</li><li>Automatisk sletning skrives i værktøjets log uden navne.</li><li>Databasens daglige backup hos Supabase gemmes i 7 dage; slettede navne kan findes i backuppen i op til 7 dage.</li><li>Udskrifter og Excel-filer med navne ligger uden for værktøjet; værktøjet spørger, før de laves, og de må kun ligge et godkendt sted.</li></ul>')+
-    sec('Sikkerhed','<ul><li>Login med genkendt e-mail og engangskode (8 cifre, gælder en time). Før login vises intet.</li><li>Automatisk log ud efter '+IDLE_MIN+' minutter uden aktivitet.</li><li>Kryptering under overførsel (HTTPS) og i hvile hos Supabase.</li><li>På pc\'en ligger kun databasens adresse, login-e-mail, sessionen og ændringer, der endnu ikke er sendt.</li><li>Rapporter skjuler navne, medmindre de slås til; udskrifter med navne mærkes "Fortroligt".</li><li>Telefonen som scanner får kun den scannede kode, aldrig registeret.</li></ul>');
+    sec('Sikkerhed','<ul><li>Login med genkendt e-mail og engangskode (8 cifre, gælder en time). Før login vises intet.</li><li>Automatisk log ud efter '+IDLE_MIN+' minutter uden aktivitet.</li><li>Kryptering under overførsel (HTTPS) og i hvile hos Supabase.</li><li>På pc\'en ligger kun databasens adresse, login-e-mail, sessionen, ændringer, der endnu ikke er sendt, og hvor langt man er nået i Akademi (uden navn).</li><li>Rapporter skjuler navne, medmindre de slås til; udskrifter med navne mærkes "Fortroligt".</li><li>Telefonen som scanner får kun den scannede kode, aldrig registeret.</li></ul>');
 }
 function printRecord(){
   printArea('<style>@page rpt{size:A4;margin:16mm 15mm 18mm;@top-left{content:'+cssStr('Fortegnelse · '+(state.site||''))+';font:8pt -apple-system,"Segoe UI",Arial,sans-serif;color:#6e6e73}@bottom-right{content:"Side " counter(page) " af " counter(pages);font:8pt -apple-system,"Segoe UI",Arial,sans-serif;color:#6e6e73}}.rpt{page:rpt}</style><article class="rpt"><header class="rpt-h"><div class="rpt-org"><span>'+esc(state.site||'Arbejdspladsen')+'</span><span class="rpt-tag">Enhedsoverblik</span></div><h1>Fortegnelse over behandling</h1><p class="rpt-meta">Enhedsoverblik '+esc((document.querySelector('meta[name="version"]')||{content:''}).content)+' · '+fmtDate(today())+'</p></header>'+gdprRecordHtml()+'<footer class="rpt-f"><span>Fortegnelsen indeholder ingen navne.</span><span>Udarbejdet '+fmtDate(today())+'</span></footer></article>');
@@ -3240,7 +3241,17 @@ const EDU_QUIZ=[
  {q:'En tidligere medarbejder beder om at få slettet alt om sig. Hvad gør du?',a:['Leder i registeret og retter felterne et ad gangen','Opsætning → GDPR → Find personen → Slet alt om personen','Sender en mail til Supporten'],c:1,why:'Find personen viser alt, der er gemt om personen, og Slet alt om personen sletter det med det samme. Det skrives i loggen som "GDPR slettet".',les:'gdpr'},
  {q:'Du forlader pc\'en midt i arbejdet. Hvad sker der?',a:['Ingenting, du er logget ind til du logger ud','Du bliver logget ud efter 30 minutter uden aktivitet','Registeret slettes'],c:1,why:'Efter 30 minutter uden aktivitet logger systemet dig ud, så andre ikke kan bruge pc\'en i dit navn. Log ud selv, når du går.',les:'gdpr'}
 ];
-function quizStart(){ui.quiz={i:0,ans:EDU_QUIZ.map(()=>-1),phase:'q'};}
+/* Version 6.9 (Eddy 18-10-2026): "Det skal være muligt at pause sin træning under akademi, og komme tilbage og fortsætte, hvor man stoppede".
+   Where you are (the open lesson, or the test with its answers) is kept on this pc (localStorage, no names), and the front page offers "Fortsæt". */
+const EDU_KEY='enhedsoverblik.akademi';
+function eduProg(){const p=lsGet(EDU_KEY);if(!p||typeof p!=='object')return null;const o={};
+  if(Number.isInteger(p.les)&&p.les>=0&&p.les<EDU.length)o.les=p.les;
+  if(p.quiz&&Number.isInteger(p.quiz.i)&&p.quiz.i>=0&&p.quiz.i<EDU_QUIZ.length&&Array.isArray(p.quiz.ans)&&p.quiz.ans.length===EDU_QUIZ.length)o.quiz={i:p.quiz.i,ans:p.quiz.ans.map(x=>Number.isInteger(x)&&x>=-1&&x<3?x:-1),phase:'q'};
+  return o.les!=null||o.quiz?o:null;}
+function eduSave(ch){const p=eduProg()||{};Object.assign(p,ch);Object.keys(p).forEach(k=>{if(p[k]==null)delete p[k];});lsSet(EDU_KEY,Object.keys(p).length?p:null);}
+function quizStart(){ui.quiz={i:0,ans:EDU_QUIZ.map(()=>-1),phase:'q'};eduSave({les:null,quiz:{i:0,ans:ui.quiz.ans}});}
+function quizResume(){const p=eduProg();if(!p||!p.quiz)return false;ui.quiz=p.quiz;return true;}
+function quizSave(){const z=ui.quiz;if(!z)return;if(z.phase==='q')eduSave({quiz:{i:z.i,ans:z.ans}});else if(quizScore().pass)lsSet(EDU_KEY,null);else eduSave({quiz:null});}
 function quizScore(){const z=ui.quiz;const right=EDU_QUIZ.filter((Q,i)=>z.ans[i]===Q.c).length;return {right,total:EDU_QUIZ.length,need:Math.ceil(EDU_QUIZ.length*QUIZ_PASS),pass:right>=Math.ceil(EDU_QUIZ.length*QUIZ_PASS)};}
 function quizReview(){
   const z=ui.quiz,wrong=EDU_QUIZ.map((Q,i)=>[Q,i]).filter(([Q,i])=>z.ans[i]!==Q.c);
@@ -3281,8 +3292,10 @@ function viewUndervisning(){
   if(i==null||i<0||i>=EDU.length){
     const row=(k,title,sub,ic)=>'<li><button class="mrow" data-act="edu-open" data-arg="'+k+'"><span class="ic orange edunr" aria-hidden="true">'+ic+'</span><span>'+title+(sub?'<small>'+sub+'</small>':'')+'</span>'+ICON.chev+'</button></li>';
     const total=EDU.reduce((a,L)=>a+L.min,0);
-    return '<div class="lead"><h1>Akademi</h1><p>Lær systemet trin for trin. Hvert emne tager et par minutter, og billederne viser præcis, hvor du skal klikke. Alt i alt ca. '+total+' minutter.</p></div>'+
-      '<div class="row-actions" style="margin-bottom:1.6rem"><button class="btn primary" data-act="edu-open" data-arg="0">Start forfra</button><button class="btn" data-act="edu-print">Udskriv det hele (PDF)</button></div>'+
+    return '<div class="lead"><h1>Akademi</h1><p>Lær systemet trin for trin. Hvert emne tager et par minutter, og billederne viser præcis, hvor du skal klikke. Alt i alt ca. '+total+' minutter. Du kan holde pause når som helst: Akademi husker på denne pc, hvor du er, og også dine svar i testen.</p></div>'+
+      (()=>{const p=eduProg();if(!p)return '';const done=p.quiz?p.quiz.ans.filter(x=>x>=0).length:0;
+        return '<div class="notice eduresume"><p><b>Du var i gang.</b> '+(p.quiz?'Testen, spørgsmål '+(p.quiz.i+1)+' af '+EDU_QUIZ.length+(done?' ('+done+' besvaret)':'')+'.':'Emne '+(p.les+1)+': '+EDU[p.les].t+'.')+' Fortsæt, hvor du stoppede, eller start forfra.</p><div class="row-actions">'+(p.quiz?'<button class="btn primary" data-act="quiz-resume">Fortsæt testen</button>':'<button class="btn primary" data-act="edu-open" data-arg="'+p.les+'">Fortsæt emne '+(p.les+1)+'</button>')+'</div></div>';})()+
+      '<div class="row-actions" style="margin-bottom:1.6rem"><button class="btn'+(eduProg()?'':' primary')+'" data-act="edu-restart">Start forfra</button><button class="btn" data-act="edu-print">Udskriv det hele (PDF)</button></div>'+
       '<section><h2>Hvad skal du gøre?</h2><ul class="mlist">'+EDU_HELP.map(h=>{const k=EDU.findIndex(L=>L.id===h[1]);return row(k,h[0],'Se emne '+(k+1)+': '+EDU[k].t,ICON.edu);}).join('')+'</ul></section>'+
       '<section><h2>Alle emner</h2><ul class="mlist edulist">'+EDU.map((L,k)=>row(k,L.t,L.intro+' Ca. '+L.min+' min.',String(k+1))).join('')+'</ul></section>'+
       '<section><h2>Test dig selv</h2><ul class="mlist"><li><button class="mrow" data-act="quiz-start"><span class="ic green" aria-hidden="true">✓</span><span>Tag testen<small>'+EDU_QUIZ.length+' spørgsmål om det, du har lært. Bestået ved mindst '+Math.round(QUIZ_PASS*100)+' % rigtige. Ca. 5 min.</small></span>'+ICON.chev+'</button></li></ul></section>';
@@ -4991,13 +5004,15 @@ const ACT={
   'ph-send':()=>{const i=$('#phIn');if(i&&i.value.trim()){phoneSend(i.value);i.value='';i.focus();}},
   'cam-open':()=>{phAudioOn();const dl=$('#dlg');if(dl.open&&dl.classList.contains('qs')){dl.classList.remove('qs');}openCam();},
   'qs-open':openQs,
-  'edu-open':a=>{ui.tab='undervisning';ui.edu=a===''||a==null?-1:+a;const lv=$('#srLive');if(lv)lv.textContent='';render();window.scrollTo(0,0);toastHide();const h=ui.edu>=0&&$('#main .edul h1');if(h&&!coarse()){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}},
+  'edu-restart':()=>{lsSet(EDU_KEY,null);ui.quiz=null;ACT['edu-open']('0');},
+  'quiz-resume':()=>{if(!quizResume())quizStart();ui.tab='undervisning';ui.edu='quiz';render();window.scrollTo(0,0);const h=$('#main .quiz h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}},
+  'edu-open':a=>{ui.tab='undervisning';ui.edu=a===''||a==null?-1:+a;if(ui.edu>=0)eduSave({les:ui.edu});const lv=$('#srLive');if(lv)lv.textContent='';render();window.scrollTo(0,0);toastHide();const h=ui.edu>=0&&$('#main .edul h1');if(h&&!coarse()){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}},
   'edu-print':()=>printEdu(),
   'gdpr-find':()=>{const f=$('#main [data-in="gdpr-q"]');const q=clean(f?f.value:'');if(!q){toast('Skriv navnet først.');return;}ui.gdprQ=q;render();},
   'gdpr-delete':a=>{const q=String(a||'');if(!q)return;if(!confirm('Alt om '+q+' slettes: navn, lister, historik, noter og listen over fratrådte. Det kan ikke fortrydes. Vil du fortsætte?'))return;const n=gdprDeletePerson(q);ui.gdprQ='';markDirty();render();toast('GDPR slettet: '+pl(n,'sted','steder')+' om personen.');},
   'gdpr-record':()=>printRecord(),
   'quiz-start':()=>{quizStart();ui.tab='undervisning';ui.edu='quiz';render();window.scrollTo(0,0);const h=$('#main .quiz h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}},
-  'quiz-next':()=>{const z=ui.quiz;if(!z||z.ans[z.i]<0)return;if(z.i<EDU_QUIZ.length-1)z.i++;else z.phase='result';render();window.scrollTo(0,0);const h=$('#main .quiz h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}},
+  'quiz-next':()=>{const z=ui.quiz;if(!z||z.ans[z.i]<0)return;if(z.i<EDU_QUIZ.length-1)z.i++;else z.phase='result';quizSave();render();window.scrollTo(0,0);const h=$('#main .quiz h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}},
   'quiz-review':()=>{if(!ui.quiz)return;ui.quiz.phase='review';render();window.scrollTo(0,0);},
   'edu-zoom':a=>eduZoom(a),
   'qs-go':a=>qsRun(+a),
@@ -5080,7 +5095,7 @@ document.addEventListener('change',e=>{
     const sm=statusDevice(d,el.value);if(sm!==null)markDirty();if(inDlg)openDevice(id);else if(ui.tab==='register')refreshReg();else render();if(sm)toast(sm.trim());}
   else if(ch==='dev-apple'){const d=devById(id);if(!d)return;d.apple=el.checked;if(el.checked&&d.type==='Ukendt')d.type='Telefon';hist(d,el.checked?'Markeret som iPhone':'Ikke en iPhone');markDirty();openDevice(id);if(ui.tab==='register')refreshReg();}
   else if(ch==='gdpr-days'){const n=parseInt(el.value,10);if(!Number.isInteger(n)||n<1||n>3650){el.value=gdprDays();toast('Skriv et tal mellem 1 og 3650.');return;}if(n!==gdprDays()){state.gdprDays=n;markDirty();toast('Navne i historikken slettes nu efter '+n+' dage. Navne, der allerede står der, beholder deres dato.');}}
-  else if(ch==='quiz'){if(ui.quiz&&ui.quiz.phase==='q'){ui.quiz.ans[ui.quiz.i]=+el.dataset.arg;const b=$('#main [data-act="quiz-next"]');if(b)b.disabled=false;}}
+  else if(ch==='quiz'){if(ui.quiz&&ui.quiz.phase==='q'){ui.quiz.ans[ui.quiz.i]=+el.dataset.arg;quizSave();const b=$('#main [data-act="quiz-next"]');if(b)b.disabled=false;}}
   else if(ch==='dev-shared'){const d=devById(id);if(!d)return;
     if(el.checked&&namesOf(d).length&&!confirm('Enheden bliver '+sharedWord(d).toLowerCase()+', og navnet på sidste bruger slettes fra enheden og historikken. Det kan ikke fortrydes. Vil du fortsætte?')){el.checked=false;return;}
     setShared(d,el.checked);markDirty();openDevice(id);if(ui.tab==='register')refreshReg();}
