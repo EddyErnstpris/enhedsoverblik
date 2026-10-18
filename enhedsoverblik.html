@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.7 (2026-10-18)">
+<meta name="version" content="6.8 (2026-10-18)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -929,7 +929,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.7 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.8 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="listFile" accept=".csv,.txt,.tsv,.htm,.html" hidden>
@@ -995,6 +995,8 @@ const pl=(n,one,many)=>n+' '+(n===1?one:many);
 /* Version 5.71 (Eddy 13-10-2026): "Udfaset" is now "Skal sendes retur", and "Returneret til Supporten" is "Sendt retur".
    Files and the database with the old words are read with the new ones (OLD_STATUS). */
 const STATUSES=['I drift','Reserve','Afventer nulstilling','Reparation','Skal sendes retur','Sendt retur','Bortkommet'];
+/* Version 6.8 (Eddy 18-10-2026): "Reserve" is called "Klar" in the status menus (the stored value stays Reserve, so older registers and the lists are unchanged). */
+function stLabel(x){return x==='Reserve'?'Klar':x;}
 const OLD_STATUS={'Udfaset':'Skal sendes retur','Returneret til Supporten':'Sendt retur'};
 const newStatusText=t=>t.replace(/^Status: (Udfaset|Returneret til Supporten)$/,(m,w)=>'Status: '+OLD_STATUS[w]);
 const ACTIVE=new Set(['I drift','Reserve','Afventer nulstilling','Reparation']);
@@ -2186,7 +2188,7 @@ function regTable(){
         '<td class="nw"><div>'+(d.type==='Ukendt'?'<select class="typesel" aria-label="Type for '+nm+'" data-ch="dev" data-id="'+d.id+'" data-k="type"><option value="Ukendt" selected>Type mangler, vælg</option><option>Telefon</option><option>Vikartelefon</option><option>Tablet</option></select>':esc(d.type))+' <span class="muted nowrap">'+esc(d.model)+'</span>'+osTag(d)+'</div><div class="sub mono">'+esc(d.serial)+'</div>'+(simLinks(d)?'<div class="sub">'+simLinks(d)+'</div>':'')+'</td>'+
         '<td data-l="Sidste bruger"><div>'+(d.shared?'<span class="muted">'+sharedWord(d)+'</span>':d.lastUser?'<span class="uname">'+esc(d.lastUser)+'</span>':'')+'</div><div class="sub num">'+(fmtDate(d.lastSeen)?'Sidst set <span class="nowrap">'+fmtDate(d.lastSeen)+'</span>':'')+'</div></td>'+
         '<td data-l="Placering"><select aria-label="Placering for '+nm+'" data-ch="place" data-id="'+d.id+'">'+deptOptions(d.deptId)+'</select></td>'+
-        '<td data-l="Status"><select aria-label="Status for '+nm+'" data-ch="status" data-id="'+d.id+'">'+STATUSES.map(s=>'<option'+(s===d.status?' selected':'')+'>'+s+'</option>').join('')+'</select></td>'+
+        '<td data-l="Status"><select aria-label="Status for '+nm+'" data-ch="status" data-id="'+d.id+'">'+STATUSES.map(s=>'<option value="'+s+'"'+(s===d.status?' selected':'')+'>'+stLabel(s)+'</option>').join('')+'</select></td>'+
         '<td class="flags">'+fl.join(' ')+'</td></tr>';
     }).join('')+'</tbody></table>'+(all.length>list.length?'<div class="more"><button class="btn" data-act="reg-more">Vis flere ('+(all.length-list.length)+' til)</button></div>':'');
 }
@@ -2195,7 +2197,7 @@ function regBulk(){
   const n=ui.reg.sel.size;if(!n)return '';
   return '<div class="bulk" role="region" aria-label="Valgte enheder"><b class="num">'+pl(n,'enhed valgt','enheder valgt')+'</b>'+
     '<select aria-label="Placér de valgte" data-ch="bulk-place"><option value="" disabled selected>Placér på…</option>'+deptOptions('__x',false,false)+'</select>'+
-    '<select aria-label="Status for de valgte" data-ch="bulk-status"><option value="" disabled selected>Sæt status…</option>'+STATUSES.map(s=>'<option>'+s+'</option>').join('')+'</select>'+
+    '<select aria-label="Status for de valgte" data-ch="bulk-status"><option value="" disabled selected>Sæt status…</option>'+STATUSES.map(s=>'<option value="'+s+'">'+stLabel(s)+'</option>').join('')+'</select>'+
     '<select aria-label="Type for de valgte" data-ch="bulk-type"><option value="" disabled selected>Sæt type…</option><option>Telefon</option><option>Vikartelefon</option><option>Tablet</option></select>'+
     '<button class="btn small" data-act="reg-sel-clear">Ryd valg</button></div>';
 }
@@ -2206,7 +2208,7 @@ function viewRegister(){
   return '<div class="regv"><div class="lead"><h1>Register</h1><p>Én række pr. enhed. Placering og status retter du direkte i listen.</p></div>'+
     '<div class="toolbar"><div class="grow"><input type="search" placeholder="Label, serienr., IMEI, bruger" aria-label="Søg" data-in="reg-q" value="'+esc(r.q)+'"></div>'+
     '<select aria-label="Filtrér på placering" data-ch="reg-dept"><option value="">Alle placeringer</option><option value="__none"'+(r.dept==='__none'?' selected':'')+'>Uden placering</option>'+deptOptions(r.dept,true)+'</select>'+
-    '<select aria-label="Filtrér på status" data-ch="reg-status"><option value="">Alle statusser</option>'+STATUSES.map(s=>'<option'+(s===r.status?' selected':'')+'>'+s+'</option>').join('')+'</select>'+
+    '<select aria-label="Filtrér på status" data-ch="reg-status"><option value="">Alle statusser</option>'+STATUSES.map(s=>'<option value="'+s+'"'+(s===r.status?' selected':'')+'>'+stLabel(s)+'</option>').join('')+'</select>'+
     '<select aria-label="Filtrér på type" data-ch="reg-type"><option value="">Alle typer</option>'+['Telefon','Vikartelefon','Tablet','Ukendt'].map(s=>'<option'+(s===r.type?' selected':'')+'>'+s+'</option>').join('')+'</select></div>'+
     '<div class="toolbar"><div class="chips">'+chip('','Alle')+chip('noplace','Mangler placering')+chip('inact','Inaktive')+chip('missing','Ikke på listerne')+chip('leaver','Bruger fratrådt')+chip('expected','Forventet retur')+chip('shared','Vikartelefoner')+chip('iphone','iPhones')+'</div><span class="spacer"></span>'+
     '<div class="row-actions"><button class="btn small" data-act="assign-labels">Tildel labels</button><button class="btn small" data-act="add-device">Tilføj enhed</button><button class="btn small" data-act="export-csv">Eksportér til Excel</button></div></div>'+
@@ -2668,7 +2670,7 @@ function statusDevice(d,v){
   if(d.deptId===LAGER){if(!ACTIVE.has(v)){d.deptId='';leaveStock(d);d.lockUser=today();d.userBy={};d.mismatch={};}else if(v==='Reserve'&&!d.readySince)d.readySince=today();else if(v!=='Reserve')d.readySince='';}
   const sev=v==='Sendt retur'?{k:'Retur til Supporten',who:'',place:'Supporten'}:v==='Bortkommet'?{k:'Meldt bortkommet',who:'',place:''}:v==='Reserve'&&d.deptId===LAGER?{k:'Klar',who:'',place:'Lager'}:null;
   if(gone)leaveForGood(d);
-  hist(d,'Status: '+v,sev);
+  hist(d,'Status: '+stLabel(v),sev);
   return simOnStatus(d,v);
 }
 function fromDept(d){
@@ -3998,7 +4000,7 @@ function openDevice(id){
     f('serial','Serienummer')+f('imei','IMEI')+f('model','Model')+f('phone','Telefonnummer')+(d.shared?'<div class="field"><span>Bruger</span><b>'+esc(sharedWord(d))+', bruges af flere</b></div>':f('lastUser','Sidste bruger'))+
     '<div class="field"><span>Sidst set</span><b class="num">'+(fmtDate(d.lastSeen)||'Ingen dato')+'</b></div>'+
     '<label class="field">Placering<select data-ch="place" data-id="'+id+'">'+deptOptions(d.deptId)+'</select></label>'+
-    '<label class="field">Status<select data-ch="status" data-id="'+id+'">'+STATUSES.map(s=>'<option'+(s===d.status?' selected':'')+'>'+s+'</option>').join('')+'</select></label>'+
+    '<label class="field">Status<select data-ch="status" data-id="'+id+'">'+STATUSES.map(s=>'<option value="'+s+'"'+(s===d.status?' selected':'')+'>'+stLabel(s)+'</option>').join('')+'</select></label>'+
     f('note','Note','wide')+
     simDevSection(d)+
     (ACTIVE.has(d.status)&&!inStock(d)&&!d.shared?'<label class="field wide">Brugeren stopper den<input type="date" data-in="dev-leave" data-id="'+id+'" min="2000-01-01" max="2099-12-31" value="'+esc(d.leaveDate)+'"><span class="muted" style="font-size:.8125rem;font-weight:400">Er lageret lukket, lægges enheden i afleveringskassen. Efter datoen står den som Mangler, indtil den er scannet ind.</span></label>':'')+
@@ -5097,8 +5099,8 @@ document.addEventListener('change',e=>{
     }else{
       if(!v){return;}
       const asks=ds.map(d=>statusAsks(d,v)).filter(Boolean);
-      if(asks.length&&!confirm(pl(ds.length,'enhed','enheder')+' får status "'+v+'". '+asks[0])){el.value='';return;}
-      let nSim=0,nCh=0;ds.forEach(d=>{const n=(v==='Reparation'||v==='Sendt retur'||v==='Bortkommet')&&d.status!==v?simsOf(d).length:0;if(statusDevice(d,v)!==null){nSim+=n;nCh++;}});if(!nCh){el.value='';toast('Ingen af de valgte enheder ændrede sig.');return;}toast(pl(nCh,'enhed har','enheder har')+' fået status '+((st=>st.length===1?st[0]:v)([...new Set(ds.map(d=>d.status))]))+'.'+(nSim?(v==='Bortkommet'?' '+pl(nSim,'simkort er','simkort er')+' meldt bortkommet. Spær '+(nSim===1?'nummeret':'numrene')+' hos Supporten.':' Tag '+pl(nSim,'simkort','simkort')+' ud, og læg '+(nSim===1?'det':'dem')+' i simkassen.'):''));
+      if(asks.length&&!confirm(pl(ds.length,'enhed','enheder')+' får status "'+stLabel(v)+'". '+asks[0])){el.value='';return;}
+      let nSim=0,nCh=0;ds.forEach(d=>{const n=(v==='Reparation'||v==='Sendt retur'||v==='Bortkommet')&&d.status!==v?simsOf(d).length:0;if(statusDevice(d,v)!==null){nSim+=n;nCh++;}});if(!nCh){el.value='';toast('Ingen af de valgte enheder ændrede sig.');return;}toast(pl(nCh,'enhed har','enheder har')+' fået status '+stLabel((st=>st.length===1?st[0]:v)([...new Set(ds.map(d=>d.status))]))+'.'+(nSim?(v==='Bortkommet'?' '+pl(nSim,'simkort er','simkort er')+' meldt bortkommet. Spær '+(nSim===1?'nummeret':'numrene')+' hos Supporten.':' Tag '+pl(nSim,'simkort','simkort')+' ud, og læg '+(nSim===1?'det':'dem')+' i simkassen.'):''));
     }
     ui.reg.sel.clear();markDirty();render();refreshReg();}
   else if(ch==='rm-all'||ch==='rm-dev'||ch==='rmc-cb'||ch==='rmc-all'){
