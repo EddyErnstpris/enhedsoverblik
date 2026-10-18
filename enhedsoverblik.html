@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.3 (2026-10-18)">
+<meta name="version" content="6.4 (2026-10-18)">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
 :root{
@@ -928,7 +928,7 @@ details>summary{min-height:24px}
   </div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.3 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.4 fra <span class="nowrap">18-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
 <input type="file" id="listFile" accept=".csv,.txt,.tsv,.htm,.html" hidden>
@@ -1075,7 +1075,7 @@ function keyOf(el){
   if(ds.k!=null)k+='[data-k="'+q(ds.k)+'"]';
   return k;
 }
-function resetUi(){if(ui.found)ui.found.clear();if(ui.rep){ui.rep.names=!!REP_NAMES[ui.rep.type];ui.rep.dept='';ui.rep.open=false;}ui.tab='overblik';ui.inactFilter='alle';regReset();ui.scan='';ui.box=null;ui.simq='';pend.full=pend.inact=null;}
+function resetUi(){if(ui.found)ui.found.clear();if(ui.rep){ui.rep.names=!!REP_NAMES[ui.rep.type];ui.rep.dept='';ui.rep.open=false;}ui.tab='overblik';ui.inactFilter='alle';regReset();ui.scan='';ui.box=null;ui.simq='';ui.gdprQ='';pend.full=pend.inact=null;}
 
 function markDirty(){dirty=true;renderSaveState();if(!state.demo)dbChanged();}
 
@@ -1231,6 +1231,8 @@ function scrubOwn(d,names){
   d.note=sc(d.note);
   simsOf(d).forEach(s=>{if(s.note)s.note=sc(s.note);});
   rowsOf(d).forEach(r=>{if(hit(r.user))r.user='';if(r.plan)r.plan=sc(r.plan);});
+  /* Version 6.4: the remarks on the digital lists too. */
+  Object.values(state.checks||{}).forEach(c=>{const it=c&&c.items&&c.items[d.id];if(it&&it.n)it.n=sc(it.n);});
 }
 /* Deletes people from the rest of the register: user fields, the tool's own
    history lines and the list of leavers. Free text on other devices is left. */
@@ -1337,7 +1339,7 @@ function gdprTraces(q){
   const out={q,names,devs:[],rows:0,leaver:false,sims:0,total:0};
   state.devices.forEach(d=>{const w=[];if(hit(d.lastUser))w.push('sidste bruger');if(Object.values(d.userBy||{}).some(hit))w.push('navn fra listerne');
     const hl=d.history.filter(h=>(h.e&&(hit(h.e.who)||hit(h.e.ret)))||inText(h.t)).length;if(hl)w.push(pl(hl,'linje','linjer')+' i historikken');
-    if(inText(d.note))w.push('note');if(w.length){out.devs.push({d,w});out.total+=w.length;}});
+    if(inText(d.note))w.push('note');if(Object.values(state.checks||{}).some(c=>c&&c.items&&c.items[d.id]&&inText(c.items[d.id].n)))w.push('bemærkning på digital liste');if(w.length){out.devs.push({d,w});out.total+=w.length;}});
   out.rows=state.inactive.rows.filter(r=>hit(r.user)).length;out.total+=out.rows;
   out.leaver=state.leavers.split(/\r?\n/).some(l=>hit(l.trim()));if(out.leaver)out.total++;
   out.sims=state.sims.filter(x=>inText(x.note)).length;out.total+=out.sims;
@@ -1363,7 +1365,7 @@ function gdprDeletePerson(q){
 }
 /* Version 6.3: the record of processing (GDPR article 30), built from the register's own settings; printed from Opsætning → GDPR. */
 function gdprRecordHtml(){
-  const n=gdprDays(),site=esc(state.site||'arbejdspladsen'),db=dbOn()?'Supabase (EU, Irland), projekt sat op under Opsætning → Database':'ingen database sat op';
+  const n=gdprDays(),site=esc(state.site||'arbejdspladsen'),db=dbOn()?'Supabase (EU, Irland), projekt sat op under Opsætning → Database':'Supabase (EU, Irland); ikke sat op på denne pc';
   const sec=(h,b)=>'<section class="rpt-s"><h2>'+h+'</h2>'+b+'</section>';
   return '<p class="rpt-lead">Fortegnelse over behandling af personoplysninger i Enhedsoverblik (databeskyttelsesforordningen, artikel 30). Udskrevet '+fmtDate(today())+'.</p>'+
     sec('Dataansvarlig',"<p>"+site+" (kommunen). Databeskyttelsesrådgiveren fastsætter fristerne.</p>")+
@@ -1837,6 +1839,8 @@ function loginGate(){return !state.devices.length&&dbOn()&&!db.loaded&&!db.ses;}
 function render(){
   if(loginGate()&&ui.tab!=='overblik'){ui.tab='overblik';if($('#dlg').open){dlgCleanup();$('#dlg').close();}}
   document.body.dataset.tab=ui.tab;
+  /* Version 6.4: the result of "Find personen" (a name) is shown only while Opsætning is open, and never after a logout. */
+  if(ui.tab!=='opsaetning')ui.gdprQ='';
   if(gdprDay!==today()){gdprDay=today();if(!state.demo&&gdprSweep())markDirty();}
   if(loginGate()&&ui.tab==='overblik')document.body.dataset.login='1';else delete document.body.dataset.login;
   if(ui.tab!=='simkort'){const lv=$('#srLive');if(lv&&lv.textContent)lv.textContent='';}
@@ -2423,7 +2427,7 @@ function viewOpsaetning(){
       [['minTlf','Telefoner, mindst'],['minTab','Tablets, mindst'],['days','Dage klar før opgave'],['waitDays','Dage ikke klar før opgave']].map(f=>'<label class="field">'+f[1]+'<input type="number" min="0" max="365" data-in="stock" data-k="'+f[0]+'" value="'+state.stock[f[0]]+'"></label>').join('')+'</div></section>'+
     viewDbSection()+
     '<section><h2>GDPR</h2><p class="muted">Når en enhed indleveres, står navnet på sidste bruger i enhedens historik i det antal dage, der står her, og slettes så automatisk. En person, der ikke har haft nogen enhed i brug i det antal dage, slettes helt fra registeret. Antallet er jeres valg efter databeskyttelsesreglerne.</p><label class="field" style="max-width:16rem">Dage, før navne slettes<input type="number" min="1" max="3650" data-ch="gdpr-days" value="'+gdprDays()+'"></label>'+
-      '<p class="muted" style="margin-top:.9rem">Find alt, der er gemt om en person, og slet det, hvis personen beder om det (indsigt og sletning).</p><div class="row-actions"><input type="search" data-in="gdpr-q" aria-label="Navn på personen" placeholder="Skriv navnet" autocomplete="off" style="flex:1 1 10rem;min-width:0;max-width:20rem"><button class="btn primary" data-act="gdpr-find">Find personen</button><button class="btn" data-act="gdpr-record">Fortegnelse (udskriv)</button></div>'+
+      '<p class="muted" style="margin-top:.9rem">Find alt, der er gemt om en person, og slet det, hvis personen beder om det (indsigt og sletning).</p><div class="row-actions"><input type="search" data-in="gdpr-q" aria-label="Navn på personen" placeholder="Skriv navnet" autocomplete="off" value="'+esc(ui.gdprQ||'')+'" style="flex:1 1 10rem;min-width:0;max-width:20rem"><button class="btn primary" data-act="gdpr-find">Find personen</button><button class="btn" data-act="gdpr-record">Fortegnelse (udskriv)</button></div>'+
       (ui.gdprQ?gdprFindHtml(ui.gdprQ):'')+'</section>'+
     '<section><h2>Fratrådte medarbejdere</h2><p class="muted">Skriv ét navn pr. linje, præcis som det står i listerne. Enheder med de brugere bliver markeret, så du kan hente dem.</p><textarea rows="5" aria-label="Fratrådte medarbejdere, ét navn pr. linje" data-in="leavers" style="max-width:24rem">\n'+esc(state.leavers)+'</textarea>'+
       (()=>{const idle=idleLeavers();return idle.length?'<div class="notice" style="max-width:36rem;margin-top:.8rem"><p>'+(idle.length===1?esc(idle[0])+' har':pl(idle.length,'navn','navne')+' har')+' ingen enhed i brug i registeret. Et navn slettes selv, når den sidste enhed indleveres. <button class="btn small" data-act="leavers-idle">Slet '+(idle.length===1?'navnet':'navnene')+'</button></p></div>':'';})()+
@@ -5191,6 +5195,7 @@ document.addEventListener('keydown',e=>{
     const b=$('#dlg .dlg-actions .btn.primary');if(b&&!b.disabled){e.preventDefault();b.click();return;}
   }
   if(e.key==='Enter'&&tg&&tg.dataset&&tg.dataset.in==='stock'&&!drawing){stockRule(tg);return;}
+  if(e.key==='Enter'&&tg&&tg.dataset&&tg.dataset.in==='gdpr-q'){e.preventDefault();ACT['gdpr-find']();return;}
   if(e.key==='Enter'&&tg&&tg.id==='phIn'){e.preventDefault();ACT['ph-send']();return;}
   /* Version 5.75: Enter in the number field of "Tag simkortet ud" presses OK. */
   if(e.key==='Enter'&&tg&&tg.dataset&&tg.dataset.swp!=null){e.preventDefault();ACT['sim-wait-ok']();return;}
