@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.16 (2026-10-19)">
+<meta name="version" content="6.17 (2026-10-19)">
 <meta name="referrer" content="no-referrer">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
@@ -973,7 +973,7 @@ details>summary{min-height:24px}
   <div class="tabrow"><nav class="tabs" id="tabs" aria-label="Sektioner"></nav></div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.16 fra <span class="nowrap">19-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.17 fra <span class="nowrap">19-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="askDlg" class="askd" aria-labelledby="askT"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
@@ -2608,25 +2608,8 @@ function scanAuto(d){
    serial number, puts it on stock as not ready, and opens the device sheet so the rest (label, type, model) is filled in as usual.
    The next scan of the same code then meets the ordinary stock box (Markér som klar / Udlevér). Not in "Tøm kassen", not for an
    ICCID (18–20 digits) and not for a 15-digit number whose check digit fails (the warning stays). */
-/* TEST (6.2, Eddy 18-10-2026: "Indsæt R81 test modulet igen, så jeg kan genteste scannings processen ordentligt, og fjern det først igen, når jeg
-   specifikt beder dig om det"): while TEST_SCAN is on, a code on Lager that matches no device gets the test boxes from 5.98 ("Skal den ind på
-   lageret?" → "Vil du udlevere den?") without creating anything; the real creation (scanNew, 6.0) is paused meanwhile. To remove: set TEST_SCAN
-   to false or delete TEST_SCAN, testScan, the actions test-in/test-out and eoDebug.setTestScan, plus test R86. */
-let TEST_SCAN=true;
-function testScan(code){
-  const k=skey(code);if(!TEST_SCAN||k.length<4||boxOn()||/^\d{18,20}$/.test(simDigits(code)))return false;
-  if(/^\d{15}$/.test(k)&&!luhnOk(k))return false;
-  if(!ui.testStock)ui.testStock=new Set();
-  const inS=ui.testStock.has(k),tag='<p class="muted" style="font-size:.8125rem">Test af scanning. Der gemmes intet i registeret.</p>';
-  scanBox=true;
-  showDlg(dlgHead('Test: '+esc(code),inS?'Står på lageret (test)':'Ikke på lageret')+'<div class="dlg-body">'+
-    (inS?'<p><b>Enheden er på lageret. Vil du udlevere den?</b></p>':'<p><b>Enheden er ikke på lageret. Skal den ind på lageret?</b></p>')+tag+
-    '<div class="row-actions dlg-actions"><button class="btn" data-act="dlg-close">Nej</button><button class="btn primary" data-act="'+(inS?'test-out':'test-in')+'" data-arg="'+esc(k)+'"'+(inS?' style="background:var(--gbtn);color:#fff"':'')+'>'+(inS?'Ja, udlevér':'Ja, ind på lageret')+'</button></div></div>');
-  const b=$('#dlg .dlg-actions .btn.primary');if(b&&!matchMedia('(pointer:coarse)').matches)b.focus({preventScroll:true});
-  return true;
-}
+/* Version 6.17 (Eddy 19-10-2026: "Fjern R81"): the test mode from 6.2 (TEST_SCAN/testScan, the actions test-in/test-out, eoDebug.setTestScan and test R86) is removed; an unknown code creates the device as in 6.0. */
 function scanNew(code){
-  if(TEST_SCAN)return testScan(code);/* TEST 6.2 */
   const k=skey(code);if(k.length<4||boxOn()||/^\d{18,20}$/.test(simDigits(code)))return false;
   const isImei=/^\d{15}$/.test(k);if(isImei&&!luhnOk(k))return false;
   scanBox=true;
@@ -5143,8 +5126,6 @@ const ACT={
   'tjek-reset':async a=>{if(!await ask('Vil du fjerne alle krydser og bemærkninger på listen? Det kan ikke fortrydes.'))return;const c=tjekData(a);c.items={};c.started=today();markDirty();render();toast('Listen er nulstillet.');},
   'stock-out-yes':a=>{openHandOut(a);},
   /* TEST 6.2 */
-  'test-in':a=>{ui.testStock.add(a);$('#dlg').close();toast('Test: enheden er nu på lageret. Scan den igen for at prøve Udlevér.');},
-  'test-out':a=>{ui.testStock.delete(a);$('#dlg').close();toast('Test: enheden er udleveret. Der er intet gemt.');},
   'scan-new':a=>{const k=skey(a);if(!k||findByScan(k).length)return;const isImei=/^\d{15}$/.test(k);
     const d=newDevice({serial:isImei?'':k,imei:isImei?k:'',model:'',type:''},'manual');enterStock(d,'Afventer nulstilling');
     hist(d,'Oprettet ved scanning på Lager og indleveret som ny enhed',{k:'Indleveret',who:'',place:'Ny enhed'});markDirty();
@@ -5427,7 +5408,7 @@ window.addEventListener('beforeunload',e=>{
 });
 
 /* Read-only view of the state for the test suite. */
-Object.defineProperty(window,'eoDebug',{value:{get state(){return state;},tts:{on:TTS,parts:ttsParts,get key(){return ttsKey;}},get db(){return db;},get dirty(){return dirty;},saveText(){state.savedAt=nowISO();const t=JSON.stringify(stateForSave(),null,1);if(!dbOn())dirty=false;renderSaveState();return t;},loadText(t){return loadRegister(String(t));},setTestScan(on){TEST_SCAN=!!on;}},enumerable:false});
+Object.defineProperty(window,'eoDebug',{value:{get state(){return state;},tts:{on:TTS,parts:ttsParts,get key(){return ttsKey;}},get db(){return db;},get dirty(){return dirty;},saveText(){state.savedAt=nowISO();const t=JSON.stringify(stateForSave(),null,1);if(!dbOn())dirty=false;renderSaveState();return t;},loadText(t){return loadRegister(String(t));}},enumerable:false});
 if(PH)phoneStart();else{render();dbStart();}
 })();
 </script>
