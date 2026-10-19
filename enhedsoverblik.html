@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.14 (2026-10-19)">
+<meta name="version" content="6.15 (2026-10-19)">
 <meta name="referrer" content="no-referrer">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
@@ -287,7 +287,10 @@ footer.foot svg{color:var(--s60)}
 .edubtn svg{width:1.15rem;height:1.15rem;flex:none}
 .edunr{font-weight:700;font-size:1rem}
 .edubtn[aria-current="page"]{background:var(--accent-soft)}
-.edu-count{color:var(--muted);font-size:.875rem;margin:.8rem 0 .1rem}
+.edu-count{color:var(--muted);font-size:.875rem;margin:.8rem 0 .1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap}
+/* Version 6.15 (Eddy 19-10-2026): "Gør det muligt at få læst træningsmaterialet op" – the read-aloud button in each lesson and on each question. */
+.ttsbtn{display:inline-flex;align-items:center;gap:.35rem}.ttsbtn svg{width:1.05rem;height:1.05rem}.quiz .ttsbtn{margin:-.2rem 0 .8rem}
+@media print{.ttsbtn{display:none}}
 /* Version 6.10: the status bar in Akademi */
 .edubar{margin:.9rem 0 .4rem;max-width:46rem}.ebsegs{display:flex;gap:4px;align-items:stretch;height:14px}
 .eseg{flex:1 1 0;min-width:0;appearance:none;border:0;padding:0;margin:0;border-radius:7px;background:var(--fill);cursor:pointer;position:relative;transition:background .35s,transform .2s}
@@ -970,7 +973,7 @@ details>summary{min-height:24px}
   <div class="tabrow"><nav class="tabs" id="tabs" aria-label="Sektioner"></nav></div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.14 fra <span class="nowrap">19-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.15 fra <span class="nowrap">19-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="askDlg" class="askd" aria-labelledby="askT"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
@@ -1824,6 +1827,8 @@ function assignLabels(){
 /* ---------- Rendering ---------- */
 const SV='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">';
 const ICON={
+  speak:SV+'<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M15.5 9a4 4 0 0 1 0 6M18 6.5a7.5 7.5 0 0 1 0 11"/></svg>',
+  stop:SV+'<rect x="6" y="6" width="12" height="12" rx="2"/></svg>',
   logout:SV+'<path d="M14 4.5H7.5a2 2 0 0 0-2 2v11a2 2 0 0 0 2 2H14"/><path d="M11 12h9M16.8 8.6 20.2 12l-3.4 3.4"/></svg>',
   overblik:SV+'<rect x="3.5" y="3.5" width="7" height="7" rx="2"/><rect x="13.5" y="3.5" width="7" height="7" rx="2"/><rect x="3.5" y="13.5" width="7" height="7" rx="2"/><rect x="13.5" y="13.5" width="7" height="7" rx="2"/></svg>',
   inaktive:SV+'<circle cx="12" cy="12" r="8.6"/><path d="M12 7.4V12l3 2"/></svg>',
@@ -1915,6 +1920,7 @@ function render(){
   renderSaveState();
   fitPaper();
   topH();
+  if(TTS&&ttsKey&&!main.querySelector('.ttsbtn[data-arg="'+ttsKey+'"]'))ttsStop();
   window.scrollTo(0,y);
   if(ui.tab==='tjek'&&ui.tjek&&ui.tjek.hit){const h=$('#tj-'+ui.tjek.hit);if(h)h.scrollIntoView({block:'center'});}
   if(sel){const el=scope.querySelector(sel);if(el){el.focus({preventScroll:true});if(caret&&caret.s!=null){try{el.setSelectionRange(caret.s,caret.e);}catch(e){}}}else if(scope===main)focusFallback();}
@@ -3338,7 +3344,7 @@ function quizScore(){const z=ui.quiz;const right=EDU_QUIZ.filter((Q,i)=>z.ans[i]
 function quizReview(){
   const z=ui.quiz,wrong=EDU_QUIZ.map((Q,i)=>[Q,i]).filter(([Q,i])=>z.ans[i]!==Q.c);
   if(!wrong.length)return '<div class="notice"><b>Alle svar var rigtige.</b> Der er ikke noget at gennemgå.</div>';
-  return '<h2>Gennemgang af dine '+pl(wrong.length,'fejl','fejl')+'</h2><ol class="qrev">'+wrong.map(([Q,i])=>{const k=EDU.findIndex(L=>L.id===Q.les);
+  return '<h2>Gennemgang af dine '+pl(wrong.length,'fejl','fejl')+'</h2>'+ttsButton('rev:0')+'<ol class="qrev">'+wrong.map(([Q,i])=>{const k=EDU.findIndex(L=>L.id===Q.les);
     return '<li><b>'+(i+1)+'. '+Q.q+'</b><span class="qwrong">Dit svar: '+(z.ans[i]>=0?Q.a[z.ans[i]]:'intet svar')+'</span><br><span class="qright">Rigtigt svar: '+Q.a[Q.c]+'</span><span class="qwhy">'+Q.why+(k>=0?' <button class="btn plain small" data-act="edu-open" data-arg="'+k+'">Se emne '+(k+1)+'</button>':'')+'</span></li>';}).join('')+'</ol>';
 }
 function viewQuiz(){
@@ -3346,7 +3352,7 @@ function viewQuiz(){
   if(z.phase==='q'){
     const Q=EDU_QUIZ[z.i],picked=z.ans[z.i];
     return back+eduBar('quiz')+'<div class="quiz"><p class="qprog">Spørgsmål '+(z.i+1)+' af '+N+' · bestået ved mindst '+Math.ceil(N*QUIZ_PASS)+' rigtige</p><div class="qbar"><i style="width:'+Math.round(z.i/N*100)+'%"></i></div>'+
-      '<h1>'+Q.q+'</h1><ul class="qopts" role="radiogroup" aria-label="Svar">'+Q.a.map((t,j)=>'<li><label class="qopt"><input type="radio" name="quiz" data-ch="quiz" data-arg="'+j+'"'+(picked===j?' checked':'')+'> <span>'+t+'</span></label></li>').join('')+'</ul>'+
+      '<h1>'+Q.q+'</h1>'+ttsButton('quiz:'+z.i)+'<ul class="qopts" role="radiogroup" aria-label="Svar">'+Q.a.map((t,j)=>'<li><label class="qopt"><input type="radio" name="quiz" data-ch="quiz" data-arg="'+j+'"'+(picked===j?' checked':'')+'> <span>'+t+'</span></label></li>').join('')+'</ul>'+
       '<div class="row-actions"><button class="btn primary" data-act="quiz-next"'+(picked<0?' disabled':'')+'>'+(z.i<N-1?'Næste ›':'Se resultatet')+'</button></div></div>';
   }
   const sc=quizScore();
@@ -3361,6 +3367,35 @@ function viewQuiz(){
   }
   return back+'<div class="quiz"><p class="qprog">Bestået: '+sc.right+' af '+sc.total+' rigtige</p>'+quizReview()+'<div class="row-actions"><button class="btn primary" data-act="edu-open" data-arg="">Tilbage til Akademi</button><button class="btn" data-act="quiz-start">Tag testen igen</button></div></div>';
 }
+/* Version 6.15 (Eddy 19-10-2026): "Gør det muligt at få læst træningsmaterialet op". The browser's own speech (speechSynthesis; nothing is sent
+   anywhere) reads a lesson (title, introduction, the numbered steps and "Husk") or a question with its three answers. A Danish voice is used when
+   the pc or phone has one; otherwise the browser's default voice reads the Danish text. The text is split into sentences-sized parts, because
+   Chrome stops a long utterance after about 15 seconds. The button toggles (Læs op / Stop oplæsning); leaving the page stops the reading. */
+const TTS=typeof speechSynthesis!=='undefined'&&typeof SpeechSynthesisUtterance!=='undefined';
+let ttsKey='',ttsWarned=false;
+if(TTS){try{speechSynthesis.getVoices();speechSynthesis.addEventListener('voiceschanged',()=>speechSynthesis.getVoices());}catch(e){}}
+function ttsVoice(){try{const vs=speechSynthesis.getVoices();return vs.find(v=>/^da([-_]|$)/i.test(v.lang)&&v.default)||vs.find(v=>/^da([-_]|$)/i.test(v.lang))||null;}catch(e){return null;}}
+function ttsClean(t){return String(t).replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/→/g,', så ').replace(/\bfx\b/g,'for eksempel').replace(/Ctrl\+K/g,'Control K').replace(/\s+/g,' ').trim();}
+function ttsParts(key){
+  const m=/^(les|quiz|rev):(\d+)$/.exec(key||'');if(!m)return [];
+  const out=[];
+  if(m[1]==='les'){const L=EDU[+m[2]];if(!L)return [];out.push(L.t+'.',L.intro);L.sec.forEach(s=>s.steps.forEach((st,k)=>out.push((k+1)+'. '+st[0]+'. '+st[1])));if(L.tips.length){out.push('Husk.');L.tips.forEach(t=>out.push(t));}}
+  else if(m[1]==='quiz'){const Q=EDU_QUIZ[+m[2]];if(!Q)return [];out.push('Spørgsmål '+(+m[2]+1)+'. '+Q.q);Q.a.forEach((a,k)=>out.push('Svar '+(k+1)+': '+a));}
+  else{const z=ui.quiz;if(!z)return [];EDU_QUIZ.forEach((Q,i)=>{if(z.ans[i]===Q.c)return;out.push('Spørgsmål '+(i+1)+'. '+Q.q,'Dit svar: '+(z.ans[i]>=0?Q.a[z.ans[i]]:'intet svar')+'.','Rigtigt svar: '+Q.a[Q.c]+'.',Q.why);});}
+  return out.map(ttsClean).flatMap(t=>t.split(/(?<=[a-zA-ZæøåÆØÅ)"][.!?])\s+(?=[A-ZÆØÅ0-9"„(])/)).map(t=>t.trim()).filter(Boolean);
+}
+function ttsButton(key){if(!TTS)return '';const on=ttsKey===key;return '<button class="btn small ttsbtn'+(on?' primary':'')+'" data-act="edu-read" data-arg="'+key+'" aria-pressed="'+(on?'true':'false')+'">'+(on?ICON.stop+'Stop oplæsning':ICON.speak+'Læs op')+'</button>';}
+function ttsPaint(){document.querySelectorAll('.ttsbtn').forEach(b=>{const on=ttsKey===b.dataset.arg;b.classList.toggle('primary',on);b.setAttribute('aria-pressed',on?'true':'false');b.innerHTML=on?ICON.stop+'Stop oplæsning':ICON.speak+'Læs op';});}
+function ttsStop(){if(!TTS)return;ttsKey='';try{speechSynthesis.cancel();}catch(e){}ttsPaint();}
+function ttsStart(key){
+  if(!TTS)return;if(ttsKey===key){ttsStop();return;}
+  ttsStop();const parts=ttsParts(key);if(!parts.length)return;
+  const v=ttsVoice();if(!v&&!ttsWarned){ttsWarned=true;toast('Der er ingen dansk stemme på denne enhed, så oplæsningen kan lyde udenlandsk.');}
+  ttsKey=key;const my=key;
+  parts.forEach((p,k)=>{const u=new SpeechSynthesisUtterance(p);u.lang='da-DK';if(v)u.voice=v;u.rate=.95;if(k===parts.length-1){u.onend=()=>{if(ttsKey===my)ttsStop();};}u.onerror=()=>{if(ttsKey===my)ttsStop();};try{speechSynthesis.speak(u);}catch(e){}});
+  ttsPaint();
+}
+if(TTS)document.addEventListener('visibilitychange',()=>{if(document.hidden&&ttsKey)ttsStop();});
 function eduLesson(i,printing){
   const L=EDU[i];let n=0;
   return '<article class="edul">'+(printing?'<h2 class="edu-pt">'+(i+1)+'. '+L.t+'</h2>':'<h1>'+L.t+'</h1>')+'<p class="edu-intro">'+L.intro+' <span class="edu-min">Ca. '+L.min+' min.</span></p>'+
@@ -3374,7 +3409,7 @@ function viewUndervisning(){
   if(i==null||i<0||i>=EDU.length){
     const row=(k,title,sub,ic)=>'<li><button class="mrow" data-act="edu-open" data-arg="'+k+'"><span class="ic orange edunr" aria-hidden="true">'+ic+'</span><span>'+title+(sub?'<small>'+sub+'</small>':'')+'</span>'+ICON.chev+'</button></li>';
     const total=EDU.reduce((a,L)=>a+L.min,0);
-    return '<div class="lead"><h1>Akademi</h1><p>Lær systemet trin for trin. Hvert emne tager et par minutter, og billederne viser præcis, hvor du skal klikke. Alt i alt ca. '+total+' minutter. Du kan holde pause når som helst: Akademi husker på denne pc, hvor du er, og også dine svar i testen.</p></div>'+eduBar(-1)+
+    return '<div class="lead"><h1>Akademi</h1><p>Lær systemet trin for trin. Hvert emne tager et par minutter, og billederne viser præcis, hvor du skal klikke. Alt i alt ca. '+total+' minutter. Du kan holde pause når som helst: Akademi husker på denne pc, hvor du er, og også dine svar i testen.'+(TTS?' Hvert emne og hvert spørgsmål kan læses højt: tryk Læs op.':'')+'</p></div>'+eduBar(-1)+
       (()=>{const p=eduProg();if(!p||(p.les==null&&!p.quiz))return '';const done=p.quiz?p.quiz.ans.filter(x=>x>=0).length:0;
         return '<div class="notice eduresume"><p><b>Du var i gang.</b> '+(p.quiz?'Testen, spørgsmål '+(p.quiz.i+1)+' af '+EDU_QUIZ.length+(done?' ('+done+' besvaret)':'')+'.':'Emne '+(p.les+1)+': '+EDU[p.les].t+'.')+' Fortsæt, hvor du stoppede, eller start forfra.</p><div class="row-actions">'+(p.quiz?'<button class="btn primary" data-act="quiz-resume">Fortsæt testen</button>':'<button class="btn primary" data-act="edu-open" data-arg="'+p.les+'">Fortsæt emne '+(p.les+1)+'</button>')+'</div></div>';})()+
       '<div class="row-actions" style="margin-bottom:1.6rem"><button class="btn'+((p=>p&&(p.les!=null||p.quiz))(eduProg())?'':' primary')+'" data-act="edu-restart">Start forfra</button><button class="btn" data-act="edu-print">Udskriv det hele (PDF)</button></div>'+
@@ -3383,7 +3418,7 @@ function viewUndervisning(){
       '<section><h2>Test dig selv</h2><ul class="mlist"><li><button class="mrow" data-act="quiz-start"><span class="ic green" aria-hidden="true">✓</span><span>Tag testen<small>'+EDU_QUIZ.length+' spørgsmål om det, du har lært. Bestået ved mindst '+Math.round(QUIZ_PASS*100)+' % rigtige. Ca. 6 min.</small></span>'+ICON.chev+'</button></li></ul></section>';
   }
   return '<button class="btn plain edubackbtn" data-act="edu-open" data-arg="">'+ICON.back+'Alle emner</button>'+
-    eduBar(i)+'<p class="edu-count">Emne '+(i+1)+' af '+EDU.length+'</p>'+eduLesson(i)+
+    eduBar(i)+'<p class="edu-count"><span>Emne '+(i+1)+' af '+EDU.length+'</span>'+ttsButton('les:'+i)+'</p>'+eduLesson(i)+
     '<div class="row-actions edunav">'+(i>0?'<button class="btn" data-act="edu-open" data-arg="'+(i-1)+'">‹ Forrige: '+EDU[i-1].t+'</button>':'')+
     (i<EDU.length-1?'<button class="btn primary" data-act="edu-next" data-arg="'+i+'">Næste: '+EDU[i+1].t+' ›</button>':'<button class="btn primary" data-act="edu-finish" data-arg="'+i+'">Færdig. Tag testen ›</button>')+'</div>';
 }
@@ -5130,6 +5165,7 @@ const ACT={
   'quiz-resume':()=>{if(!quizResume())quizStart();ui.tab='undervisning';ui.edu='quiz';render();window.scrollTo(0,0);const h=$('#main .quiz h1');if(h){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}},
   'edu-open':a=>{ui.tab='undervisning';ui.edu=a===''||a==null?-1:+a;if(ui.edu>=0)eduSave({les:ui.edu});const lv=$('#srLive');if(lv)lv.textContent='';render();window.scrollTo(0,0);toastHide();const h=ui.edu>=0&&$('#main .edul h1');if(h&&!coarse()){h.setAttribute('tabindex','-1');h.focus({preventScroll:true});}},
   'edu-print':()=>printEdu(),
+  'edu-read':a=>ttsStart(a),
   'gdpr-find':()=>{const f=$('#main [data-in="gdpr-q"]');const q=clean(f?f.value:'');if(!q){toast('Skriv navnet først.');return;}ui.gdprQ=q;render();},
   'gdpr-delete':async a=>{const q=String(a||'');if(!q)return;if(!await ask('Alt om '+q+' slettes: navn, lister, historik, noter og listen over fratrådte. Det kan ikke fortrydes. Vil du fortsætte?'))return;const n=gdprDeletePerson(q);ui.gdprQ='';markDirty();render();toast('GDPR slettet: '+pl(n,'sted','steder')+' om personen.');},
   'gdpr-record':()=>printRecord(),
@@ -5390,7 +5426,7 @@ window.addEventListener('beforeunload',e=>{
 });
 
 /* Read-only view of the state for the test suite. */
-Object.defineProperty(window,'eoDebug',{value:{get state(){return state;},get db(){return db;},get dirty(){return dirty;},saveText(){state.savedAt=nowISO();const t=JSON.stringify(stateForSave(),null,1);if(!dbOn())dirty=false;renderSaveState();return t;},loadText(t){return loadRegister(String(t));},setTestScan(on){TEST_SCAN=!!on;}},enumerable:false});
+Object.defineProperty(window,'eoDebug',{value:{get state(){return state;},tts:{on:TTS,parts:ttsParts,get key(){return ttsKey;}},get db(){return db;},get dirty(){return dirty;},saveText(){state.savedAt=nowISO();const t=JSON.stringify(stateForSave(),null,1);if(!dbOn())dirty=false;renderSaveState();return t;},loadText(t){return loadRegister(String(t));},setTestScan(on){TEST_SCAN=!!on;}},enumerable:false});
 if(PH)phoneStart();else{render();dbStart();}
 })();
 </script>
