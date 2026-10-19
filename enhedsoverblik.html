@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.17 (2026-10-19)">
+<meta name="version" content="6.18 (2026-10-19)">
 <meta name="referrer" content="no-referrer">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
@@ -973,7 +973,7 @@ details>summary{min-height:24px}
   <div class="tabrow"><nav class="tabs" id="tabs" aria-label="Sektioner"></nav></div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.17 fra <span class="nowrap">19-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.18 fra <span class="nowrap">19-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="askDlg" class="askd" aria-labelledby="askT"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
@@ -2562,7 +2562,7 @@ function viewLager(){
     return '<div class="srow"><div><div class="who">'+devTitle(d)+'</div>'+leaveFlag(d)+'</div><div class="muted">'+esc(placeName(d.deptId))+'<div class="mono" style="font-size:.8125rem">'+esc(d.serial||'')+'</div></div>'+
       '<div class="row-actions"><button class="btn small primary" data-act="'+a.act+'" data-arg="'+d.id+'">'+a.label+'</button><button class="btn small" data-act="dev" data-arg="'+d.id+'">Detaljer</button></div></div>';}).join('')+'</div></section>':'';
   return '<div class="lead"><h1>Lager</h1><p>Alle enheder går gennem lageret mellem to medarbejdere. Scan eller skriv label, serienummer eller IMEI.</p></div>'+lagerSub('lager')+
-    '<div class="scan"><input type="search" data-in="scan" aria-label="Scan eller søg efter en enhed" placeholder="Scan label, serienr. eller IMEI" value="'+esc(ui.scan)+'" autocomplete="off"><div class="row-actions lagerbtns">'+(ui.box?'':'<button class="btn primary" data-act="box-start">Tøm kassen</button>')+(camOk()?'<button class="btn primary" data-act="cam-open">Scan med kamera</button>':'')+(dbOn()?'<button class="btn primary" data-act="phone-open">'+(pairOn()?'Telefon forbundet':'Scan med telefon')+'</button>':'')+'<button class="btn primary" data-act="print-stock">Lagerliste (udskriv eller PDF)</button><button class="btn primary" data-act="labels-open">Udskriv mærkater</button></div></div>'+
+    '<div class="scan"><input type="search" data-in="scan" aria-label="Scan eller søg efter en enhed" placeholder="Scan label, serienr. eller IMEI" value="'+esc(ui.scan)+'" autocomplete="off"><div class="row-actions lagerbtns">'+(ui.box?'':'<button class="btn primary" data-act="box-start">Tøm kassen</button>')+(camOk()?'<button class="btn primary" data-act="cam-open">Scan med kamera</button>':'')+(dbOn()?'<button class="btn primary" data-act="phone-open">'+(pairOn()?'Telefon forbundet':'Scan med telefon')+'</button>':'')+'<button class="btn primary" data-act="print-stock">Lagerliste (udskriv eller PDF)</button><button class="btn primary" data-act="labels-open">Udskriv labels</button></div></div>'+
     box+
     '<div class="scanres" id="scanRes">'+scanResults()+'</div>'+
     expRows+
@@ -2822,10 +2822,10 @@ window.addEventListener('beforeprint',()=>{if(ui.tab==='rapporter'&&!document.bo
 function openLabels(){
   const all=state.devices.filter(d=>d.label&&ACTIVE.has(d.status)).length;
   const st=state.devices.filter(d=>d.label&&inStock(d)).length;
-  showDlg(dlgHead('Udskriv mærkater','A4-ark med 3 × 8 mærkater på 63,5 × 33,9 mm')+
+  showDlg(dlgHead('Udskriv labels','A4-ark med 3 × 8 labels på 63,5 × 33,9 mm')+
     '<div class="dlg-body"><div class="formgrid">'+
     '<label class="field">Hvilke enheder<select id="lbWhich"><option value="all">Alle med label ('+all+')</option><option value="stock">Kun på lageret ('+st+')</option></select></label>'+
-    '<label class="field">Spring de første mærkater over<input type="number" id="lbSkip" min="0" max="23" value="0"></label></div>'+
+    '<label class="field">Spring de første labels over<input type="number" id="lbSkip" min="0" max="23" value="0"></label></div>'+
     '<p class="muted" style="font-size:.8125rem;margin-top:.9rem">Udskriv første gang på almindeligt papir, og hold det op mod arket. Vælg 100 % eller "Faktisk størrelse" i udskriftsvinduet. Har en enhed ingen label, så brug Tildel labels under Register først.</p>'+
     '<div class="row-actions dlg-actions"><button class="btn" data-act="dlg-close">Annullér</button><button class="btn primary" data-act="labels-print"'+(all?'':' disabled')+'>Udskriv</button></div></div>');
 }
@@ -3169,7 +3169,7 @@ const EDU=[
    {img:'hi',alt:'Boksen Indlevér, der spørger, om enheden skal ind på lageret, med punktet om simkortet og knappen Indlevér',steps:[
     ['Skal den ind på lageret?','Tjek, at simkortet sidder i enheden, og sæt fluebenet.'],
     ['Tryk Indlevér','Enheden er nu på lager som ikke klar. Navnet fjernes fra enheden, men står i enhedens historik i en periode (antal dage sættes under Opsætning) og slettes så automatisk. Tryk Annullér, hvis den ikke skal ind.']]}],
-  tips:['Sæt enheden til opladning, og nulstil den.','Er enheden i stykker, så sæt status til Reparation bagefter.','Er enheden helt ny og ikke i registeret, spørger systemet, om den skal oprettes og ind på lageret. Udfyld så label, type og model.']},
+  tips:['Sæt enheden til opladning, og nulstil den.','Er enheden i stykker, så sæt status til Reparation bagefter.','Er enheden helt ny og ikke i registeret, spørger systemet, om den skal oprettes og ind på lageret. Udfyld så label, type og model, og print en label til den under Lager → Udskriv labels.']},
  {id:'kasse',t:'Afleveringskassen',min:2,intro:'Er lageret lukket, lægger medarbejderen enheden i den aflåste kasse. Næste dag tømmer du den på fanen Lager med knappen Tøm kassen.',
   sec:[
    {img:'box',alt:'Afleveringskassen tømmes: scanfeltet og knappen Færdig med kassen',steps:[
@@ -3212,7 +3212,7 @@ const EDU=[
     ['Klik på labelen','Så åbner enhedens vindue med alle oplysninger, historik og simkort.'],
     ['Status','Klar betyder nulstillet og klar til udlevering. Er enheden gået i stykker, så vælg Reparation. Er den væk, så vælg Bortkommet. En enhed uden for lageret kan kun sættes I drift, når den har et simkort.'],
     ['Type','Telefon, Tablet eller Vikartelefon. En vikartelefon bruges af skiftende vikarer, og der gemmes ingen bruger på den.']]}],
-  tips:['Sæt flueben ved flere enheder for at rette dem alle på én gang.','Flaget Uden simkort ved en enhed betyder, at den står i drift uden kort. Sæt et kort i (tryk på labelen → Sæt i enhed), eller indlevér enheden.']},
+  tips:['Sæt flueben ved flere enheder for at rette dem alle på én gang.','Labelen er enhedens navn, fx TLF-001. Tildel labels giver alle enheder uden label et nummer, og Lager → Udskriv labels printer klistermærker med labelen og en stregkode (A4-ark med 3 × 8). Én label pr. enhed.','Flaget Uden simkort ved en enhed betyder, at den står i drift uden kort. Sæt et kort i (tryk på labelen → Sæt i enhed), eller indlevér enheden.']},
  {id:'simkort',t:'Simkort',min:2,intro:'Simkortet følger telefonen. Ved reparation eller retur tages kortet ud og lægges på lager.',
   sec:[
    {img:'sim',alt:'Siden Simkort med søgning, tal og kort på lager',steps:[
@@ -3297,6 +3297,7 @@ const EDU_QUIZ=[
  {q:'Hvad betyder status Klar på en enhed?',a:['Den er nulstillet og kan udleveres','Den er i brug hos en medarbejder','Den skal sendes retur'],c:0,why:'Klar er enheder på lageret, der er nulstillet og tjekket. Den ældste udleveres først.',les:'register'},
  {q:'Noget er gået galt i registeret. Hvor finder du en tidligere kopi?',a:['Opsætning → Database → Sikkerhedskopier på denne pc → Gendan','Det kan ikke lade sig gøre','Rapporter → Statusrapport'],c:0,why:'Hver gang et gem er bekræftet, gemmes en kopi på pc\'en (højst 30, højst 14 dage). Gendan gemmer kopien som en ny version i databasen.',les:'opsaetning'},
  {q:'En kollega har gemt en ændring på en anden pc. Hvad sker der hos dig?',a:['Systemet henter selv den nye version og giver besked nederst på skærmen','Ingenting, før du genindlæser siden','Din version overskriver kollegaens'],c:0,why:'Inden for et par minutter, eller når du vender tilbage til fanen, hentes den nye version, og der står "Registeret er opdateret fra databasen" nederst.',les:'opsaetning'},
+ {q:'En enhed har fået en label i registeret, men mangler klistermærket. Hvor printer du det?',a:['Lager → Udskriv labels','Rapporter → Lagerliste','Opsætning → Arbejdsplads'],c:0,why:'Udskriv labels på Lager laver et A4-ark med 3 × 8 labels med stregkode. Har enheden ingen label, så brug Tildel labels under Register først.',les:'register'},
  {q:'Du forlader pc\'en midt i arbejdet. Hvad sker der?',a:['Ingenting, du er logget ind til du logger ud','Du bliver logget ud efter 30 minutter uden aktivitet','Registeret slettes'],c:1,why:'Efter 30 minutter uden aktivitet logger systemet dig ud, så andre ikke kan bruge pc\'en i dit navn. Log ud selv, når du går.',les:'gdpr'}
 ];
 /* Version 6.9 (Eddy 18-10-2026): "Det skal være muligt at pause sin træning under akademi, og komme tilbage og fortsætte, hvor man stoppede".
@@ -3536,7 +3537,7 @@ const QS_ACTIONS=[
   ['Udlevér en enhed','udlever ny medarbejder lager',()=>{ui.tab='lager';render();focusScan();}],
   ['Scan med kamera','kamera scan stregkode',()=>{ui.tab='lager';render();if(camOk())openCam();}],
   ['Scan med telefon','telefon mobil scan scanner kamera',()=>{ui.tab='lager';render();ACT['phone-open']();}],
-  ['Udskriv mærkater','maerkater labels stregkode print',()=>{ui.tab='lager';render();openLabels();}],
+  ['Udskriv labels','labels maerkater stregkode print',()=>{ui.tab='lager';render();openLabels();}],
   ['Tøm afleveringskassen','kasse afleveringskasse toem',()=>{ui.tab='lager';render();ACT['box-start']();}],
   ['Simkort','simkort sim iccid telefonnummer',()=>{ui.tab='simkort';render();}],
   ['Nyt simkort','nyt simkort opret iccid',()=>{ui.tab='simkort';render();openSimNew('');}],
@@ -5088,7 +5089,7 @@ const ACT={
   'reg-untyped':()=>{regReset({type:'Ukendt'});ACT.tab('register');},
   'assign-labels':()=>{const before=new Set(state.devices.filter(d=>d.label).map(d=>d.id));const n=assignLabels();if(n){markDirty();render();refreshReg();}
     const nw=state.devices.filter(d=>d.label&&!before.has(d.id)).map(d=>d.label).sort();
-    toast(n?pl(n,'enhed','enheder')+' har fået en label'+(nw.length?' ('+nw[0]+(nw.length>1?' til '+nw[nw.length-1]:'')+')':'')+'. Udskriv mærkater under Lager.':'Alle enheder har allerede en label.');},
+    toast(n?pl(n,'enhed','enheder')+' har fået en label'+(nw.length?' ('+nw[0]+(nw.length>1?' til '+nw[nw.length-1]:'')+')':'')+'. Udskriv labels under Lager.':'Alle enheder har allerede en label.');},
   'add-device':()=>{const d=newDevice({serial:'',imei:'',model:'',type:''},'manual');hist(d,'Oprettet manuelt');render();refreshReg();openDevice(d.id);},
   'export-csv':exportCsv,
   'hand-in-open':openHandIn,'hand-in':doHandIn,
