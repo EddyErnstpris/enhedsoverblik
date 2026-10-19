@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.15 (2026-10-19)">
+<meta name="version" content="6.16 (2026-10-19)">
 <meta name="referrer" content="no-referrer">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
@@ -289,7 +289,7 @@ footer.foot svg{color:var(--s60)}
 .edubtn[aria-current="page"]{background:var(--accent-soft)}
 .edu-count{color:var(--muted);font-size:.875rem;margin:.8rem 0 .1rem;display:flex;align-items:center;justify-content:space-between;gap:.6rem;flex-wrap:wrap}
 /* Version 6.15 (Eddy 19-10-2026): "Gør det muligt at få læst træningsmaterialet op" – the read-aloud button in each lesson and on each question. */
-.ttsbtn{display:inline-flex;align-items:center;gap:.35rem}.ttsbtn svg{width:1.05rem;height:1.05rem}.quiz .ttsbtn{margin:-.2rem 0 .8rem}
+.ttsbtn{display:inline-flex;align-items:center;gap:.35rem}.ttsbtn svg{width:1.05rem;height:1.05rem}.quiz .ttsbtn,.edul .ttsbtn{margin:-.2rem 0 .8rem}
 @media print{.ttsbtn{display:none}}
 /* Version 6.10: the status bar in Akademi */
 .edubar{margin:.9rem 0 .4rem;max-width:46rem}.ebsegs{display:flex;gap:4px;align-items:stretch;height:14px}
@@ -973,7 +973,7 @@ details>summary{min-height:24px}
   <div class="tabrow"><nav class="tabs" id="tabs" aria-label="Sektioner"></nav></div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.15 fra <span class="nowrap">19-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.16 fra <span class="nowrap">19-10-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="askDlg" class="askd" aria-labelledby="askT"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
@@ -3382,10 +3382,11 @@ function ttsParts(key){
   if(m[1]==='les'){const L=EDU[+m[2]];if(!L)return [];out.push(L.t+'.',L.intro);L.sec.forEach(s=>s.steps.forEach((st,k)=>out.push((k+1)+'. '+st[0]+'. '+st[1])));if(L.tips.length){out.push('Husk.');L.tips.forEach(t=>out.push(t));}}
   else if(m[1]==='quiz'){const Q=EDU_QUIZ[+m[2]];if(!Q)return [];out.push('Spørgsmål '+(+m[2]+1)+'. '+Q.q);Q.a.forEach((a,k)=>out.push('Svar '+(k+1)+': '+a));}
   else{const z=ui.quiz;if(!z)return [];EDU_QUIZ.forEach((Q,i)=>{if(z.ans[i]===Q.c)return;out.push('Spørgsmål '+(i+1)+'. '+Q.q,'Dit svar: '+(z.ans[i]>=0?Q.a[z.ans[i]]:'intet svar')+'.','Rigtigt svar: '+Q.a[Q.c]+'.',Q.why);});}
-  return out.map(ttsClean).flatMap(t=>t.split(/(?<=[a-zA-ZæøåÆØÅ)"][.!?])\s+(?=[A-ZÆØÅ0-9"„(])/)).map(t=>t.trim()).filter(Boolean);
+  return out.map(ttsClean).flatMap(t=>t.replace(/([a-zA-ZæøåÆØÅ)"][.!?])\s+(?=[A-ZÆØÅ0-9"„(])/g,'$1\n').split('\n')).map(t=>t.trim()).filter(Boolean);
 }
-function ttsButton(key){if(!TTS)return '';const on=ttsKey===key;return '<button class="btn small ttsbtn'+(on?' primary':'')+'" data-act="edu-read" data-arg="'+key+'" aria-pressed="'+(on?'true':'false')+'">'+(on?ICON.stop+'Stop oplæsning':ICON.speak+'Læs op')+'</button>';}
-function ttsPaint(){document.querySelectorAll('.ttsbtn').forEach(b=>{const on=ttsKey===b.dataset.arg;b.classList.toggle('primary',on);b.setAttribute('aria-pressed',on?'true':'false');b.innerHTML=on?ICON.stop+'Stop oplæsning':ICON.speak+'Læs op';});}
+/* Version 6.16 (Eddy 19-10-2026): the button is blue with white text in both states and sits under the heading in the lessons as in the test. */
+function ttsButton(key){if(!TTS)return '';const on=ttsKey===key;return '<button class="btn small primary ttsbtn" data-act="edu-read" data-arg="'+key+'" aria-pressed="'+(on?'true':'false')+'">'+(on?ICON.stop+'Stop oplæsning':ICON.speak+'Læs op')+'</button>';}
+function ttsPaint(){document.querySelectorAll('.ttsbtn').forEach(b=>{const on=ttsKey===b.dataset.arg;b.setAttribute('aria-pressed',on?'true':'false');b.innerHTML=on?ICON.stop+'Stop oplæsning':ICON.speak+'Læs op';});}
 function ttsStop(){if(!TTS)return;ttsKey='';try{speechSynthesis.cancel();}catch(e){}ttsPaint();}
 function ttsStart(key){
   if(!TTS)return;if(ttsKey===key){ttsStop();return;}
@@ -3398,7 +3399,7 @@ function ttsStart(key){
 if(TTS)document.addEventListener('visibilitychange',()=>{if(document.hidden&&ttsKey)ttsStop();});
 function eduLesson(i,printing){
   const L=EDU[i];let n=0;
-  return '<article class="edul">'+(printing?'<h2 class="edu-pt">'+(i+1)+'. '+L.t+'</h2>':'<h1>'+L.t+'</h1>')+'<p class="edu-intro">'+L.intro+' <span class="edu-min">Ca. '+L.min+' min.</span></p>'+
+  return '<article class="edul">'+(printing?'<h2 class="edu-pt">'+(i+1)+'. '+L.t+'</h2>':'<h1>'+L.t+'</h1>'+ttsButton('les:'+i))+'<p class="edu-intro">'+L.intro+' <span class="edu-min">Ca. '+L.min+' min.</span></p>'+
     L.sec.map(s=>{const src=eduImg(s.img);return '<section class="edus">'+(src?'<figure class="edufig">'+(printing?'':'<button class="eduzbtn" data-act="edu-zoom" data-arg="'+s.img+'" aria-label="Vis billedet i fuld størrelse: '+esc(s.alt)+'">')+'<img src="'+src+'"'+eduDims(s.img)+' alt="'+(printing?esc(s.alt):'')+'"'+(printing?'':' loading="lazy" decoding="async"')+'>'+(printing?'':'</button><figcaption class="eduhint">Tryk på billedet for at se det større.</figcaption>')+'</figure>':'')+
       '<ol class="edusteps">'+s.steps.map((st,j)=>'<li><span class="edunum" aria-hidden="true">'+(j+1)+'</span><div><b>'+st[0]+'</b><span>'+st[1]+'</span></div></li>').join('')+'</ol></section>';}).join('')+
     (L.tips.length?'<div class="notice edutips"><b>Husk</b><ul>'+L.tips.map(t=>'<li>'+t+'</li>').join('')+'</ul></div>':'')+'</article>';
@@ -3418,7 +3419,7 @@ function viewUndervisning(){
       '<section><h2>Test dig selv</h2><ul class="mlist"><li><button class="mrow" data-act="quiz-start"><span class="ic green" aria-hidden="true">✓</span><span>Tag testen<small>'+EDU_QUIZ.length+' spørgsmål om det, du har lært. Bestået ved mindst '+Math.round(QUIZ_PASS*100)+' % rigtige. Ca. 6 min.</small></span>'+ICON.chev+'</button></li></ul></section>';
   }
   return '<button class="btn plain edubackbtn" data-act="edu-open" data-arg="">'+ICON.back+'Alle emner</button>'+
-    eduBar(i)+'<p class="edu-count"><span>Emne '+(i+1)+' af '+EDU.length+'</span>'+ttsButton('les:'+i)+'</p>'+eduLesson(i)+
+    eduBar(i)+'<p class="edu-count"><span>Emne '+(i+1)+' af '+EDU.length+'</span></p>'+eduLesson(i)+
     '<div class="row-actions edunav">'+(i>0?'<button class="btn" data-act="edu-open" data-arg="'+(i-1)+'">‹ Forrige: '+EDU[i-1].t+'</button>':'')+
     (i<EDU.length-1?'<button class="btn primary" data-act="edu-next" data-arg="'+i+'">Næste: '+EDU[i+1].t+' ›</button>':'<button class="btn primary" data-act="edu-finish" data-arg="'+i+'">Færdig. Tag testen ›</button>')+'</div>';
 }
