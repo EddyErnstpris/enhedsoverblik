@@ -7,9 +7,9 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.39 (2026-11-01)">
+<meta name="version" content="6.40 (2026-11-01)">
 <meta name="eo-ocr" content="0c05de4f327b9dddc751046be5268a4a049e4930ca8f1398fdaddd8f0427dc95">
-<meta name="eo-edu" content="2b6155ff1b8f687d1b7ad3af675609cf52a5edc89c2431a3270ebe13c9d95524">
+<meta name="eo-edu" content="28b17fd2e81f74121fe4382c1c324a3759e096b1ae8b4f028f5f2234fce07979">
 <meta name="referrer" content="no-referrer">
 <meta name="eo-db" content="{&quot;url&quot;:&quot;https://hmqwqdpsshjkwyxjtgue.supabase.co&quot;,&quot;key&quot;:&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhtcXdxZHBzc2hqa3d5eGp0Z3VlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTE3MTQwMjcsImV4cCI6MjEwNzI5MDAyN30.-IoCFm2i-eYpxcNTEVeLnx8DtKFJWtoqfFK9i0N2vPA&quot;}">
 <style>
@@ -776,17 +776,12 @@ dialog.askd{width:min(32rem,calc(100vw - 2rem))}.askf{padding:1.3rem 1.4rem 1.2r
 /* Version 6.29: the list of users under Opsætning → Database wraps its cells, so it fits beside the form and on a phone. */
 .users-tbl{width:100%}.users-tbl td,.users-tbl th{white-space:normal;overflow-wrap:anywhere;vertical-align:top}.users-tbl .flag{white-space:normal}.users-tbl .uinv{display:block;font-size:.8125rem;font-weight:400;margin-top:.15rem}.users .formgrid{max-width:34rem}
 #printArea{display:none}
-@page labels{size:A4;margin:12.9mm 7.2mm}
 /* Version 6.39 (Eddy 01-11-2026, labelprinteren er købt): labels on a 29 mm roll (Brother QL, DK-22211), one label per page of 50 × 29 mm,
-   printed from the phone (AirPrint) or the pc. The barcode is quiet-zoned and tall enough for the hand scanner. */
+   printed from the phone (AirPrint) or the pc. The barcode is quiet-zoned and tall enough for the hand scanner.
+   6.40 (Eddy 01-11-2026: "Det skal kun være muligt at udskrive på label printeren, og ikke på A4 ark"): the A4 sheet (3 × 8) is gone. */
 @page roll{size:50mm 29mm;margin:0}
 .rolls{page:roll}.rolls .lblr{width:50mm;height:29mm;box-sizing:border-box;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.5mm;padding:1.5mm 3mm;overflow:hidden;color:#000;break-after:page;page-break-after:always}
 .rolls .lblr:last-child{break-after:auto;page-break-after:auto}.lblr b{font-size:12pt;letter-spacing:.03em;font-family:var(--mono);line-height:1.1}.lblr svg{display:block;width:100%;height:11mm}.lblr small{font-size:6pt;line-height:1.1}
-.labels{page:labels;display:grid;grid-template-columns:repeat(3,63.5mm);grid-auto-rows:33.9mm;column-gap:2.5mm}
-.lbl{display:flex;flex-direction:column;justify-content:center;align-items:center;gap:.6mm;padding:2mm 3mm;overflow:hidden;color:#000;break-inside:avoid}
-.lbl b{font-size:13pt;letter-spacing:.03em;font-family:var(--mono)}
-.lbl svg{display:block;width:100%;height:14mm}
-.lbl small{font-size:6.5pt}
 .ptable{border-collapse:collapse;width:100%;font-size:10pt}
 .ptable th,.ptable td{border-bottom:1px solid #999;padding:4px 6px;text-align:left}
 @media (hover:hover) and (pointer:fine){#toast.show{pointer-events:auto}}
@@ -995,7 +990,7 @@ details>summary{min-height:24px}
   <div class="tabrow"><nav class="tabs" id="tabs" aria-label="Sektioner"></nav></div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.39 fra <span class="nowrap">01-11-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.40 fra <span class="nowrap">01-11-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="askDlg" class="askd" aria-labelledby="askT"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
@@ -3106,29 +3101,23 @@ function openLabels(which){
   const all=state.devices.filter(d=>d.label&&ACTIVE.has(d.status)).length;
   const st=state.devices.filter(d=>d.label&&inStock(d)).length,nw=labelsNew().length;
   const pre=which==='new'&&nw?'new':'all';
-  const roll=ui.lblRoll===true;
-  showDlg(dlgHead('Udskriv labels',roll?'Labelrulle 29 mm: én label pr. side, 50 × 29 mm':'A4-ark med 3 × 8 labels på 63,5 × 33,9 mm')+
+  showDlg(dlgHead('Udskriv labels','Labelprinteren: én label pr. side, 50 × 29 mm på rullen 29 mm')+
     '<div class="dlg-body"><div class="formgrid">'+
-    '<label class="field wide">Udskriv på<select id="lbMode" data-ch="lbl-mode"><option value="a4"'+(roll?'':' selected')+'>A4-ark med 3 × 8 labels</option><option value="roll"'+(roll?' selected':'')+'>Labelrulle 29 mm (Brother QL, 50 × 29 mm pr. label)</option></select></label>'+
-    '<label class="field">Hvilke enheder<select id="lbWhich">'+(nw?'<option value="new"'+(pre==='new'?' selected':'')+'>Nye labels, ikke udskrevet ('+nw+')</option>':'')+'<option value="all"'+(pre==='all'?' selected':'')+'>Alle med label ('+all+')</option><option value="stock">Kun på lageret ('+st+')</option></select></label>'+
-    (roll?'':'<label class="field">Spring de første labels over<input type="number" id="lbSkip" min="0" max="23" value="0"></label>')+'</div>'+
-    '<p class="muted" style="font-size:.8125rem;margin-top:.9rem">'+(roll?'Vælg labelprinteren og papiret "29 mm" (eller 29 × 50 mm) i udskriftsvinduet, og slå "Tilpas til siden" fra. Fra telefonen: Udskriv → vælg Brother-printeren. Hver label kommer ud for sig.':'Udskriv første gang på almindeligt papir, og hold det op mod labelarket. Vælg 100 % eller "Faktisk størrelse" i udskriftsvinduet.')+' Har en enhed ingen label, så brug Tildel labels under Register først.</p>'+
+    '<label class="field wide">Hvilke enheder<select id="lbWhich">'+(nw?'<option value="new"'+(pre==='new'?' selected':'')+'>Nye labels, ikke udskrevet ('+nw+')</option>':'')+'<option value="all"'+(pre==='all'?' selected':'')+'>Alle med label ('+all+')</option><option value="stock">Kun på lageret ('+st+')</option></select></label></div>'+
+    '<p class="muted" style="font-size:.8125rem;margin-top:.9rem">Vælg labelprinteren og papiret "29 mm" (eller 29 × 50 mm) i udskriftsvinduet, og slå "Tilpas til siden" fra. Fra telefonen: Udskriv → vælg Brother-printeren. Hver label kommer ud for sig. Har en enhed ingen label, så brug Tildel labels under Register først.</p>'+
     '<div class="row-actions dlg-actions"><button class="btn" data-act="dlg-close">Annullér</button><button class="btn primary" data-act="labels-print"'+(all?'':' disabled')+'>Udskriv</button></div></div>');
 }
 function rollHtml(list){
   return '<div class="rolls">'+list.map(d=>'<div class="lblr"><b>'+esc(d.label)+'</b>'+code128(d.label)+'<small>'+esc((d.type==='Ukendt'?'':d.type+' ')+d.model)+'</small></div>').join('')+'</div>';
 }
-function labelsHtml(list,skip){
-  return '<div class="labels">'+'<div></div>'.repeat(skip)+list.map(d=>'<div class="lbl"><b>'+esc(d.label)+'</b>'+code128(d.label)+'<small>'+esc((d.type==='Ukendt'?'':d.type+' ')+d.model)+'</small></div>').join('')+'</div>';
-}
 function printLabels(){
-  const which=$('#lbWhich').value,roll=ui.lblRoll===true,skip=roll?0:Math.max(0,Math.min(23,parseInt(($('#lbSkip')||{value:0}).value,10)||0));
+  const which=$('#lbWhich').value;
   const list=which==='new'?labelsNew():state.devices.filter(d=>d.label&&(which==='stock'?inStock(d):ACTIVE.has(d.status))).sort((a,b)=>a.label.localeCompare(b.label));
   if(!list.length){toast('Der er ingen enheder med label at udskrive.');return;}
   const nw=list.filter(d=>d.lblNew);
-  $('#dlg').close();printArea(roll?rollHtml(list):labelsHtml(list,skip));
+  $('#dlg').close();printArea(rollHtml(list));
   /* 6.31: the mark "not printed" is taken off only when the labels came out (a cancelled print keeps them waiting). */
-  if(nw.length)setTimeout(async()=>{if(!await ask(pl(nw.length,'ny label','nye labels')+' var med'+(roll?'':' på arket')+'. Kom de ud af printeren?',{ok:'Ja, de er udskrevet',cancel:'Nej'}))return;nw.forEach(d=>{delete d.lblNew;});markDirty();if(ui.tab==='lager'&&!$('#dlg').open)render();},300);
+  if(nw.length)setTimeout(async()=>{if(!await ask(pl(nw.length,'ny label','nye labels')+' var med. Kom de ud af printeren?',{ok:'Ja, de er udskrevet',cancel:'Nej'}))return;nw.forEach(d=>{delete d.lblNew;});markDirty();if(ui.tab==='lager'&&!$('#dlg').open)render();},300);
   if(ui.tab==='lager')render();
 }
 function printStock(){
@@ -3520,16 +3509,15 @@ const EDU=[
    {img:'lblnew',alt:'Lager med beskeden 2 labels venter på udskrift og knappen Udskriv de 2 labels',steps:[
     ['Labels venter','Nye enheder får en label af sig selv: fra listen, ved scanning og med Tilføj enhed. Lager viser, hvor mange labels der venter på udskrift, og numrene.'],
     ['Udskriv dem','Tryk Udskriv de … labels. Arket har kun de nye labels. Når de er udskrevet, forsvinder beskeden.']]},
-   {img:'lblprint',alt:'Vinduet Udskriv labels med valget Udskriv på (A4-ark eller labelrulle 29 mm), Hvilke enheder og knappen Udskriv',steps:[
-    ['Udskriv på','A4-ark med 3 × 8 labels, eller labelrulle 29 mm til labelprinteren (Brother QL): én label pr. side på 50 × 29 mm. Valget huskes, mens værktøjet er åbent.'],
-    ['Hvilke enheder','Nye labels, alle med label, eller kun dem på lageret.'],
-    ['Udskriv','Med labelrullen: vælg labelprinteren og papiret 29 mm i udskriftsvinduet, og slå Tilpas til siden fra. Fra telefonen vælger du Brother-printeren under Udskriv.']]},
+   {img:'lblprint',alt:'Vinduet Udskriv labels med Hvilke enheder og knappen Udskriv',steps:[
+    ['Hvilke enheder','Nye labels, alle med label, eller kun dem på lageret. Labels printes på labelprinteren (Brother QL) på rullen 29 mm: én label pr. side på 50 × 29 mm.'],
+    ['Udskriv','Vælg labelprinteren og papiret 29 mm i udskriftsvinduet, og slå Tilpas til siden fra. Fra telefonen vælger du Brother-printeren under Udskriv.']]},
    {img:'dev',alt:'Enhedens vindue med alle oplysninger',steps:[
     ['Klik på labelen','Så åbner enhedens vindue med alle oplysninger, historik og simkort.'],
     ['Status','Klar betyder nulstillet og klar til udlevering. Er enheden gået i stykker, så vælg Skal sendes retur: en enhed, der skal repareres, sendes altid retur. Er den væk, så vælg Bortkommet. En enhed uden for lageret kan kun sættes I drift, når den har et simkort.'],
     ['Type','Telefon, Tablet eller Vikartelefon. En vikartelefon bruges af skiftende vikarer, og der gemmes ingen bruger på den.'],
     ['Cura eller Admin','En telefon i drift er Cura eller Admin (valgt ved Udlevér). Er det valgt forkert, så ret det her; ændringen står i historikken.']]}],
-  tips:['Sæt flueben ved flere enheder for at rette dem alle på én gang.','En telefon i drift har mærket Cura eller Admin ved enheden, så du kan se det i listerne.','Er enheden en iPhone, så slå iPhone til i enhedens vindue. Så får den mærket iPhone og kommer med, når du trykker iPhones på Lager.','Vælger du typen (Telefon, Tablet eller Vikartelefon), før labelen er udskrevet, får enheden en label, der passer: ENH-… bliver TLF-… eller TAB-…. En udskrevet label eller en, du selv har skrevet, ændres aldrig.','Labelen er enhedens navn, fx TLF-001. Nye enheder får en label af sig selv; Tildel labels giver ældre enheder uden label et nummer. Lager → Udskriv labels printer klistermærker med labelen og en stregkode, alle eller kun de nye: på A4-ark med 3 × 8 labels, eller på labelprinterens rulle (29 mm, én label ad gangen), også fra telefonen. Én label pr. enhed.','Flaget Uden simkort ved en enhed betyder, at den står i drift uden kort. Sæt et kort i (tryk på labelen → Sæt i enhed), eller indlevér enheden.']},
+  tips:['Sæt flueben ved flere enheder for at rette dem alle på én gang.','En telefon i drift har mærket Cura eller Admin ved enheden, så du kan se det i listerne.','Er enheden en iPhone, så slå iPhone til i enhedens vindue. Så får den mærket iPhone og kommer med, når du trykker iPhones på Lager.','Vælger du typen (Telefon, Tablet eller Vikartelefon), før labelen er udskrevet, får enheden en label, der passer: ENH-… bliver TLF-… eller TAB-…. En udskrevet label eller en, du selv har skrevet, ændres aldrig.','Labelen er enhedens navn, fx TLF-001. Nye enheder får en label af sig selv; Tildel labels giver ældre enheder uden label et nummer. Lager → Udskriv labels printer klistermærker med labelen og en stregkode på labelprinterens rulle (29 mm, én label ad gangen), alle eller kun de nye, også fra telefonen. Én label pr. enhed.','Flaget Uden simkort ved en enhed betyder, at den står i drift uden kort. Sæt et kort i (tryk på labelen → Sæt i enhed), eller indlevér enheden.']},
  {id:'simkort',t:'Simkort og simkort-kartoteket',min:5,intro:'Simkortet følger telefonen. Når enheden skal sendes retur, tages kortet ud og lægges i simkort-kartoteket på lageret: en Rolodex, hvor hver plastiklomme har en label (A1, A2, A3 …).',
   sec:[
    {img:'sim',alt:'Siden Simkort med søgning, tal og kort på lager med deres lomme',steps:[
@@ -3679,7 +3667,7 @@ const EDU_QUIZ=[
  {q:'Hvad betyder status Klar på en enhed?',a:['Den er nulstillet og kan udleveres','Den er i brug hos en medarbejder','Den skal sendes retur'],c:0,why:'Klar er enheder på lageret, der er nulstillet og tjekket. Den ældste udleveres først.',les:'register'},
  {q:'Noget er gået galt i registeret. Hvor finder du en tidligere kopi?',a:['Opsætning → Database → Sikkerhedskopier på denne pc → Gendan','Det kan ikke lade sig gøre','Rapporter → Statusrapport'],c:0,why:'Hver gang et gem er bekræftet, gemmes en kopi på pc\'en (højst 30, højst 14 dage). Gendan gemmer kopien som en ny version i databasen.',les:'opsaetning'},
  {q:'En kollega har gemt en ændring på en anden pc. Hvad sker der hos dig?',a:['Systemet henter selv den nye version og giver besked nederst på skærmen','Ingenting, før du genindlæser siden','Din version overskriver kollegaens'],c:0,why:'Inden for et par minutter, eller når du vender tilbage til fanen, hentes den nye version, og der står "Registeret er opdateret fra databasen" nederst.',les:'opsaetning'},
- {q:'En enhed har fået en label i registeret, men mangler klistermærket. Hvor printer du det?',a:['Lager → Udskriv labels','Rapporter → Lagerliste','Opsætning → Arbejdsplads'],c:0,why:'Udskriv labels på Lager printer labels med stregkode: på et A4-ark med 3 × 8 eller på labelprinterens rulle. Har enheden ingen label, så brug Tildel labels under Register først.',les:'register'},
+ {q:'En enhed har fået en label i registeret, men mangler klistermærket. Hvor printer du det?',a:['Lager → Udskriv labels','Rapporter → Lagerliste','Opsætning → Arbejdsplads'],c:0,why:'Udskriv labels på Lager printer labels med stregkode på labelprinterens rulle. Har enheden ingen label, så brug Tildel labels under Register først.',les:'register'},
  {q:'Du skal udlevere en iPhone. Hvordan ser du kun iPhones på Lager?',a:['Tryk knappen iPhones øverst på Lager','Søg efter "Apple" i Register','Det kan man ikke'],c:0,why:'Knappen iPhones øverst på Lager viser kun iPhones i alle lister. Tryk igen for at se alle enheder.',les:'udlever'},
  {q:'Hvor på Lager kan du se, at en klar enhed mangler simkort?',a:['Under overskriften Uden simkort i listen','Det står kun i Register','Det står i rapporten Lagerliste'],c:0,why:'Hver liste på Lager er delt i Med simkort og Uden simkort. Sæt et kort i, før enheden udleveres, eller lad Udlevér vælge det ældste ledige.',les:'udlever'},
  {q:'Du vil kun se de enheder, der er ude hos medarbejderne. Hvad trykker du på i Register?',a:['Knappen I drift','Knappen Inaktive','Knappen Uden placering'],c:0,why:'Knappen I drift viser enhederne i drift uden for lageret. Tryk Alle for at se alle igen.',les:'register'},
@@ -6191,7 +6179,6 @@ document.addEventListener('change',async e=>{
     if(q&&!await ask(q)){el.value=d.status;return;}
     if(!inDlg)regPin(id);
     const sm=statusDevice(d,el.value);if(sm!==null)markDirty();if(inDlg)openDevice(id);else if(ui.tab==='register')refreshReg();else render();if(sm)toast(sm.trim());}
-  else if(ch==='lbl-mode'){ui.lblRoll=el.value==='roll';const w=$('#lbWhich')?$('#lbWhich').value:'';openLabels(w==='new'?'new':'all');if($('#lbWhich')&&w)$('#lbWhich').value=w;}
   else if(ch==='dev-use'){const d=devById(id);if(!d||!needsUse(d))return;const v=USES.includes(el.value)?el.value:'';if(v===(d.use||''))return;if(v)d.use=v;else delete d.use;hist(d,'Cura/Admin: '+(v||'ikke valgt'));markDirty();openDevice(id);if(ui.tab==='register')refreshReg();else render();}
   else if(ch==='dev-apple'){const d=devById(id);if(!d)return;d.apple=el.checked;if(el.checked&&d.type==='Ukendt'){d.type='Telefon';relabelNew(d);}hist(d,el.checked?'Markeret som iPhone':'Ikke en iPhone');markDirty();openDevice(id);if(ui.tab==='register')refreshReg();}
   else if(ch==='gdpr-days'){const n=parseInt(el.value,10);if(!Number.isInteger(n)||n<1||n>3650){el.value=gdprDays();toast('Skriv et tal mellem 1 og 3650.');return;}if(n!==gdprDays()){state.gdprDays=n;markDirty();toast('Navne i historikken slettes nu efter '+n+' dage. Navne, der allerede står der, beholder deres dato.');}}
