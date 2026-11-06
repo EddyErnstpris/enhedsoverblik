@@ -7,7 +7,7 @@
 <meta name="theme-color" content="#F5F5F7" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 <title>Enhedsoverblik</title>
-<meta name="version" content="6.43 (2026-11-06)">
+<meta name="version" content="6.44 (2026-11-06)">
 <meta name="eo-ocr" content="0c05de4f327b9dddc751046be5268a4a049e4930ca8f1398fdaddd8f0427dc95">
 <meta name="eo-edu" content="d2abc1687b41a023640ad3b88a698f8cf6016d6c537b40f0acbb1ca404bc9eb4">
 <meta name="referrer" content="no-referrer">
@@ -1021,7 +1021,7 @@ details>summary{min-height:24px}
   <div class="tabrow"><nav class="tabs" id="tabs" aria-label="Sektioner"></nav></div>
 </header>
 <main id="main" tabindex="-1"></main>
-<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.43 fra <span class="nowrap">06-11-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
+<footer class="foot"><div class="foot-row"><svg viewBox="0 0 12 14" aria-hidden="true"><rect x="1" y="6" width="10" height="7.5" rx="2" fill="currentColor"/><path d="M3.3 6V4a2.7 2.7 0 0 1 5.4 0v2" fill="none" stroke="currentColor" stroke-width="1.4"/></svg><span>Data gemmes i den database, der er sat op under Opsætning. Værktøjet taler ikke med andre adresser. Version 6.44 fra <span class="nowrap">06-11-2026</span>. <b class="foot-by">Udviklet af Eddy Ernstpris</b></span></div></footer>
 <dialog id="dlg" aria-labelledby="dlgTitle"></dialog>
 <dialog id="askDlg" class="askd" aria-labelledby="askT"></dialog>
 <dialog id="simdlg" aria-labelledby="simdlgTitle"></dialog>
@@ -3125,13 +3125,14 @@ function code128(text){
 /* The print area is cleared after printing. Safari on iPhone and iPad returns
    from print() at once, so only afterprint (or a long fallback) clears it.
    6.42 (Eddy 06-11-2026, picture of the iPhone print window with 239 pages): on iPhone and iPad afterprint comes at once,
-   before the print window has drawn the pages, so the whole page was printed. There the print area stays until the next
-   touch on the page (the print window takes the touches while it is open), and the 2-minute fallback is not used. */
+   before the print window has drawn the pages, so the whole page was printed. There the print area stays, and the 2-minute fallback is not used.
+   6.44 (Eddy 06-11-2026, pictures: one label until the Brother printer is chosen, then the whole page): the print window draws the page again
+   when a printer or paper is chosen, and the touches in it reached the page, so 6.43 cleared the area too early. Now it stays until another
+   tab is opened or the next print replaces it. */
 const IOS_PRINT=/iP(hone|ad|od)/.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
 let printTimer=null,printAt=0;
 function printDone(){document.body.classList.remove('print-area');$('#printArea').innerHTML='';clearTimeout(printTimer);}
 window.addEventListener('afterprint',()=>{if(!IOS_PRINT)printDone();});
-document.addEventListener('pointerdown',()=>{if(IOS_PRINT&&document.body.classList.contains('print-area')&&Date.now()-printAt>1500)printDone();},true);
 function printArea(html,noPrint){
   const a=$('#printArea');a.innerHTML=html;document.body.classList.add('print-area');printAt=Date.now();
   clearTimeout(printTimer);if(!IOS_PRINT)printTimer=setTimeout(()=>{if(!matchMedia('print').matches)printDone();},120000);
@@ -6008,7 +6009,7 @@ function ask(msg,o){o=o||{};if(window.__nativeConfirm)return Promise.resolve(con
     const done=()=>{d.removeEventListener('close',done);res(d.returnValue==='ok');};d.addEventListener('close',done);d.returnValue='';d.showModal();});}
 async function confirmLose(){return !dirty||state.demo||await ask('Du har ændringer, der ikke er gemt i databasen endnu. Vil du fortsætte?');}
 const ACT={
-  'tab':a=>{if(a==='rapporter'&&ui.tab!=='rapporter')ui.rep.open=false;ui.tab=a;const lv=$('#srLive');if(lv)lv.textContent='';render();window.scrollTo(0,0);toastHide();},
+  'tab':a=>{if(IOS_PRINT&&document.body.classList.contains('print-area'))printDone();if(a==='rapporter'&&ui.tab!=='rapporter')ui.rep.open=false;ui.tab=a;const lv=$('#srLive');if(lv)lv.textContent='';render();window.scrollTo(0,0);toastHide();},
   'go-inact':a=>{if($('#dlg').open){dlgCleanup();$('#dlg').close();}ui.tab='inaktive';ui.inactFilter=a;render();window.scrollTo(0,0);},
   'go-reg':a=>{ui.tab='register';regReset({special:a});render();refreshReg();window.scrollTo(0,0);regChipIntoView();},
   'go-dept':a=>{ui.tab='register';regReset({dept:a});render();refreshReg();window.scrollTo(0,0);},
